@@ -1,0 +1,19 @@
+html, body, #app-content, #inner-app-content, #outer-container {
+    margin: 0px;
+    padding: 2px;
+    height: 100%;
+}
+
+#app-navigation-items {
+    height: 100% !important;
+}
+
+#map {
+    height: 60%;
+    padding: 1px;
+}
+
+#highchart {
+    height: 40%;
+    padding: 1px;
+}
