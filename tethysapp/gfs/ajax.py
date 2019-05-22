@@ -3,8 +3,8 @@ import ast
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 
-from .options import app_configuration, gldas_variables
-from .tools import shpchart, pointchart, polychart, makestatplots
+from .options import app_configuration, gfs_variables
+from .charts import shpchart, pointchart, polychart, makestatplots
 
 
 @login_required()
@@ -18,7 +18,7 @@ def get_pointseries(request):
     data['type'] = '(Values at a Point)'
     data = makestatplots(data)
 
-    variables = gldas_variables()
+    variables = gfs_variables()
     for key in variables:
         if variables[key] == data['variable']:
             name = key
@@ -38,7 +38,7 @@ def get_polygonaverage(request):
     data['type'] = '(Averaged over a Polygon)'
     data = makestatplots(data)
 
-    variables = gldas_variables()
+    variables = gfs_variables()
     for key in variables:
         if variables[key] == data['variable']:
             name = key
@@ -59,7 +59,7 @@ def get_shapeaverage(request):
     data['type'] = '(Average for ' + data['region'] + ')'
     data = makestatplots(data)
 
-    variables = gldas_variables()
+    variables = gfs_variables()
     for key in variables:
         if variables[key] == data['variable']:
             name = key

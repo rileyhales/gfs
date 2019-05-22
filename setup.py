@@ -14,7 +14,7 @@ dependencies = ['netCDF4', 'numpy', 'pandas', 'rasterstats', 'rasterio', 'osr']
 
 setup(
     name=release_package,
-    version='0.0.1',
+    version='0.0.2',
     tags='',
     description='',
     long_description='',

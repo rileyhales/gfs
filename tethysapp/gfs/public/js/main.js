@@ -67,23 +67,12 @@ mapObj.on("mousemove", function (event) {
     $("#mouse-position").html('Lat: ' + event.latlng.lat.toFixed(5) + ', Lon: ' + event.latlng.lng.toFixed(5));
 });
 
-let layerObj = newLayer();              // adds the wms raster layer
-let controlsObj = makeControls();       // the layer toggle controls top-right corner
-legend.addTo(mapObj);                   // add the legend graphic to the map
+// let layerObj = newLayer();              // adds the wms raster layer
+// let controlsObj = makeControls();       // the layer toggle controls top-right corner
+// legend.addTo(mapObj);                   // add the legend graphic to the map
 updateGEOJSON();                        // asynchronously get geoserver wfs/geojson data for the regions
 
 ////////////////////////////////////////////////////////////////////////  EVENT LISTENERS
-$("#dates").change(function () {
-    clearMap();
-    for (let i = 0; i < geojsons.length; i++) {
-        geojsons[i][0].addTo(mapObj)
-    }
-    layerObj = newLayer();
-    controlsObj = makeControls();
-    getDrawnChart(drawnItems);
-    legend.addTo(mapObj);
-});
-
 $("#variables").change(function () {
     clearMap();
     for (let i = 0; i < geojsons.length; i++) {
@@ -110,10 +99,6 @@ $('#colorscheme').change(function () {
 });
 
 $("#opacity_geojson").change(function () {
-    styleGeoJSON();
-});
-
-$('#colors_geojson').change(function () {
     styleGeoJSON();
 });
 

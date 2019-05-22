@@ -4,15 +4,15 @@ from tethys_sdk.app_settings import CustomSetting
 
 class Gfs(TethysAppBase):
     """
-    Tethys app class for GFS Tool.
+    Tethys app class for GFS Visualizer Tool.
     """
 
-    name = 'Gfs'
+    name = 'GFS Visualizer Tool'
     index = 'gfs:home'
-    icon = 'gfs/images/globe3.png'
+    icon = 'gfs/images/gfs.png'
     package = 'gfs'
     root_url = 'gfs'
-    color = '#add8e6'
+    color = '#013220'
     description = 'Visualizes the most recent GFS forecasts through time-animated maps.\n' \
                   'Generates timeseries charts and datasets at points or averaged over polygons.\n'
     tags = ''
@@ -21,7 +21,7 @@ class Gfs(TethysAppBase):
     youtubelink = 'https://youtube.com'
     githublink = 'https://github.com/rileyhales/gfs'
     gfslink = 'https://www.ncdc.noaa.gov/data-access/model-data/model-datasets/global-forcast-system-gfs'
-    version = 'Version 0.0.1 - 22 May 2019'
+    version = 'Version 0.0.2 - 22 May 2019'
 
     def url_maps(self):
         """

@@ -1,8 +1,9 @@
-from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from tethys_sdk.gizmos import SelectInput, RangeSlider
-from .options import gfs_variables, wms_colors, geojson_colors, timecoverage, get_charttypes
+from django.shortcuts import render
+from tethys_sdk.gizmos import SelectInput, RangeSlider, Button
+
 from .app import Gfs as App
+from .options import gfs_variables, wms_colors, geojson_colors, get_charttypes
 
 
 @login_required()
@@ -24,6 +25,8 @@ def home(request):
         original=True,
         options=options,
     )
+
+    current_gfs_time = 'This GFS Data is from'
 
     colorscheme = SelectInput(
         display_text='Raster Color Scheme',
@@ -71,6 +74,7 @@ def home(request):
 
     context = {
         'variables': variables,
+        'current_gfs_time': current_gfs_time,
         'colorscheme': colorscheme,
         'opacity_raster': opacity_raster,
         'colors_geojson': colors_geojson,

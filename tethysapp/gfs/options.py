@@ -20,6 +20,7 @@ def gfs_variables():
     List of the plottable variables from the GLDAS 2.1 datasets used
     """
     return {
+        # todo get the right list of gfs variables
         'Air Temperature': 'Tair_f_inst',
         'Surface Albedo': 'Albedo_inst',
         'Surface Temperature': 'AvgSurfT_inst',
@@ -85,6 +86,7 @@ def geojson_colors():
 
 
 def get_charttypes():
+    # todo filter these when we figure out what charts we'll have
     return [
         ('Full Timeseries (Single-Line Plot)', 'timeseries'),
         ('Monthly Analysis (Box Plot)', 'monthbox'),

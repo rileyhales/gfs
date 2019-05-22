@@ -36,6 +36,7 @@ function basemaps() {
 
 ////////////////////////////////////////////////////////////////////////  WMS LAYERS FOR GLDAS
 function newLayer() {
+    // todo make this build the right url
     let wmsurl = threddsbase + $("#dates").val() + '.ncml';
     let wmsLayer = L.tileLayer.wms(wmsurl, {
         // version: '1.3.0',
@@ -48,7 +49,8 @@ function newLayer() {
         opacity: $("#opacity_raster").val(),
         BGCOLOR: '0x000000',
         styles: 'boxfill/' + $('#colorscheme').val(),
-        colorscalerange: bounds[$("#dates").val()][$("#variables").val()],
+        // todo: boundaries
+        // colorscalerange: bounds[$("#dates").val()][$("#variables").val()],
     });
 
     let timedLayer = L.timeDimension.layer.wms(wmsLayer, {
@@ -66,6 +68,7 @@ function newLayer() {
 let legend = L.control({position: 'topright'});
 legend.onAdd = function (mapObj) {
     let div = L.DomUtil.create('div', 'legend');
+    // todo: boundaries, build the right url
     let url = threddsbase + $("#dates").val() + '.ncml' + "?REQUEST=GetLegendGraphic&LAYER=" + $("#variables").val() + "&PALETTE=" + $('#colorscheme').val() + "&COLORSCALERANGE=" + bounds[$("#dates").val()][$("#variables").val()];
     div.innerHTML = '<img src="' + url + '" alt="legend" style="width:100%; float:right;">';
     return div

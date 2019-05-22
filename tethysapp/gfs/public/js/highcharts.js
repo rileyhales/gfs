@@ -121,6 +121,7 @@ function newMultilineChart(data) {
     });
 }
 
+// todo this probably wont be necessary anymore
 function newBoxPlot(data) {
     let charttype = $("#charttype").val();
     let categories;
@@ -181,6 +182,7 @@ function getDrawnChart(drawnItems) {
             coords: coords,
             geojson: geojson[0],
             variable: $('#variables').val(),
+            // todo dates doesn't exist here
             time: $("#dates").val(),
         };
 
@@ -188,9 +190,9 @@ function getDrawnChart(drawnItems) {
         let url;
         let drawtype = geojson[0]['geometry']['type'];
         if (drawtype === 'Point') {
-            url = '/apps/gldas/ajax/getPointSeries/';
+            url = '/apps/gfs/ajax/getPointSeries/';
         } else {
-            url = '/apps/gldas/ajax/getPolygonAverage/';
+            url = '/apps/gfs/ajax/getPolygonAverage/';
         }
 
         $.ajax({
@@ -224,6 +226,7 @@ function getShapeChart(selectedregion) {
 
     let data = {
         variable: $('#variables').val(),
+        // todo dates doesn't exist here
         time: $("#dates").val(),
         region: selectedregion,
     };
@@ -236,7 +239,7 @@ function getShapeChart(selectedregion) {
     }
 
     $.ajax({
-        url: '/apps/gldas/ajax/getShapeAverage/',
+        url: '/apps/gfs/ajax/getShapeAverage/',
         data: JSON.stringify(data),
         dataType: 'json',
         contentType: "application/json",
@@ -256,6 +259,7 @@ function makechart() {
         } else if (type === 'yearmulti' || type === 'monthmulti') {
             newMultilineChart(chartdata);
         } else if (type === 'yearbox' || type === 'monthbox') {
+            // todo no more boxplot
             newBoxPlot(chartdata);
         }
     }

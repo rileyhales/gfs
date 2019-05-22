@@ -67,8 +67,9 @@
   <li class="title" role="button" id="datatoggle">GFS Data Controls</li>
   <div id="datacontrols">
     {% gizmo select_input variables %}
+    <a class="btn btn-default btn-block" role="button" onclick="">Check for updated GFS Data</a>
+    <div style="text-align: center; padding: 4px;"><strong>{{ current_gfs_time }}</strong></div>
     <div id="mouse-position" class="well well-sm" style="text-align: center"></div>
-    {#    <a class="btn btn-default btn-block" id="mouse-position" style="text-align: center"></a>#}
   </div>
 
   <li class="title" role="button" id="displaytoggle">Display Options</li>
@@ -131,7 +132,11 @@
   <script type="text/javascript" src="https://code.highcharts.com/modules/no-data-to-display.js"></script>
 
    <!-- scripts I wrote for the app, main should go last -->
+<script src="{% static 'gfs/js/geojsons1.js' %}" type="text/javascript"></script>
+<script src="{% static 'gfs/js/geojsons2.js' %}" type="text/javascript"></script>
+<script src="{% static 'gfs/js/geojsons3.js' %}" type="text/javascript"></script>
 <script src="{% static 'gfs/js/bounds.js' %}" type="text/javascript"></script>
+
 <script src="{% static 'gfs/js/highcharts.js' %}" type="text/javascript"></script>
 <script src="{% static 'gfs/js/leaflet.js' %}" type="text/javascript"></script>
 <script src="{% static 'gfs/js/main.js' %}" type="text/javascript"></script>
