@@ -5,6 +5,12 @@ This is a Tethys 2/3 compatible app that visualizes GFS data from NOAA.
 
 ## App Features
 
+~~~~
+rasterstats
+rasterio
+osr
+conda install -c conda-forge cfgrib
+~~~~
 
 ## Installation Instructions
 ### 1 Install the Tethys App
@@ -22,7 +28,7 @@ tethys manage collectstatic
 ~~~~
 Reset the server, then attempt to log in through the web interface as an administrator. The app should appear in the Apps Library page in grey indicating you need to configure the custom settings.
 
-### 2 Set up a Thredds Server (GLDAS Rasters)
+### 2 Set up a Thredds Server (GFS Raster Images)
 You will also need to modify Thredds' settings files to enable WMS services and support for netCDF files on your server. In the folder where you installed Thredds, there should be a file called ```catalog.xml```. 
 ~~~~
 vim catalog.xml

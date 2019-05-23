@@ -21,7 +21,7 @@ class Gfs(TethysAppBase):
     youtubelink = 'https://youtube.com'
     githublink = 'https://github.com/rileyhales/gfs'
     gfslink = 'https://www.ncdc.noaa.gov/data-access/model-data/model-datasets/global-forcast-system-gfs'
-    version = 'Version 0.0.2 - 22 May 2019'
+    version = 'Version 0.0.3 - 23 May 2019'
 
     def url_maps(self):
         """
@@ -58,6 +58,12 @@ class Gfs(TethysAppBase):
                 url='gfs/ajax/getShapeAverage',
                 controller='gfs.ajax.get_shapeaverage',
             ),
+
+            UrlMap(
+                name='downloadGFS',
+                url='gfs/gfsdata/downloadGFS',
+                controller='gfs.gfsdata.download_gfs'
+            )
 
         )
         return url_maps

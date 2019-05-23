@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 
 from .options import app_configuration, gfs_variables
-from .charts import shpchart, pointchart, polychart, makestatplots
+from .tools import shpchart, pointchart, polychart
 
 
 @login_required()
@@ -16,7 +16,6 @@ def get_pointseries(request):
     data = ast.literal_eval(request.body.decode('utf-8'))
     data = pointchart(data)
     data['type'] = '(Values at a Point)'
-    data = makestatplots(data)
 
     variables = gfs_variables()
     for key in variables:
@@ -36,7 +35,6 @@ def get_polygonaverage(request):
     data = ast.literal_eval(request.body.decode('utf-8'))
     data = polychart(data)
     data['type'] = '(Averaged over a Polygon)'
-    data = makestatplots(data)
 
     variables = gfs_variables()
     for key in variables:
@@ -57,7 +55,6 @@ def get_shapeaverage(request):
     data = ast.literal_eval(request.body.decode('utf-8'))
     data = shpchart(data)
     data['type'] = '(Average for ' + data['region'] + ')'
-    data = makestatplots(data)
 
     variables = gfs_variables()
     for key in variables:
@@ -66,6 +63,15 @@ def get_shapeaverage(request):
             data['name'] = name
             break
     return JsonResponse(data)
+
+
+@login_required()
+def get_newgfsdata():
+    # todo make the series of functions to update the data get called when you press the button
+    # todo make a way for this function to get called every day so that the data is always the most current?
+    # todo or make a way for thredds to show grib data on wms so that we dont have to convert to netcdfs
+
+    return
 
 
 @login_required()

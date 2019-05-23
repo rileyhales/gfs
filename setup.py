@@ -10,7 +10,7 @@ app_class = 'gfs.app:Gfs'
 app_package_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'tethysapp', app_package)
 
 # -- Python Dependencies -- #
-dependencies = ['netCDF4', 'numpy', 'pandas', 'rasterstats', 'rasterio', 'osr']
+dependencies = ['netCDF4', 'numpy', 'pandas', 'xarray']
 
 setup(
     name=release_package,

@@ -3,7 +3,7 @@ from django.shortcuts import render
 from tethys_sdk.gizmos import SelectInput, RangeSlider, Button
 
 from .app import Gfs as App
-from .options import gfs_variables, wms_colors, geojson_colors, get_charttypes
+from .options import gfs_variables, wms_colors, geojson_colors, get_charttypes, currentgfs
 
 
 @login_required()
@@ -26,7 +26,7 @@ def home(request):
         options=options,
     )
 
-    current_gfs_time = 'This GFS Data is from'
+    current_gfs_time = currentgfs()
 
     colorscheme = SelectInput(
         display_text='Raster Color Scheme',

@@ -7,14 +7,14 @@ import rasterio
 import rasterstats
 import netCDF4
 import numpy
-import pandas
-import statistics
 
 from .app import Gfs as App
 from .options import app_configuration
 
 
-# todo change the file filtering process
+# todo change the file filtering process to get the right netcdf directory
+# todo in shpchart, add resampling by factor of ~15 before averaging
+
 def pointchart(data):
     """
     Description: generates a timeseries for a given point and given variable defined by the user.
@@ -131,7 +131,6 @@ def polychart(data):
     return data
 
 
-# todo this will need to be modified based on the gfs file saving structure
 def shpchart(data):
     """
     Description: This script accepts a netcdf file in a geographic coordinate system, specifically the NASA GLDAS
@@ -202,44 +201,5 @@ def shpchart(data):
 
     if os.path.isdir(geotiffdir):
         shutil.rmtree(geotiffdir)
-
-    return data
-
-
-# todo this probably is irrelevant now
-def makestatplots(data):
-    """
-    Calculates statistics for the array of timeseries values and returns arrays for a highcharts boxplot
-    Dependencies: statistics, pandas, datetime, calendar
-    """
-    df = pandas.DataFrame(data['values'], columns=['dates', 'values', 'month', 'year'])
-    data['multiline'] = {'yearmulti': {'min': [], 'max': [], 'mean': []},
-                         'monthmulti': {'min': [], 'max': [], 'mean': []}}
-    data['boxplot'] = {'yearbox': [], 'monthbox': []}
-
-    months = dict((n, m) for n, m in enumerate(calendar.month_name))
-    data['categories'] = {'month': [months[i + 1] for i in range(12)], 'year': [i + 2000 for i in range(20)]}
-
-    if data['time'] == 'alltimes':
-        for i in range(1, 13):
-            tmp = df[df['month'] == i]['values']
-            std = statistics.stdev(tmp)
-            ymin = min(tmp)
-            ymax = max(tmp)
-            mean = sum(tmp) / len(tmp)
-            data['boxplot']['monthbox'].append([months[i], ymin, mean - std, mean, mean + std, ymax])
-            data['multiline']['monthmulti']['min'].append((months[i], ymin))
-            data['multiline']['monthmulti']['mean'].append((months[i], mean))
-            data['multiline']['monthmulti']['max'].append((months[i], ymax))
-        for i in range(20):
-            tmp = df[df['year'] == i + 2000]['values']
-            std = statistics.stdev(tmp)
-            ymin = min(tmp)
-            ymax = max(tmp)
-            mean = sum(tmp) / len(tmp)
-            data['boxplot']['yearbox'].append([i, ymin, mean - std, mean, mean + std, ymax])
-            data['multiline']['yearmulti']['min'].append((i + 2000, ymin))
-            data['multiline']['yearmulti']['mean'].append((i + 2000, mean))
-            data['multiline']['yearmulti']['max'].append((i + 2000, ymax))
 
     return data

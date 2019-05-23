@@ -1,5 +1,6 @@
 from .app import Gfs as App
 import os
+import datetime
 
 
 def app_configuration():
@@ -17,7 +18,7 @@ def app_configuration():
 
 def gfs_variables():
     """
-    List of the plottable variables from the GLDAS 2.1 datasets used
+    List of the plottable variables from the GFS model
     """
     return {
         # todo get the right list of gfs variables
@@ -86,11 +87,18 @@ def geojson_colors():
 
 
 def get_charttypes():
-    # todo filter these when we figure out what charts we'll have
+    # todo deprecate the functions for changing chart type, only show one plot
     return [
         ('Full Timeseries (Single-Line Plot)', 'timeseries'),
-        ('Monthly Analysis (Box Plot)', 'monthbox'),
-        ('Monthly Analysis (Multi-Line Plot)', 'monthmulti'),
-        ('Yearly Analysis (Box Plot)', 'yearbox'),
-        ('Yearly Analysis (Multi-Line Plot)', 'yearmulti'),
     ]
+
+
+def currentgfs():
+    # todo make this read the folder of netcdfs rather than the gribs because nc is what is on the map.
+    gfspath = App.get_custom_setting("Local Thredds Folder Path")
+    gfs = os.listdir(os.path.join(gfspath, 'gribdownloads'))
+    gfs = [n for n in gfs if not n.startswith('.')]
+    if len(gfs) > 0:
+        gfs = datetime.datetime.strptime(gfs[0], "%Y%m%d%H")
+        return "This GFS data from " + datetime.datetime.strftime(gfs, "%b %d, %I%p UTC")      # Month Day at Hour am/pm
+    return "No GFS data detected"

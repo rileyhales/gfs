@@ -251,6 +251,7 @@ function getShapeChart(selectedregion) {
     })
 }
 
+// todo no more boxplot options, deprecate the filtering options
 function makechart() {
     if (chartdata !== null) {
         let type = $("#charttype").val();
@@ -259,7 +260,6 @@ function makechart() {
         } else if (type === 'yearmulti' || type === 'monthmulti') {
             newMultilineChart(chartdata);
         } else if (type === 'yearbox' || type === 'monthbox') {
-            // todo no more boxplot
             newBoxPlot(chartdata);
         }
     }
