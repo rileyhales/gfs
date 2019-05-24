@@ -12,6 +12,8 @@ osr
 conda install -c conda-forge cfgrib
 ~~~~
 
+The GFS model produces a new forecast every 6 Hours at 00, 06, 12, 18 UTC. Each forecast is divided into 6-hour timesteps. Each of those 6-hour timesteps is downloaded as a separate GRIB2 file of about 600MB. To show this data as a time animated map, you need to convert them to netCDF files. 
+
 ## Installation Instructions
 ### 1 Install the Tethys App
 This application is compatible with Tethys 2.X and Tethys 3 Distributions and is compatible with both Python 2 and 3 and Django 1 and 2. Install the latest version of Tethys before installing this app. This app requires the python packages: numpy, netcdf4, ogr, osr. Both should be installed automatically as part of this installation process.

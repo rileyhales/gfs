@@ -73,6 +73,22 @@ mapObj.on("mousemove", function (event) {
 updateGEOJSON();                        // asynchronously get geoserver wfs/geojson data for the regions
 
 ////////////////////////////////////////////////////////////////////////  EVENT LISTENERS
+$("#updategfsbtn").click(function () {
+    if (confirm('This may take several minutes and you may not have access to the app while this process completes. Are you sure you want to update the GFS data?')) {
+        $.ajax({
+            url: '/apps/gfs/ajax/updateGFS/',
+            async: false,
+            data: '',
+            dataType: 'json',
+            contentType: "application/json",
+            method: 'POST',
+            success: function (result) {
+                location.reload();
+            },
+        });
+    }
+});
+
 $("#variables").change(function () {
     clearMap();
     for (let i = 0; i < geojsons.length; i++) {
@@ -106,14 +122,10 @@ $('#colors_geojson').change(function () {
     styleGeoJSON();
 });
 
-$('#charttype').change(function () {
-    makechart();
-});
-
-$("#datatoggle").click(function() {
+$("#datatoggle").click(function () {
     $("#datacontrols").toggle();
 });
 
-$("#displaytoggle").click(function() {
+$("#displaytoggle").click(function () {
     $("#displaycontrols").toggle();
 });

@@ -1,9 +1,9 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from tethys_sdk.gizmos import SelectInput, RangeSlider, Button
+from tethys_sdk.gizmos import SelectInput, RangeSlider
 
 from .app import Gfs as App
-from .options import gfs_variables, wms_colors, geojson_colors, get_charttypes, currentgfs
+from .options import gfs_variables, wms_colors, geojson_colors, currentgfs
 
 
 @login_required()
@@ -64,14 +64,6 @@ def home(request):
         initial=.2,
     )
 
-    charttype = SelectInput(
-        display_text='Choose a Plot Type',
-        name='charttype',
-        multiple=False,
-        original=True,
-        options=get_charttypes(),
-    )
-
     context = {
         'variables': variables,
         'current_gfs_time': current_gfs_time,
@@ -79,7 +71,6 @@ def home(request):
         'opacity_raster': opacity_raster,
         'colors_geojson': colors_geojson,
         'opacity_geojson': opacity_geojson,
-        'charttype': charttype,
         'youtubelink': App.youtubelink,
         'githublink': App.githublink,
         'gfslink': App.gfslink,

@@ -12,8 +12,6 @@ Highcharts.setOptions({
     },
 });
 
-let chartdata = null;
-
 // Placeholder chart
 let chart = Highcharts.chart('highchart', {
     title: {
@@ -72,88 +70,6 @@ function newHighchart(data) {
     });
 }
 
-function newMultilineChart(data) {
-    let charttype = $("#charttype").val();
-    let categories;
-    if (charttype.includes('month')) {
-        categories = 'month'
-    } else {
-        categories = 'year'
-    }
-    chart = Highcharts.chart('highchart', {
-        title: {
-            align: "center",
-            text: data['name'] + ' v Time ' + data['type'],
-        },
-        xAxis: {
-            title: {text: "Time"},
-            categories: data['categories'][categories],
-        },
-        yAxis: {
-            title: {text: data['units']}
-        },
-        series: [
-            {
-                data: data['multiline'][charttype]['min'],
-                type: "line",
-                name: 'Yearly Minimum',
-            },
-            {
-                data: data['multiline'][charttype]['max'],
-                type: "line",
-                name: 'Yearly Maximum',
-            },
-            {
-                data: data['multiline'][charttype]['mean'],
-                type: "line",
-                name: 'Yearly Average',
-            }
-        ],
-        chart: {
-            animation: true,
-            zoomType: 'xy',
-            borderColor: '#000000',
-            borderWidth: 2,
-            type: 'area',
-
-        },
-
-    });
-}
-
-// todo this probably wont be necessary anymore
-function newBoxPlot(data) {
-    let charttype = $("#charttype").val();
-    let categories;
-    if (charttype.includes('month')) {
-        categories = 'month'
-    } else {
-        categories = 'year'
-    }
-    chart = Highcharts.chart('highchart', {
-        chart: {
-            type: 'boxplot',
-            animation: true,
-            zoomType: 'xy',
-            borderColor: '#000000',
-            borderWidth: 2,
-        },
-        title: {align: "center", text: data['name'] + ' Statistics ' + data['type']},
-        legend: {enabled: false},
-        xAxis: {
-            title: {text: 'Time'},
-            categories: data['categories'][categories],
-        },
-        yAxis: {title: {text: data['units']}},
-        series: [{
-            name: data['name'],
-            data: data['boxplot'][charttype],
-            tooltip: {xDateFormat: '%b',},
-        }]
-
-    });
-}
-
 function getDrawnChart(drawnItems) {
     // if there's nothing to get charts for then quit
     let geojson = drawnItems.toGeoJSON()['features'];
@@ -182,8 +98,6 @@ function getDrawnChart(drawnItems) {
             coords: coords,
             geojson: geojson[0],
             variable: $('#variables').val(),
-            // todo dates doesn't exist here
-            time: $("#dates").val(),
         };
 
         // decide which ajax url you need based on drawing type
@@ -202,8 +116,7 @@ function getDrawnChart(drawnItems) {
             contentType: "application/json",
             method: 'POST',
             success: function (result) {
-                chartdata = result;
-                makechart();
+                newHighchart(result);
             }
         })
         // If there isn't any geojson, then you actually should refresh the shapefile chart (ie the data is the lastregion)
@@ -213,21 +126,12 @@ function getDrawnChart(drawnItems) {
 }
 
 function getShapeChart(selectedregion) {
-    // if the time range is all times then confirm before executing the spatial averaging
-    if ($("#dates").val() === 'alltimes') {
-        if (!confirm("Computing a timeseries of spatial averages for all available times requires over 200 iterations of file conversions and geoprocessing operations. This may result in a long wait (15+ seconds) or cause errors. Are you sure you want to continue?")) {
-            return
-        }
-    }
-
     drawnItems.clearLayers();
     chart.hideNoData();
     chart.showLoading();
 
     let data = {
         variable: $('#variables').val(),
-        // todo dates doesn't exist here
-        time: $("#dates").val(),
         region: selectedregion,
     };
     if (selectedregion === 'lastregion') {
@@ -245,22 +149,7 @@ function getShapeChart(selectedregion) {
         contentType: "application/json",
         method: 'POST',
         success: function (result) {
-            chartdata = result;
-            makechart();
+            newHighchart(result);
         }
     })
-}
-
-// todo no more boxplot options, deprecate the filtering options
-function makechart() {
-    if (chartdata !== null) {
-        let type = $("#charttype").val();
-        if (type === 'timeseries') {
-            newHighchart(chartdata);
-        } else if (type === 'yearmulti' || type === 'monthmulti') {
-            newMultilineChart(chartdata);
-        } else if (type === 'yearbox' || type === 'monthbox') {
-            newBoxPlot(chartdata);
-        }
-    }
 }

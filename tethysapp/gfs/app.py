@@ -58,11 +58,10 @@ class Gfs(TethysAppBase):
                 url='gfs/ajax/getShapeAverage',
                 controller='gfs.ajax.get_shapeaverage',
             ),
-
             UrlMap(
-                name='downloadGFS',
-                url='gfs/gfsdata/downloadGFS',
-                controller='gfs.gfsdata.download_gfs'
+                name='updateGFS',
+                url='gfs/ajax/updateGFS',
+                controller='gfs.ajax.get_newgfsdata'
             )
 
         )

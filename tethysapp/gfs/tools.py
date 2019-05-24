@@ -14,6 +14,7 @@ from .options import app_configuration
 
 # todo change the file filtering process to get the right netcdf directory
 # todo in shpchart, add resampling by factor of ~15 before averaging
+# todo remove the time factor for filtering files and creating timeseries. Get from filename
 
 def pointchart(data):
     """

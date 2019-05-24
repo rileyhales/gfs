@@ -67,7 +67,7 @@
   <li class="title" role="button" id="datatoggle">GFS Data Controls</li>
   <div id="datacontrols">
     {% gizmo select_input variables %}
-    <a class="btn btn-default btn-block" role="button" href="/apps/gfs/gfsdata/downloadGFS" target="_blank">Check for updated GFS Data</a>
+    <a class="btn btn-default btn-block" role="button" id="updategfsbtn">Check for updated GFS Data</a>
     <div style="text-align: center; padding: 4px;"><strong>{{ current_gfs_time }}</strong></div>
     <div id="mouse-position" class="well well-sm" style="text-align: center"></div>
   </div>
@@ -78,7 +78,6 @@
     {% gizmo range_slider opacity_raster %}
     {% gizmo select_input colors_geojson %}
     {% gizmo range_slider opacity_geojson %}
-    {% gizmo select_input charttype %}
   </div>
 {% endblock %}
 
@@ -125,8 +124,7 @@
 
   <!-- script for using highcharts (display timeseries plot) -->
   <script type="text/javascript" src="https://code.highcharts.com/highcharts.js"></script>
-  <script type="text/javascript" src="https://code.highcharts.com/highcharts-more.js">
-  </script>
+  <script type="text/javascript" src="https://code.highcharts.com/highcharts-more.js"></script>
   <script type="text/javascript" src="https://code.highcharts.com/modules/exporting.js"></script>
   <script type="text/javascript" src="https://code.highcharts.com/modules/export-data.js"></script>
   <script type="text/javascript" src="https://code.highcharts.com/modules/no-data-to-display.js"></script>

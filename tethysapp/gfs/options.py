@@ -86,17 +86,10 @@ def geojson_colors():
     ]
 
 
-def get_charttypes():
-    # todo deprecate the functions for changing chart type, only show one plot
-    return [
-        ('Full Timeseries (Single-Line Plot)', 'timeseries'),
-    ]
-
-
 def currentgfs():
     # todo make this read the folder of netcdfs rather than the gribs because nc is what is on the map.
     gfspath = App.get_custom_setting("Local Thredds Folder Path")
-    gfs = os.listdir(os.path.join(gfspath, 'gribdownloads'))
+    gfs = os.listdir(os.path.join(gfspath, 'gribs'))
     gfs = [n for n in gfs if not n.startswith('.')]
     if len(gfs) > 0:
         gfs = datetime.datetime.strptime(gfs[0], "%Y%m%d%H")
