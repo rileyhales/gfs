@@ -18,7 +18,7 @@ $.ajaxSetup({
 ////////////////////////////////////////////////////////////////////////  AJAX FUNCTIONS
 function getThreddswms() {
     $.ajax({
-        url: '/apps/gldas/ajax/getCustomSettings/',
+        url: '/apps/gfs/ajax/getCustomSettings/',
         async: false,
         data: '',
         dataType: 'json',
@@ -67,8 +67,8 @@ mapObj.on("mousemove", function (event) {
     $("#mouse-position").html('Lat: ' + event.latlng.lat.toFixed(5) + ', Lon: ' + event.latlng.lng.toFixed(5));
 });
 
-// let layerObj = newLayer();              // adds the wms raster layer
-// let controlsObj = makeControls();       // the layer toggle controls top-right corner
+let layerObj = newLayer();              // adds the wms raster layer
+let controlsObj = makeControls();       // the layer toggle controls top-right corner
 // legend.addTo(mapObj);                   // add the legend graphic to the map
 updateGEOJSON();                        // asynchronously get geoserver wfs/geojson data for the regions
 

@@ -21,37 +21,55 @@ def gfs_variables():
     List of the plottable variables from the GFS model
     """
     return {
-        # todo get the right list of gfs variables
-        'Air Temperature': 'Tair_f_inst',
-        'Surface Albedo': 'Albedo_inst',
-        'Surface Temperature': 'AvgSurfT_inst',
-        'Canopy Water Amount': 'CanopInt_inst',
-        'Evaporation Flux From Canopy': 'ECanop_tavg',
-        'Evaporation Flux From Soil': 'ESoil_tavg',
-        'Water Evaporation Flux': 'Evap_tavg',
-        'Surface Downwelling Longwave Flux In Air': 'LWdown_f_tavg',
-        'Surface Net Downward Longwave Flux': 'Lwnet_tavg',
-        'Potential Evaporation Flux': 'PotEvap_tavg',
-        'Surface Air Pressure': 'Psurf_f_inst',
-        'Specific Humidity': 'Qair_f_inst',
-        'Downward Heat Flux In Soil': 'Qg_tavg',
-        'Surface Upward Sensible Heat Flux': 'Qh_tavg',
-        'Surface Upward Latent Heat Flux': 'Qle_tavg',
-        'Surface Runoff Amount': 'Qs_acc',
-        'Subsurface Runoff Amount': 'Qsb_acc',
-        'Surface Snow Melt Amount': 'Qsm_acc',
-        'Precipitation Flux': 'Rainf_f_tavg',
-        'Rainfall Flux': 'Rainf_tavg',
-        'Root Zone Soil Moisture': 'RootMoist_inst',
-        'Surface Snow Amount': 'SWE_inst',
-        'Soil Temperature': 'SoilTMP0_10cm_inst',
-        'Surface Downwelling Shortwave Flux In Air': 'SWdown_f_tavg',
-        'Surface Snow Thickness': 'SnowDepth_inst',
-        'Snowfall Flux': 'Snowf_tavg',
-        'Surface Net Downward Shortwave Flux': 'Swnet_tavg',
-        'Transpiration Flux From Veg': 'Tveg_tavg',
-        'Wind Speed': 'Wind_f_inst',
-        }
+        'Albedo': 'al',
+        'Best (4-layer) lifted index': '4lftx',
+        'Categorical freezing rain': 'cfrzr',
+        'Categorical ice pellets': 'cicep',
+        'Categorical rain': 'crain',
+        'Categorical snow': 'csnow',
+        'Convective available potential energy': 'cape',
+        'Convective inhibition': 'cin',
+        'Convective precipitation (water)': 'acpcp',
+        'Convective precipitation rate': 'cprat',
+        'Downward long-wave radiation flux': 'dlwrf',
+        'Downward short-wave radiation flux': 'dswrf',
+        'Field capacity': 'fldcp',
+        'Ground heat flux': 'gflux',
+        'Haines index': 'hindex',
+        'Initial time of forecast': 'time',
+        'Land-sea coverage (nearest neighbor) [land=1,sea=0]': 'landn',
+        'Land-sea mask': 'lsm',
+        'Latent heat net flux': 'lhtfl',
+        'Latitude': 'latitude',
+        'Longitude': 'longitude',
+        'Meridional flux of gravity wave stress': 'v-gwd',
+        'Momentum flux, u component': 'uflx',
+        'Momentum flux, v component': 'vflx',
+        'Original grib coordinate for key: level(surface)': 'surface',
+        'Orography': 'orog',
+        'Percent frozen precipitation': 'cpofp',
+        'Planetary boundary layer height': 'hpbl',
+        'Potential evaporation rate': 'pevpr',
+        'Precipitation rate': 'prate',
+        'Sea ice area fraction': 'siconc',
+        'Sensible heat net flux': 'shtfl',
+        'Snow depth': 'sde',
+        'Sunshine duration': 'SUNSD',
+        'Surface lifted index': 'lftx',
+        'Surface pressure': 'sp',
+        'Temperature': 't',
+        'Time': 'valid_time',
+        'Time since forecast reference time': 'step',
+        'Total precipitation': 'tp',
+        'Upward long-wave radiation flux': 'ulwrf',
+        'Upward short-wave radiation flux': 'uswrf',
+        'Visibility': 'vis',
+        'Water equivalent of accumulated snow depth': 'sdwe',
+        'Water runoff': 'watr',
+        'Wilting point': 'wilt',
+        'Wind speed (gust)': 'gust',
+        'Zonal flux of gravity wave stress': 'u-gwd'
+    }
 
 
 def wms_colors():
@@ -69,7 +87,7 @@ def wms_colors():
         ('ALG', 'alg'),
         ('ALG 2', 'alg2'),
         ('Ferret', 'ferret'),
-        ]
+    ]
 
 
 def geojson_colors():
@@ -93,5 +111,5 @@ def currentgfs():
     gfs = [n for n in gfs if not n.startswith('.')]
     if len(gfs) > 0:
         gfs = datetime.datetime.strptime(gfs[0], "%Y%m%d%H")
-        return "This GFS data from " + datetime.datetime.strftime(gfs, "%b %d, %I%p UTC")      # Month Day at Hour am/pm
+        return "This GFS data from " + datetime.datetime.strftime(gfs, "%b %d, %I%p UTC")  # Month Day at Hour am/pm
     return "No GFS data detected"

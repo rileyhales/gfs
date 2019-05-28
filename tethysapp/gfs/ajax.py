@@ -72,11 +72,11 @@ def get_newgfsdata(request):
     gets called when you press the update gfs button on the main page
     Dependencies: from .gfsdata import *
     """
-    # todo make the series of functions to update the data get called when you press the button
     # todo make a way for this function to get called every day so that the data is always the most current?
-    # todo or make a way for thredds to show grib data on wms so that we dont have to convert to netcdfs
     fc_tstamp = download_gfs()
     grib_to_netcdf(fc_tstamp)
+    nc_georeference(fc_tstamp)
+    new_ncml(fc_tstamp)
 
     return JsonResponse({'Finished': 'Finished'})
 

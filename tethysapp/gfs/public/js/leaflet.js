@@ -37,31 +37,33 @@ function basemaps() {
 ////////////////////////////////////////////////////////////////////////  WMS LAYERS FOR GLDAS
 function newLayer() {
     // todo make this build the right url
-    let wmsurl = threddsbase + $("#dates").val() + '.ncml';
-    let wmsLayer = L.tileLayer.wms(wmsurl, {
+    let url = threddsbase + 'gfs.ncml';
+    console.log(url);
+    let wmsLayer = L.tileLayer.wms(url, {
         // version: '1.3.0',
-        layers: $("#variables").val(),
-        dimension: 'time',
-        useCache: true,
+        layers: 'gust',
+        // dimension: 'time',
+        // useCache: true,
         crossOrigin: false,
         format: 'image/png',
         transparent: true,
         opacity: $("#opacity_raster").val(),
         BGCOLOR: '0x000000',
-        styles: 'boxfill/' + $('#colorscheme').val(),
+        // styles: 'boxfill/' + $('#colorscheme').val(),
         // todo: boundaries
         // colorscalerange: bounds[$("#dates").val()][$("#variables").val()],
     });
 
-    let timedLayer = L.timeDimension.layer.wms(wmsLayer, {
-        name: 'time',
-        requestTimefromCapabilities: true,
-        updateTimeDimension: true,
-        updateTimeDimensionMode: 'replace',
-        cache: 20,
-    }).addTo(mapObj);
+    // let timedLayer = L.timeDimension.layer.wms(wmsLayer, {
+    //     name: 'time',
+    //     requestTimefromCapabilities: true,
+    //     updateTimeDimension: true,
+    //     updateTimeDimensionMode: 'replace',
+    //     cache: 20,
+    // }).addTo(mapObj);
 
-    return timedLayer
+    // return timedLayer
+    return wmsLayer.addTo(mapObj)
 }
 
 ////////////////////////////////////////////////////////////////////////  LEGEND DEFINITIONS
