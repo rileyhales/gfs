@@ -1,11 +1,14 @@
+import numpy
 import datetime
+import math
 import os
 import shutil
 import urllib.request
-import xarray
-import netCDF4
 
-from .options import app_configuration
+import netCDF4
+import xarray
+
+from .options import app_configuration, gfs_variables
 
 
 def download_gfs():
@@ -47,7 +50,7 @@ def download_gfs():
     os.mkdir(downloadpath)
 
     # This is the List of forecast timesteps for 2 days (6-hr increments)
-    t_steps = ['006', '012', '018', '024', '030']  # , '036', '042', '048', '054', '060']
+    t_steps = ['006', '012', '018', '024', '030', '036', '042', '048', '054', '060']
     for step in t_steps:
         url = 'https://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p25.pl?file=gfs.t' + fc_time + 'z.pgrb2.0p25.f' + step + \
               "&all_lev=on&all_var=on&subregion=&leftlon=-180&rightlon=180&toplat=90&bottomlat=-90&dir=%2Fgfs." + fc_tstamp
@@ -164,10 +167,6 @@ def nc_georeference(fc_tstamp):
         for dimension in dimensions:
             duplicate.createDimension(dimension, dimensions[dimension])
 
-        # for dim in duplicate.dimensions.keys():
-        #     print(dim)
-        #     print(duplicate.dimensions[dim])
-
         # 'Manually' create the dimensions that need to be set carefully
         duplicate.createVariable(varname='lat', datatype='f4', dimensions='lat')
         duplicate.createVariable(varname='lon', datatype='f4', dimensions='lon')
@@ -254,18 +253,68 @@ def new_ncml(fc_tstamp):
     date = datetime.datetime.strftime(date, "%Y-%m-%d %H:00:00")
     with open(ncml, 'w') as file:
         file.write(
-            '<netcdf xmlns="http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2">'
-            '    <variable name="time" type="int" shape="time">'
-            '        <attribute name="units" value="hours since ' + date + '"/>'
-            '        <attribute name="_CoordinateAxisType" value="Time" />'
-            '        <values start="0" increment="6" />'
-            '    </variable>'
-            '    <aggregation dimName="time" type="joinExisting" recheckEvery="1 hour">'
-            '        <scan location="netcdfs/"/>'
-            '    </aggregation>'
+            '<netcdf xmlns="http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2">\n'
+            '    <variable name="time" type="int" shape="time">\n'
+            '        <attribute name="units" value="hours since ' + date + '"/>\n'
+            '        <attribute name="_CoordinateAxisType" value="Time" />\n'
+            '        <values start="0" increment="6" />\n'
+            '    </variable>\n'
+            '    <aggregation dimName="time" type="joinExisting" recheckEvery="1 hour">\n'
+            '        <scan location="netcdfs/"/>\n'
+            '    </aggregation>\n'
             '</netcdf>'
         )
     print('completed ncml')
     return
 
-# todo set the wms bounds js
+
+def set_wmsbounds():
+    """
+    Dynamically defines exact boundaries for the legend and wms so that they are synchronized
+    Dependencies: netcdf4, os, math, numpy
+    """
+    print('\nSetting the WMS bounds')
+    boundsfile = os.path.join(os.path.dirname(__file__), 'public', 'js', 'bounds.js')
+    print(boundsfile)
+    ncfolder = app_configuration()['threddsdatadir']
+    ncfolder = os.path.join(ncfolder, 'netcdfs')
+    files = os.listdir(ncfolder)
+    files = [file for file in files if file.endswith('.nc') and file.startswith('process')][0]
+
+    # setup the dictionary of values to return
+    bounds = {}
+    variables = gfs_variables()
+    for variable in variables:
+        bounds[variables[variable]] = ''
+
+    # for nc in files:
+    path = os.path.join(ncfolder, files)
+    dataset = netCDF4.Dataset(path, 'r')
+    print('working on file ' + path)
+
+    for variable in variables:
+        print('checking for variable ' + variable)
+        array = dataset[variables[variable]][:]
+        array = array.flatten()
+        array = array[~numpy.isnan(array)]
+        maximum = math.ceil(max(array))
+        if maximum == numpy.nan:
+            maximum = 0
+        print('max is ' + str(maximum))
+
+        minimum = math.floor(min(array))
+        if minimum == numpy.nan:
+            minimum = 0
+        print('min is ' + str(minimum))
+
+        bounds[variables[variable]] = str(maximum) + ',' + str(minimum)
+    dataset.close()
+    print(bounds)
+
+
+    print('\ndone checking for max/min. writing the file')
+    boundsfile = os.path.join(os.path.dirname(__file__), 'public', 'js', 'bounds.js')
+    with open(boundsfile, 'w') as file:
+        file.write('const bounds = {' + str(bounds) + '};')
+    print('wrote the file. all done')
+    return

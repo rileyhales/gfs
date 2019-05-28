@@ -69,7 +69,7 @@ mapObj.on("mousemove", function (event) {
 
 let layerObj = newLayer();              // adds the wms raster layer
 let controlsObj = makeControls();       // the layer toggle controls top-right corner
-// legend.addTo(mapObj);                   // add the legend graphic to the map
+legend.addTo(mapObj);                   // add the legend graphic to the map
 updateGEOJSON();                        // asynchronously get geoserver wfs/geojson data for the regions
 
 ////////////////////////////////////////////////////////////////////////  EVENT LISTENERS

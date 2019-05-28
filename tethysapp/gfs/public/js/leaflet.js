@@ -49,9 +49,8 @@ function newLayer() {
         transparent: true,
         opacity: $("#opacity_raster").val(),
         BGCOLOR: '0x000000',
-        // styles: 'boxfill/' + $('#colorscheme').val(),
-        // todo: boundaries
-        // colorscalerange: bounds[$("#dates").val()][$("#variables").val()],
+        styles: 'boxfill/' + $('#colorscheme').val(),
+        colorscalerange: bounds[$("#variables").val()],
     });
 
     // let timedLayer = L.timeDimension.layer.wms(wmsLayer, {
@@ -161,7 +160,7 @@ function styleGeoJSON() {
 // the layers box on the top right of the map
 function makeControls() {
     return L.control.layers(basemapObj, {
-        'GLDAS Layer': layerObj,
+        'GFS Layer': layerObj,
         'Drawing': drawnItems,
         'Europe': europe,
         'Asia': asia,

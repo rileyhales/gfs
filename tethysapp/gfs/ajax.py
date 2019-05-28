@@ -3,7 +3,7 @@ import ast
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 
-from .options import app_configuration, gfs_variables
+from .options import *
 from .tools import shpchart, pointchart, polychart
 from .gfsdata import *
 
@@ -77,6 +77,7 @@ def get_newgfsdata(request):
     grib_to_netcdf(fc_tstamp)
     nc_georeference(fc_tstamp)
     new_ncml(fc_tstamp)
+    set_wmsbounds()
 
     return JsonResponse({'Finished': 'Finished'})
 

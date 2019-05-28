@@ -1,2 +1,1 @@
-// todo fill this with something? delete it?
-const bounds = {};
+const bounds = {{'al': '88,0', '4lftx': '29,-17', 'cfrzr': '1,0', 'cicep': '0,0', 'crain': '1,0', 'csnow': '1,0', 'cape': '4668,0', 'cin': '1,-1110', 'acpcp': '38,0', 'cprat': '1,0', 'dlwrf': '512,60', 'dswrf': '983,0', 'fldcp': '1,0', 'landn': '1,0', 'lsm': '1,0', 'lhtfl': '666,-108', 'v-gwd': '15,-16', 'uflx': '3,-4', 'vflx': '3,-2', 'orog': '6110,-237', 'cpofp': '100,-51', 'hpbl': '5968,16', 'pevpr': '1981,-35', 'prate': '1,0', 'siconc': '1,0', 'shtfl': '548,-214', 'sde': '3,0', 'SUNSD': '21600,0', 'lftx': '45,-13', 'sp': '103790,48163', 't': '348,202', 'tp': '163,0', 'ulwrf': '748,96', 'uswrf': '762,0', 'vis': '24100,0', 'sdwe': '435,0', 'watr': '105,0', 'wilt': '1,0', 'gust': '34,0', 'u-gwd': '8,-8'}};
