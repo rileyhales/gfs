@@ -307,7 +307,7 @@ def set_wmsbounds():
             minimum = 0
         print('min is ' + str(minimum))
 
-        bounds[variables[variable]] = str(maximum) + ',' + str(minimum)
+        bounds[variables[variable]] = str(minimum) + ',' + str(maximum)
     dataset.close()
     print(bounds)
 
@@ -315,6 +315,6 @@ def set_wmsbounds():
     print('\ndone checking for max/min. writing the file')
     boundsfile = os.path.join(os.path.dirname(__file__), 'public', 'js', 'bounds.js')
     with open(boundsfile, 'w') as file:
-        file.write('const bounds = {' + str(bounds) + '};')
+        file.write('const bounds = ' + str(bounds) + ';')
     print('wrote the file. all done')
     return
