@@ -1,18 +1,15 @@
 # GFS Visualizer Tool Documentation
-This is a Tethys 2/3 compatible app that visualizes GFS data from NOAA.
+This is a Tethys 2/3 compatible app that visualizes GFS data from NOAA. The GFS model produces a new forecast every 6 Hours at 00, 06, 12, 18 UTC each day. Each forecast is divided into 6-hour timesteps and covers the next 16 days. Each of those 6-hour timesteps is downloaded as a separate GRIB2 file of about 600MB. To show this data as a time animated map, you need to convert them to netCDF files. 
 
-© [Riley Hales](http://rileyhales.com), 2019. Based on the [GLDAS Data Visualizer](https://github.com/rileyhales/gldas) (Hales, 2018) Developed at the BYU Hydroinformatics Lab.
+© [Riley Hales](http://rileyhales.com), 2019. Based on the [GLDAS Data Visualizer](https://github.com/rileyhales/gfs) (Hales, 2018) Developed at the BYU Hydroinformatics Lab.
 
 ## App Features
-
+Since tethys environments by default do not draw from the conda-forge channel, you will need to run these commands before installing the app.
 ~~~~
-rasterstats
-rasterio
-osr
+conda install -c conda-forge rasterstats
+conda install -c conda-forge rasterio
 conda install -c conda-forge cfgrib
 ~~~~
-
-The GFS model produces a new forecast every 6 Hours at 00, 06, 12, 18 UTC. Each forecast is divided into 6-hour timesteps. Each of those 6-hour timesteps is downloaded as a separate GRIB2 file of about 600MB. To show this data as a time animated map, you need to convert them to netCDF files. 
 
 ## Installation Instructions
 ### 1 Install the Tethys App
@@ -31,6 +28,17 @@ tethys manage collectstatic
 Reset the server, then attempt to log in through the web interface as an administrator. The app should appear in the Apps Library page in grey indicating you need to configure the custom settings.
 
 ### 2 Set up a Thredds Server (GFS Raster Images)
+Refer to the documentation for Thredds to set up an instance of Thredds on your tethys server.
+
+In the public folder where your datasets are stored, create a new folder called ````gfs````. This app is designed to navigate a specially organized directory containing the gfs data. Inside this folder, create 2 more folders named ````netcdfs```` and ````gribs````. Leave these folders empty. If you did it correctly, your folder should look like this:
+~~~~
+gfs
+--->gribs
+	---><empty directory>
+--->netcdfs
+	---><empty directory>
+~~~~ 
+
 You will also need to modify Thredds' settings files to enable WMS services and support for netCDF files on your server. In the folder where you installed Thredds, there should be a file called ```catalog.xml```. 
 ~~~~
 vim catalog.xml
@@ -41,9 +49,10 @@ At the top of the document is a list of supported services. Make sure the line f
 ~~~~
 <service name="wms" serviceType="WMS" base="/thredds/wms/" />
 ~~~~
-Scroll down toward the end of the section that says ```filter```. This is the section that limits which kinds of datasets Thredds will process. We need it to accept .nc, .nc4, and .ncml file types. Make sure your ```filter``` tag includes the following lines.
+Scroll down toward the end of the section that says ```filter```. This is the section that limits which kinds of datasets Thredds will process. We need it to accept .grb, .nc, .nc4, and .ncml file types. Make sure your ```filter``` tag includes the following lines.
 ~~~~
 <filter>
+    <include wildcard="*.grb"/>
     <include wildcard="*.nc"/>
     <include wildcard="*.nc4"/>
     <include wildcard="*.ncml"/>
@@ -68,6 +77,7 @@ Press ```esc``` then type ```:x!```  and press the ```return``` key to save and 
 Reset the Thredds server so the catalog is regenerated with the edits that you've made. The command to reset your server will vary based on your installation method, such as ```docker reset thredds``` or ```sudo systemctl reset tomcat```.
 
 ### 3 Get the GFS Data from NOAA
+After installing the app, you can use the check for new data button (inside the app) to begin a download of the newest GFS datasets.
 
 ### 4 Set up a GeoServer (World Region Boundaries) (Optional, Recommended)
 Refer to the documentation for GeoServer to set up an instance of GeoServer on your tethys server. If you choose not to use geoserver, skip this step and follow instructions in step 5 for the custom settings.
@@ -89,8 +99,6 @@ Log in to your Tethys portal as an admin. Click on the grey GLDAS box and specif
 
 **Local File Path:** This is the full path to the directory named gldas that you should have created within the thredds data directory during step 2. You can get this by navigating to that folder in the terminal and then using the ```pwd``` command. (example: ```/tomcat/content/thredds/gfs/```)  
 
-**Thredds Base Address:** This is the base URL to Thredds WMS services that the app uses to build urls for each of the WMS layers generated for the netcdf datasets. If you followed the typical configuration of thredds (these instructions) then your base url will look something like ```yourserver.com/thredds/wms/testAll/gfs/```. You can verify this by opening the thredds catalog in a web browser (typically at ```yourserver.com/thredds/catalog.html```). Navigate to one of the GLDAS netcdf files and click the WMS link. A page showing an xml document should load. Copy the url in the address bar until you get to the ```/gldas/``` folder in that url. Do not include ```/raw/name_of_dataset.nc``` or the request that comes after. (example: ```https://tethys.byu.edu/thredds/wms/testAll/gldas/```)
+**Thredds Base Address:** This is the base URL to Thredds WMS services that the app uses to build urls for each of the WMS layers generated for the netcdf datasets. If you followed the typical configuration of thredds (these instructions) then your base url will look something like ```yourserver.com/thredds/wms/testAll/gfs/```. You can verify this by opening the thredds catalog in a web browser (typically at ```yourserver.com/thredds/catalog.html```). Navigate to one of the GLDAS netcdf files and click the WMS link. A page showing an xml document should load. Copy the url in the address bar until you get to the ```/gfs/``` folder in that url. Do not include ```/netcdfs/name_of_dataset.nc``` or the request that comes after. (example: ```https://tethys.byu.edu/thredds/wms/testAll/gfs/```)
 
 **Geoserver Workspace Address:** This is the WFS (ows) url to the workspace on geoserver where the shapefiles for the world region boundaries are served. This geoserver workspace needs to have at minimum WFS services enabled. You can find it by using the layer preview interface of GeoServer and choosing GeoJSON as the format. If you chose not to use geoserver, enter ```geojson``` as your url. (example: ```https://tethys.byu.edu/geoserver/gfs/ows```)
-
-## How the app works

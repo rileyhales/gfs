@@ -42,8 +42,8 @@ function newLayer() {
     let wmsLayer = L.tileLayer.wms(url, {
         // version: '1.3.0',
         layers: 'gust',
-        // dimension: 'time',
-        // useCache: true,
+        dimension: 'time',
+        useCache: true,
         crossOrigin: false,
         format: 'image/png',
         transparent: true,
@@ -53,16 +53,15 @@ function newLayer() {
         colorscalerange: bounds[$("#variables").val()],
     });
 
-    // let timedLayer = L.timeDimension.layer.wms(wmsLayer, {
-    //     name: 'time',
-    //     requestTimefromCapabilities: true,
-    //     updateTimeDimension: true,
-    //     updateTimeDimensionMode: 'replace',
-    //     cache: 20,
-    // }).addTo(mapObj);
+    let timedLayer = L.timeDimension.layer.wms(wmsLayer, {
+        name: 'time',
+        requestTimefromCapabilities: true,
+        updateTimeDimension: true,
+        updateTimeDimensionMode: 'replace',
+        cache: 20,
+    }).addTo(mapObj);
 
-    // return timedLayer
-    return wmsLayer.addTo(mapObj)
+    return timedLayer
 }
 
 ////////////////////////////////////////////////////////////////////////  LEGEND DEFINITIONS
@@ -70,7 +69,7 @@ let legend = L.control({position: 'topright'});
 legend.onAdd = function (mapObj) {
     let div = L.DomUtil.create('div', 'legend');
     // todo: boundaries, build the right url
-    let url = threddsbase + $("#dates").val() + '.ncml' + "?REQUEST=GetLegendGraphic&LAYER=" + $("#variables").val() + "&PALETTE=" + $('#colorscheme').val() + "&COLORSCALERANGE=" + bounds[$("#dates").val()][$("#variables").val()];
+    let url = threddsbase + 'gfs.ncml' + "?REQUEST=GetLegendGraphic&LAYER=" + $("#variables").val() + "&PALETTE=" + $('#colorscheme').val() + "&COLORSCALERANGE=" + bounds[$("#variables").val()];
     div.innerHTML = '<img src="' + url + '" alt="legend" style="width:100%; float:right;">';
     return div
 };
