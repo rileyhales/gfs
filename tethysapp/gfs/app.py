@@ -1,8 +1,6 @@
 from tethys_sdk.base import TethysAppBase, url_map_maker
 from tethys_sdk.app_settings import CustomSetting
 
-# todo make the update data workflow get called as a cron job. copy the cron setup to this app. make it reset thredds
-
 
 class Gfs(TethysAppBase):
     """
@@ -24,7 +22,7 @@ class Gfs(TethysAppBase):
     youtubelink = 'https://youtube.com'
     githublink = 'https://github.com/rileyhales/gfs'
     gfslink = 'https://www.ncdc.noaa.gov/data-access/model-data/model-datasets/global-forcast-system-gfs'
-    version = 'v1.0.5 - 29 May 2019'
+    version = 'v1.1 - 29 May 2019'
 
     def url_maps(self):
         """

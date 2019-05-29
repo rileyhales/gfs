@@ -17,7 +17,7 @@ def setenvironment():
     """
     print('Setting the Environment')
     # determine the most day and hour of the day timestamp of the most recent GFS forecast
-    now = datetime.datetime.now()
+    now = datetime.datetime.utcnow()
     if now.hour > 19:
         fc_time = '18'
         timestamp = now.strftime("%Y%m%d") + fc_time
@@ -40,10 +40,6 @@ def setenvironment():
     configuration = app_configuration()
     threddspath = configuration['threddsdatadir']
     wrksp = configuration['app_wksp_path']
-
-    # write a file with the current timestep
-    with open(os.path.join(wrksp, 'timestep.txt'), 'w') as file:
-        file.write(timestamp)
 
     # if the file structure already exists, quit
     if os.path.exists(os.path.join(threddspath, timestamp)):
@@ -324,7 +320,12 @@ def new_ncml(threddspath, timestamp):
     return
 
 
-def remove_olddata(threddspath, timestamp):
+def cleanup(threddspath, timestamp):
+    # write a file with the current timestep triggering the app to start using this data
+    config = app_configuration()
+    with open(os.path.join(config['app_wksp_path'], 'timestep.txt'), 'w') as file:
+        file.write(timestamp)
+
     # delete anything that isn't the new folder of data or the new gfs.ncml file
     print('\nGetting rid of old data folders')
     files = os.listdir(threddspath)
@@ -332,9 +333,10 @@ def remove_olddata(threddspath, timestamp):
     files.remove('gfs.ncml')
     for file in files:
         try:
-            shutil.rmtree(file)
+            shutil.rmtree(os.path.join(threddspath, file))
         except:
             os.remove(os.path.join(threddspath, file))
+
     print('Done')
     return
 
