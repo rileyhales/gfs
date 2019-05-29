@@ -15,7 +15,8 @@ class Gfs(TethysAppBase):
     package = 'gfs'
     root_url = 'gfs'
     color = '#013220'
-    description = 'Visualizes the most recent GFS forecasts through time-animated maps.\n' \
+    description = 'Downloads the most recent GFS forecast and processes it from a grib to an OGC compliant netCDF.\n' \
+                  'Visualizes the GFS forecasts through time-animated maps.\n' \
                   'Generates timeseries charts and datasets at points or averaged over polygons.\n'
     tags = ''
     enable_feedback = False
@@ -23,7 +24,7 @@ class Gfs(TethysAppBase):
     youtubelink = 'https://youtube.com'
     githublink = 'https://github.com/rileyhales/gfs'
     gfslink = 'https://www.ncdc.noaa.gov/data-access/model-data/model-datasets/global-forcast-system-gfs'
-    version = 'Version 0.9.0 - 28 May 2019'
+    version = 'Version 1.0.0 - 28 May 2019'
 
     def url_maps(self):
         """
@@ -62,7 +63,7 @@ class Gfs(TethysAppBase):
             ),
             UrlMap(
                 name='updateGFS',
-                url='gfs/ajax/updateGFS',
+                url='gfs/update',
                 controller='gfs.ajax.get_newgfsdata'
             )
 

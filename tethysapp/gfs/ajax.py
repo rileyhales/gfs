@@ -76,7 +76,7 @@ def get_newgfsdata(request):
     grib_to_netcdf(fc_tstamp)
     nc_georeference(fc_tstamp)
     new_ncml(fc_tstamp)
-    # set_wmsbounds()
+    set_wmsbounds()
     return JsonResponse({'Finished': 'Finished'})
 
 
