@@ -3,7 +3,7 @@ import datetime
 import math
 import os
 import shutil
-import urllib.request
+import requests
 
 import netCDF4
 import xarray
@@ -81,7 +81,7 @@ def download_gfs(threddspath, timestamp):
     time = datetime.datetime.strftime(time, "%H")
 
     # This is the List of forecast timesteps for 5 days (6-hr increments). download them all
-    fc_steps = ['006', '012', '018', '024']  # , '030', '036', '042', '048', '054', '060', '066', '072', '078', '084', '090', '096', '102', '108', '114', '120']
+    fc_steps = ['006', '012', '018', '024', '030', '036', '042', '048', '054', '060', '066', '072', '078', '084', '090', '096', '102', '108', '114', '120']
 
     # this is where the actual downloads happen. set the url, filepath, then download
     for step in fc_steps:
@@ -90,7 +90,12 @@ def download_gfs(threddspath, timestamp):
         filename = 'gfs_' + timestamp + '_' + step + '.grb'
         print('downloading the file ' + filename)
         filepath = os.path.join(gribsdir, filename)
-        urllib.request.urlretrieve(url, filepath)
+        with requests.get(url, stream=True) as r:
+            r.raise_for_status()
+            with open(filepath, 'wb') as f:
+                for chunk in r.iter_content(chunk_size=8192):
+                    if chunk:  # filter out keep-alive new chunks
+                        f.write(chunk)
 
     print('Finished Downloads')
     return
