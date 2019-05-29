@@ -72,11 +72,14 @@ def get_newgfsdata(request):
     gets called when you press the update gfs button on the main page
     Dependencies: from .gfsdata import *
     """
-    fc_tstamp = download_gfs()
-    grib_to_netcdf(fc_tstamp)
-    nc_georeference(fc_tstamp)
-    new_ncml(fc_tstamp)
-    set_wmsbounds()
+    threddspath, timestamp = setenvironment()
+    download_gfs(threddspath, timestamp)
+    grib_to_netcdf(threddspath, timestamp)
+    nc_georeference(threddspath, timestamp)
+    new_ncml(threddspath, timestamp)
+    remove_olddata(threddspath, timestamp)
+    set_wmsbounds(threddspath, timestamp)
+
     return JsonResponse({'Finished': 'Finished'})
 
 

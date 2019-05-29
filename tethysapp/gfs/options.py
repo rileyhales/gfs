@@ -106,8 +106,8 @@ def geojson_colors():
 
 def currentgfs():
     gfspath = App.get_custom_setting("Local Thredds Folder Path")
-    gfs = os.listdir(os.path.join(gfspath, 'gribs'))
-    gfs = [n for n in gfs if not n.startswith('.')]
+    gfs = os.listdir(os.path.join(gfspath))
+    gfs = [n for n in gfs if n.startswith('20')]
     if len(gfs) > 0:
         gfs = datetime.datetime.strptime(gfs[0], "%Y%m%d%H")
         return "This GFS data from " + datetime.datetime.strftime(gfs, "%b %d, %I%p UTC")  # Month Day at Hour am/pm

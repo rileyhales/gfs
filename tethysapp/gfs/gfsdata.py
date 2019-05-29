@@ -11,81 +11,109 @@ import xarray
 from .options import app_configuration, gfs_variables
 
 
-def download_gfs():
+def setenvironment():
     """
     Dependencies: os, shutil, datetime, urllib.request, app_configuration (options)
     """
-    print('Downloading new grib data')
+    print('Setting the Environment')
     # determine the most day and hour of the day timestamp of the most recent GFS forecast
-    threddsdir = app_configuration()['threddsdatadir']
     now = datetime.datetime.now()
     if now.hour > 19:
         fc_time = '18'
-        fc_tstamp = now.strftime("%Y%m%d") + fc_time
+        timestamp = now.strftime("%Y%m%d") + fc_time
     elif now.hour > 13:
         fc_time = '12'
-        fc_tstamp = now.strftime("%Y%m%d") + fc_time
+        timestamp = now.strftime("%Y%m%d") + fc_time
     elif now.hour > 7:
         fc_time = '06'
-        fc_tstamp = now.strftime("%Y%m%d") + fc_time
+        timestamp = now.strftime("%Y%m%d") + fc_time
     elif now.hour > 1:
         fc_time = '00'
-        fc_tstamp = now.strftime("%Y%m%d") + fc_time
+        timestamp = now.strftime("%Y%m%d") + fc_time
     else:
         fc_time = '18'
         now = now - datetime.timedelta(days=1)
-        fc_tstamp = now.strftime("%Y%m%d") + fc_time
-    print('determined the timestamp to download: ' + fc_tstamp)
+        timestamp = now.strftime("%Y%m%d") + fc_time
+    print('determined the timestamp to download: ' + timestamp)
 
-    # if you already have a folder of data for this timestep, quit this function (you dont need to download it)
-    if os.path.exists(os.path.join(threddsdir, 'gribs', fc_tstamp)):
-        print('You already have the most recent data. Skipping download')
-        return fc_tstamp
+    # set folder paths for the environment
+    threddspath = app_configuration()['threddsdatadir']
 
-    # delete directory of old downloaded files, remake the directories
-    print('deleting old data')
-    gribsdir = os.path.join(threddsdir, 'gribs')
-    shutil.rmtree(gribsdir)
-    os.mkdir(gribsdir)
-    os.chmod(gribsdir, 0o777)
-    downloadpath = os.path.join(gribsdir, fc_tstamp)
-    os.mkdir(downloadpath)
-    os.chmod(downloadpath, 0o777)
+    # if the file structure already exists, quit
+    if os.path.exists(os.path.join(threddspath, timestamp)):
+        return threddspath, timestamp
 
-    # This is the List of forecast timesteps for 2 days (6-hr increments). download them all
-    t_steps = ['006', '012', '018', '024', '030', '036', '042', '048', '054', '060', '066', '072',
-               '078', '084', '090', '096', '102', '108', '114', '120']
-    for step in t_steps:
-        url = 'https://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p25.pl?file=gfs.t' + fc_time + 'z.pgrb2.0p25.f' + \
-              step + "&all_lev=on&all_var=on&leftlon=-180&rightlon=180&toplat=90&bottomlat=-90&dir=%2Fgfs." + fc_tstamp
-        filename = 'gfs_' + fc_tstamp + '_' + step + '.grb'
+    print('Creating new file structure')
+    newdirectory = os.path.join(threddspath, timestamp)
+    os.mkdir(newdirectory)
+    os.chmod(newdirectory, 0o777)
+    newdirectory = os.path.join(threddspath, timestamp, 'gribs')
+    os.mkdir(newdirectory)
+    os.chmod(newdirectory, 0o777)
+    newdirectory = os.path.join(threddspath, timestamp, 'netcdfs')
+    os.mkdir(newdirectory)
+    os.chmod(newdirectory, 0o777)
+    newdirectory = os.path.join(threddspath, timestamp, 'processed')
+    os.mkdir(newdirectory)
+    os.chmod(newdirectory, 0o777)
+
+    print('All done, on to do work')
+    return threddspath, timestamp
+
+
+def download_gfs(threddspath, timestamp):
+    print('\nStarting GFS Grib Downloads')
+    # set filepaths
+    gribsdir = os.path.join(threddspath, timestamp, 'gribs')
+
+    # if you already have a folder with data for this timestep, quit this function (you dont need to download it)
+    if not os.path.exists(gribsdir):
+        print('There is no download folder, you must have already processed the downloads. Skipping download stage.')
+        return threddspath, timestamp
+    # otherwise, remove anything in the folder before starting (in case there was a partial download)
+    else:
+        shutil.rmtree(gribsdir)
+        os.mkdir(gribsdir)
+        os.chmod(gribsdir, 0o777)
+
+    # get the parts of the timestamp to put into the url
+    time = datetime.datetime.strptime(timestamp, "%Y%m%d%H")
+    time = datetime.datetime.strftime(time, "%H")
+
+    # This is the List of forecast timesteps for 5 days (6-hr increments). download them all
+    fc_steps = ['006', '012', '018', '024']  # , '030', '036', '042', '048', '054', '060', '066', '072', '078', '084', '090', '096', '102', '108', '114', '120']
+
+    # this is where the actual downloads happen. set the url, filepath, then download
+    for step in fc_steps:
+        url = 'https://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p25.pl?file=gfs.t' + time + 'z.pgrb2.0p25.f' + \
+              step + "&all_lev=on&all_var=on&leftlon=-180&rightlon=180&toplat=90&bottomlat=-90&dir=%2Fgfs." + timestamp
+        filename = 'gfs_' + timestamp + '_' + step + '.grb'
         print('downloading the file ' + filename)
-        filepath = os.path.join(downloadpath, filename)
+        filepath = os.path.join(gribsdir, filename)
         urllib.request.urlretrieve(url, filepath)
 
-    return fc_tstamp
+    print('Finished Downloads')
+    return
 
 
-def grib_to_netcdf(fc_tstamp):
+def grib_to_netcdf(threddspath, timestamp):
     """
     Dependencies: xarray, netcdf4, os, shutil, app_configuration (options)
     """
-    print('\nStarting grib conversions')
+    print('\nStarting Grib Conversions')
     # setting the environment file paths
-    thredds = app_configuration()['threddsdatadir']
-    gribs = os.path.join(thredds, 'gribs', fc_tstamp)
-    ncfolder = os.path.join(thredds, 'netcdfs')
+    gribs = os.path.join(threddspath, timestamp, 'gribs')
+    netcdfs = os.path.join(threddspath, timestamp, 'netcdfs')
 
     # if you already have gfs netcdfs in the netcdfs folder, quit the function
-    files = os.listdir(ncfolder)
-    ncs = [file for file in files if file.endswith('.nc') and file.startswith('gfs')]
-    if len(ncs) > 10:
-        print('You already converted the gribs to netcdfs. Skipping conversion')
+    if not os.path.exists(gribs):
+        print('There are no gribs to convert, you must have already run this step. Skipping conversion')
         return
-    # delete the old data and remake the folder
-    shutil.rmtree(ncfolder)
-    os.mkdir(ncfolder)
-    os.chmod(ncfolder, 0o777)
+    # otherwise, remove anything in the folder before starting (in case there was a partial conversion)
+    else:
+        shutil.rmtree(netcdfs)
+        os.mkdir(netcdfs)
+        os.chmod(netcdfs, 0o777)
 
     # for each grib file you downloaded, open it, convert it to a netcdf
     files = os.listdir(gribs)
@@ -96,21 +124,18 @@ def grib_to_netcdf(fc_tstamp):
         obj = xarray.open_dataset(path, engine='cfgrib', backend_kwargs={'filter_by_keys': {'typeOfLevel': 'surface'}})
         print('converting it to a netcdf')
         ncname = file.replace('gfs_', '').replace('.grb', '')
-        ncpath = os.path.join(ncfolder, 'gfs_' + ncname + '.nc')
+        ncpath = os.path.join(netcdfs, 'gfs_' + ncname + '.nc')
         obj.to_netcdf(ncpath, mode='w')
         print('converted\n')
 
-    # delete everything in the gribs directory (not just the .grb files in case other things are there)
-    print('deleting the old grib files')
-    files = os.listdir(gribs)
-    for file in files:
-        os.remove(os.path.join(gribs, file))
-    print('finished')
+    # delete the gribs now that you're done with them triggering future runs to skip the download step
+    shutil.rmtree(gribs)
 
+    print('Conversion Completed')
     return
 
 
-def nc_georeference(fc_tstamp):
+def nc_georeference(threddspath, timestamp):
     """
     Description: Intended to make a THREDDS data server compatible netcdf file out of an incorrectly structured
         netcdf file.
@@ -129,24 +154,27 @@ def nc_georeference(fc_tstamp):
     print('\nProcessing the netCDF files')
 
     # setting the environment file paths
-    ncfolder = app_configuration()['threddsdatadir']
-    ncfolder = os.path.join(ncfolder, 'netcdfs')
-    files = os.listdir(ncfolder)
+    netcdfs = os.path.join(threddspath, timestamp, 'netcdfs')
+    processed = os.path.join(threddspath, timestamp, 'processed')
 
     # if you already have processed netcdfs files, skip this and quit the function
-    files = [file for file in files if file.endswith('.nc') and file.startswith('process')]
-    if len(files) > 0:
-        print('There are already processed netcdfs here. Skipping netcdf processing.')
+    if not os.path.exists(netcdfs):
+        print('There are no netcdfs to be converted. Skipping netcdf processing.')
         return
+    # otherwise, remove anything in the folder before starting (in case there was a partial processing)
+    else:
+        shutil.rmtree(processed)
+        os.mkdir(processed)
+        os.chmod(processed, 0o777)
 
     # list the files that need to be converted
-    files = os.listdir(ncfolder)
-    files = [file for file in files if file.endswith('.nc') and not file.startswith('process')]
-    print('There are ' + str(len(files)) + ' compatible files. They are:')
+    net_files = os.listdir(netcdfs)
+    files = [file for file in net_files if file.endswith('.nc')]
+    print('There are ' + str(len(files)) + ' compatible files.')
 
     # read the first file that we'll copy data from in the next blocks of code
     print('Preparing the reference file')
-    path = os.path.join(ncfolder, files[0])
+    path = os.path.join(netcdfs, net_files[0])
     netcdf_obj = netCDF4.Dataset(path, 'r', clobber=False, diskless=True)
 
     # get a dictionary of the dimensions and their size and rename the north/south and east/west ones
@@ -173,8 +201,8 @@ def nc_georeference(fc_tstamp):
     # this is where the files start getting copied
     for file in files:
         print('Working on file ' + str(file))
-        openpath = os.path.join(ncfolder, file)
-        savepath = os.path.join(ncfolder, 'processed_' + file)
+        openpath = os.path.join(netcdfs, file)
+        savepath = os.path.join(processed, 'processed_' + file)
         # open the file to be copied
         original = netCDF4.Dataset(openpath, 'r', clobber=False, diskless=True)
         duplicate = netCDF4.Dataset(savepath, 'w', clobber=True, format='NETCDF4', diskless=False)
@@ -226,8 +254,8 @@ def nc_georeference(fc_tstamp):
             # create the variable
             duplicate.createVariable(varname=variable, datatype='f4', dimensions=dimension)
 
-            # copy the arrays of data and set the metadata/properties
-            date = datetime.datetime.strptime(fc_tstamp, "%Y%m%d%H")
+            # copy the arrays of data and set the timestamp/properties
+            date = datetime.datetime.strptime(timestamp, "%Y%m%d%H")
             date = datetime.datetime.strftime(date, "%Y-%m-%d %H:00:00")
             if variable == 'time':
                 duplicate[variable][:] = [hour]
@@ -236,7 +264,7 @@ def nc_georeference(fc_tstamp):
                 duplicate[variable].units = "hours since " + date
                 duplicate[variable].axis = "T"
                 # also set the begin date of this data
-                duplicate[variable].begin_date = fc_tstamp
+                duplicate[variable].begin_date = timestamp
             if variable == 'lat':
                 duplicate[variable][:] = original[variable][:]
                 duplicate[variable].axis = "Y"
@@ -247,23 +275,26 @@ def nc_georeference(fc_tstamp):
                 duplicate[variable][:] = original[variable][:]
                 duplicate[variable].axis = "lat lon"
             duplicate[variable].long_name = original[variable].long_name
-            duplicate[variable].begin_date = fc_tstamp
-            duplicate[variable].units = original[variable].unit
+            duplicate[variable].begin_date = timestamp
+            duplicate[variable].units = original[variable].units
 
         # close the files, delete the one you just did, start again
         original.close()
         duplicate.sync()
         duplicate.close()
-        os.remove(openpath)
 
+    # delete the netcdfs now that we're done with them triggering future runs to skip this step
+    shutil.rmtree(netcdfs)
+
+    print('Finished File Conversions')
     return
 
 
-def new_ncml(fc_tstamp):
+def new_ncml(threddspath, timestamp):
     print('\nWriting a new ncml file for this date')
-    ncfolder = app_configuration()['threddsdatadir']
-    ncml = os.path.join(ncfolder, 'gfs.ncml')
-    date = datetime.datetime.strptime(fc_tstamp, "%Y%m%d%H")
+    # create a new ncml file by filling in the template with the right dates and writing to a file
+    ncml = os.path.join(threddspath, 'gfs.ncml')
+    date = datetime.datetime.strptime(timestamp, "%Y%m%d%H")
     date = datetime.datetime.strftime(date, "%Y-%m-%d %H:00:00")
     with open(ncml, 'w') as file:
         file.write(
@@ -274,26 +305,39 @@ def new_ncml(fc_tstamp):
             '        <values start="0" increment="6" />\n'
             '    </variable>\n'
             '    <aggregation dimName="time" type="joinExisting" recheckEvery="1 hour">\n'
-            '        <scan location="netcdfs/"/>\n'
+            '        <scan location="' + timestamp + '/processed/"/>\n'
             '    </aggregation>\n'
             '</netcdf>'
         )
-    print('completed ncml')
+    print('Wrote New .ncml')
     return
 
 
-def set_wmsbounds():
+def remove_olddata(threddspath, timestamp):
+    # delete anything that isn't the new folder of data or the new gfs.ncml file
+    print('\nGetting rid of old data folders')
+    files = os.listdir(threddspath)
+    files.remove(timestamp)
+    files.remove('gfs.ncml')
+    for file in files:
+        try:
+            shutil.rmtree(file)
+        except:
+            os.remove(os.path.join(threddspath, file))
+    print('Done')
+    return
+
+
+def set_wmsbounds(threddspath, timestamp):
     """
     Dynamically defines exact boundaries for the legend and wms so that they are synchronized
     Dependencies: netcdf4, os, math, numpy
     """
     print('\nSetting the WMS bounds')
-    boundsfile = os.path.join(os.path.dirname(__file__), 'public', 'js', 'bounds.js')
-    print(boundsfile)
-    ncfolder = app_configuration()['threddsdatadir']
-    ncfolder = os.path.join(ncfolder, 'netcdfs')
-    files = os.listdir(ncfolder)
-    files = [file for file in files if file.endswith('.nc') and file.startswith('process')][0]
+    # get a list of files to
+    ncfolder = os.path.join(threddspath, timestamp, 'processed')
+    ncs = os.listdir(ncfolder)
+    files = [file for file in ncs if file.startswith('processed')][0]
 
     # setup the dictionary of values to return
     bounds = {}

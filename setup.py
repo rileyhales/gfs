@@ -14,7 +14,7 @@ dependencies = ['netCDF4', 'numpy', 'pandas', 'xarray']
 
 setup(
     name=release_package,
-    version='1.0.1',
+    version='1.0.2',
     tags='',
     description='',
     long_description='',
