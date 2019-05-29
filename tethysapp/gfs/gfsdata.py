@@ -19,7 +19,7 @@ def setenvironment():
     # determine the most day and hour of the day timestamp of the most recent GFS forecast
     now = datetime.datetime.now()
     if now.hour > 19:
-        fc_time = '18'
+        fc_time = '12'
         timestamp = now.strftime("%Y%m%d") + fc_time
     elif now.hour > 13:
         fc_time = '12'

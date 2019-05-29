@@ -4,11 +4,9 @@ This is a Tethys 2/3 compatible app that visualizes GFS data from NOAA. The GFS 
 © [Riley Hales](http://rileyhales.com), 2019. Based on the [GLDAS Data Visualizer](https://github.com/rileyhales/gldas) (Hales, 2018) Developed at the BYU Hydroinformatics Lab.
 
 ## App Features
-Since tethys environments by default do not draw from the conda-forge channel, you will need to run these commands before installing the app.
+You will need to run this command before installing the app to install the dependencies.
 ~~~~
-conda install -c conda-forge rasterstats
-conda install -c conda-forge rasterio
-conda install -c conda-forge cfgrib
+conda install -c conda-forge netCDF4 numpy pandas xarray rasterstats rasterio cfgrib
 ~~~~
 
 ## Installation Instructions
@@ -30,17 +28,10 @@ Reset the server, then attempt to log in through the web interface as an adminis
 ### 2 Set up a Thredds Server (GFS Raster Images)
 Refer to the documentation for Thredds to set up an instance of Thredds on your tethys server.
 
-In the public folder where your datasets are stored, create a new folder called ````gfs````. This app is designed to navigate a specially organized directory containing the gfs data. Inside this folder, create 2 more folders named ````netcdfs```` and ````gribs````. Leave these folders empty. If you did it correctly, your folder should look like this:
-~~~~
-gfs
---->gribs
-	---><empty directory>
---->netcdfs
-	---><empty directory>
-~~~~
-You need to be sure that the tethys user has permissions to modify these folders since the app, through the tethys user, will be modifying these files.
+In the public folder where your datasets are stored, create a new folder called ````gfs````. This app is designed to create and then navigate a specially organized directory containing the gfs data. You need to be sure that the tethys user has permissions to modify these folders since the app, through the tethys user, will be modifying these files.
 ~~~~
 sudo chown -Rv tethys:tethys gfs
+sudo chmod 777 -Rv *
 ~~~~ 
 
 You will also need to modify Thredds' settings files to enable WMS services and support for netCDF files on your server. In the folder where you installed Thredds, there should be a file called ```catalog.xml```. 

@@ -26,13 +26,13 @@ def pointchart(data):
 
     # environment settings
     configs = app_configuration()
-    data_dir = configs['threddsdatadir']
+    path = configs['threddsdatadir']
+    path = os.path.join(path, App.timestamp, 'processed')
 
     # return items
     data['values'] = []
 
     # list the netcdfs to be processed
-    path = os.path.join(data_dir, 'netcdfs')
     allfiles = os.listdir(path)
     files = [nc for nc in allfiles if nc.endswith('.nc')]
     files.sort()
@@ -80,13 +80,13 @@ def polychart(data):
 
     # environment settings
     configs = app_configuration()
-    data_dir = configs['threddsdatadir']
+    path = configs['threddsdatadir']
+    path = os.path.join(path, App.timestamp, 'processed')
 
     # return items
     data['values'] = []
 
     # list the netcdfs to be processed
-    path = os.path.join(data_dir, 'netcdfs')
     allfiles = os.listdir(path)
     files = [nc for nc in allfiles if nc.endswith('.nc')]
     files.sort()
@@ -140,14 +140,14 @@ def shpchart(data):
 
     # environment settings
     configs = app_configuration()
-    data_dir = configs['threddsdatadir']
+    path = configs['threddsdatadir']
+    path = os.path.join(path, App.timestamp, 'processed')
     wrkpath = configs['app_wksp_path']
 
     # return items
     data['values'] = []
 
     # list the netcdfs to be processed
-    path = os.path.join(data_dir, 'netcdfs')
     allfiles = os.listdir(path)
     files = [nc for nc in allfiles if nc.endswith('.nc')]
     files.sort()

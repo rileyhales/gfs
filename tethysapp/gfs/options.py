@@ -110,5 +110,6 @@ def currentgfs():
     gfs = [n for n in gfs if n.startswith('20')]
     if len(gfs) > 0:
         gfs = datetime.datetime.strptime(gfs[0], "%Y%m%d%H")
+        App.timestamp = gfs.strftime("%Y%m%d%H")
         return "This GFS data from " + datetime.datetime.strftime(gfs, "%b %d, %I%p UTC")  # Month Day at Hour am/pm
     return "No GFS data detected"
