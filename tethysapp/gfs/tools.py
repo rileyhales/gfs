@@ -12,10 +12,6 @@ from .app import Gfs as App
 from .options import app_configuration
 
 
-# todo change the file filtering process to get the right netcdf directory
-# todo in shpchart, add resampling by factor of ~15 before averaging
-# todo remove the time factor for filtering files and creating timeseries. Get from filename
-
 def pointchart(data):
     """
     Description: generates a timeseries for a given point and given variable defined by the user.
@@ -26,7 +22,6 @@ def pointchart(data):
     """
     # input parameters
     var = str(data['variable'])
-    tperiod = data['time']
     coords = data['coords']
 
     # environment settings
@@ -37,12 +32,9 @@ def pointchart(data):
     data['values'] = []
 
     # list the netcdfs to be processed
-    path = os.path.join(data_dir, 'raw')
+    path = os.path.join(data_dir, 'netcdfs')
     allfiles = os.listdir(path)
-    if tperiod == 'alltimes':
-        files = [nc for nc in allfiles if nc.startswith("GLDAS_NOAH025_M.A")]
-    else:
-        files = [nc for nc in allfiles if nc.startswith("GLDAS_NOAH025_M.A" + str(tperiod))]
+    files = [nc for nc in allfiles if nc.endswith('.nc')]
     files.sort()
 
     # get a list of the latitudes and longitudes and the units
@@ -58,15 +50,14 @@ def pointchart(data):
     # extract values at each timestep
     for nc in files:
         # get the time value for each file
-        dataset = netCDF4.Dataset(path + '/' + nc, 'r')
+        dataset = netCDF4.Dataset(os.path.join(path, nc), 'r')
         t_value = (dataset['time'].__dict__['begin_date'])
-        t_value = datetime.datetime.strptime(t_value, "%Y%m%d")
+        t_value = datetime.datetime.strptime(t_value, "%Y%m%d%H")
         t_step = calendar.timegm(t_value.utctimetuple()) * 1000
         # slice the array at the area you want
-        for time, var in enumerate(dataset['time'][:]):
-            # slice the array, drop nan values, get the mean, append to list of values
-            val = float(dataset[var][0, adj_lat_ind, adj_lon_ind].data)
-            data['values'].append((t_step, val, t_value.month, t_value.year))
+        val = float(dataset[var][0, adj_lat_ind, adj_lon_ind].data)
+        print(val)
+        data['values'].append((t_step, val, t_value.month, t_value.year))
         dataset.close()
 
     return data
@@ -82,7 +73,6 @@ def polychart(data):
     """
     # input parameters
     var = str(data['variable'])
-    tperiod = data['time']
     coords = data['coords'][0]  # 5x2 array 1 row/[lat,lon]/corner (1st repeated), clockwise from bottom-left
 
     # environment settings
@@ -93,12 +83,9 @@ def polychart(data):
     data['values'] = []
 
     # list the netcdfs to be processed
-    path = os.path.join(data_dir, 'raw')
+    path = os.path.join(data_dir, 'netcdfs')
     allfiles = os.listdir(path)
-    if tperiod == 'alltimes':
-        files = [nc for nc in allfiles if nc.startswith("GLDAS_NOAH025_M.A")]
-    else:
-        files = [nc for nc in allfiles if nc.startswith("GLDAS_NOAH025_M.A" + str(tperiod))]
+    files = [nc for nc in allfiles if nc.endswith('.nc')]
     files.sort()
 
     # get a list of the latitudes and longitudes and the units
@@ -118,7 +105,7 @@ def polychart(data):
         # set the time value for each file
         dataset = netCDF4.Dataset(path + '/' + nc, 'r')
         t_value = (dataset['time'].__dict__['begin_date'])
-        t_value = datetime.datetime.strptime(t_value, "%Y%m%d")
+        t_value = datetime.datetime.strptime(t_value, "%Y%m%d%H")
         t_step = calendar.timegm(t_value.utctimetuple()) * 1000
         for time, var in enumerate(dataset['time'][:]):
             # slice the array, drop nan values, get the mean, append to list of values
@@ -144,7 +131,6 @@ def shpchart(data):
     # input parameters
     var = str(data['variable'])
     region = data['region']
-    tperiod = data['time']
 
     # environment settings
     configs = app_configuration()
@@ -155,12 +141,9 @@ def shpchart(data):
     data['values'] = []
 
     # list the netcdfs to be processed
-    path = os.path.join(data_dir, 'raw')
+    path = os.path.join(data_dir, 'netcdfs')
     allfiles = os.listdir(path)
-    if tperiod == 'alltimes':
-        files = [nc for nc in allfiles if nc.startswith("GLDAS_NOAH025_M.A")]
-    else:
-        files = [nc for nc in allfiles if nc.startswith("GLDAS_NOAH025_M.A" + str(tperiod))]
+    files = [nc for nc in allfiles if nc.endswith('.nc')]
     files.sort()
 
     # Remove old geotiffs before filling it
@@ -185,7 +168,7 @@ def shpchart(data):
 
         # create the timesteps for the highcharts plot
         t_value = (nc_obj['time'].__dict__['begin_date'])
-        t_step = datetime.datetime.strptime(t_value, "%Y%m%d")
+        t_step = datetime.datetime.strptime(t_value, "%Y%m%d%H")
         time = calendar.timegm(t_step.utctimetuple()) * 1000, t_step.month, t_step.year
 
         # file paths and settings

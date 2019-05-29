@@ -16,29 +16,30 @@ def download_gfs():
     Dependencies: os, shutil, datetime, urllib.request, app_configuration (options)
     """
     print('Downloading new grib data')
-    # download the most recently made gfs forecast (fc = forecast)
+    # determine the most day and hour of the day timestamp of the most recent GFS forecast
     threddsdir = app_configuration()['threddsdatadir']
     now = datetime.datetime.now()
     if now.hour > 19:
         fc_time = '18'
-        fc_tstamp = str(now.strftime("%Y%m%d")) + fc_time
+        fc_tstamp = now.strftime("%Y%m%d") + fc_time
     elif now.hour > 13:
         fc_time = '12'
-        fc_tstamp = str(now.strftime("%Y%m%d")) + fc_time
+        fc_tstamp = now.strftime("%Y%m%d") + fc_time
     elif now.hour > 7:
         fc_time = '06'
-        fc_tstamp = str(now.strftime("%Y%m%d")) + fc_time
+        fc_tstamp = now.strftime("%Y%m%d") + fc_time
     elif now.hour > 1:
         fc_time = '00'
-        fc_tstamp = str(now.strftime("%Y%m%d")) + fc_time
+        fc_tstamp = now.strftime("%Y%m%d") + fc_time
     else:
-        # todo make this go back to the previous day's 18 forecast with timedelta
-        fc_time = '00'
-        fc_tstamp = str(now.strftime("%Y%m%d")) + fc_time
+        fc_time = '18'
+        now = now - datetime.timedelta(days=1)
+        fc_tstamp = now.strftime("%Y%m%d") + fc_time
     print('determined the timestamp to download: ' + fc_tstamp)
 
     # if you already have a folder of data for this timestep, quit this function (you dont need to download it)
-    if os.path.exists(os.path.join(threddsdir, 'gribs', fc_tstamp)):
+    tmp = os.path.join(threddsdir, 'gribs', fc_tstamp)
+    if os.path.exists(tmp) and len(os.listdir(tmp)) > 5:
         print('You already have the most recent data. Skipping download')
         return fc_tstamp
 
@@ -49,11 +50,12 @@ def download_gfs():
     downloadpath = os.path.join(threddsdir, 'gribs', fc_tstamp)
     os.mkdir(downloadpath)
 
-    # This is the List of forecast timesteps for 2 days (6-hr increments)
-    t_steps = ['006', '012', '018', '024', '030', '036', '042', '048', '054', '060']
+    # This is the List of forecast timesteps for 2 days (6-hr increments). download them all
+    t_steps = ['006', '012', '018', '024', '030', '036', '042', '048', '054', '060', '066', '072',
+               '078', '084', '090', '096', '102', '108', '114', '120']
     for step in t_steps:
         url = 'https://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p25.pl?file=gfs.t' + fc_time + 'z.pgrb2.0p25.f' + step + \
-              "&all_lev=on&all_var=on&subregion=&leftlon=-180&rightlon=180&toplat=90&bottomlat=-90&dir=%2Fgfs." + fc_tstamp
+              "&all_lev=on&all_var=on&&leftlon=-180&rightlon=180&toplat=90&bottomlat=-90&dir=%2Fgfs." + fc_tstamp
         filename = 'gfs_' + fc_tstamp + '_' + step + '.grb'
         print('downloading the file ' + filename)
         filepath = os.path.join(downloadpath, filename)
@@ -67,15 +69,22 @@ def grib_to_netcdf(fc_tstamp):
     Dependencies: xarray, netcdf4, os, shutil, app_configuration (options)
     """
     print('\nStarting grib conversions')
+    # setting the environment file paths
     thredds = app_configuration()['threddsdatadir']
     gribs = os.path.join(thredds, 'gribs', fc_tstamp)
     ncfolder = os.path.join(thredds, 'netcdfs')
-    if len(os.listdir(ncfolder)) > 2:
+
+    # if you already have gfs netcdfs in the netcdfs folder, quit the function
+    files = os.listdir(ncfolder)
+    ncs = [file for file in files if file.endswith('.nc') and file.startswith('gfs')]
+    if len(os.listdir(ncfolder)) == 10:
         print('You already converted the gribs to netcdfs. Skipping conversion')
         return
+    # delete the old data and remake the folder
     shutil.rmtree(ncfolder)
     os.mkdir(ncfolder)
 
+    # for each grib file you downloaded, open it, convert it to a netcdf
     files = os.listdir(gribs)
     files = [grib for grib in files if grib.endswith('.grb')]
     for file in files:
@@ -88,6 +97,7 @@ def grib_to_netcdf(fc_tstamp):
         obj.to_netcdf(ncpath, mode='w')
         print('converted\n')
 
+    # delete everything in the gribs directory (not just the .grb files in case other things are there)
     print('deleting the old grib files')
     files = os.listdir(gribs)
     for file in files:
@@ -114,18 +124,24 @@ def nc_georeference(fc_tstamp):
     7. The variable property coordinates = "lat lon" or else is blank/doesn't exist
     """
     print('\nProcessing the netCDF files')
+
+    # setting the environment file paths
     ncfolder = app_configuration()['threddsdatadir']
     ncfolder = os.path.join(ncfolder, 'netcdfs')
     files = os.listdir(ncfolder)
+
+    # if you already have processed netcdfs files, skip this and quit the function
     files = [file for file in files if file.endswith('.nc') and file.startswith('process')]
     if len(files) > 0:
         print('There are already processed netcdfs here. Skipping netcdf processing.')
         return
+
+    # list the files that need to be converted
     files = os.listdir(ncfolder)
     files = [file for file in files if file.endswith('.nc') and not file.startswith('process')]
     print('There are ' + str(len(files)) + ' compatible files. They are:')
 
-    # read the first file in the list to get some data
+    # read the first file that we'll copy data from in the next blocks of code
     print('Preparing the reference file')
     path = os.path.join(ncfolder, files[0])
     netcdf_obj = netCDF4.Dataset(path, 'r', clobber=False, diskless=True)
@@ -144,12 +160,11 @@ def nc_georeference(fc_tstamp):
     del variables['valid_time'], variables['step'], variables['latitude'], variables['longitude'], variables['surface']
     variables = variables.keys()
 
-    # min lat and lon and the interval between values
+    # min lat and lon and the interval between values (these are static values
     lat_min = -90
     lon_min = -180
     lat_step = .25
     lon_step = .25
-
     netcdf_obj.close()
 
     # this is where the files start getting copied
@@ -177,17 +192,16 @@ def nc_georeference(fc_tstamp):
         duplicate['lat'][:] = lat_list
         duplicate['lon'][:] = lon_list
 
-        # set the attributes for lat and lon individually
+        # set the attributes for lat and lon (except fill value, you just can't copy it)
         for attr in original['latitude'].__dict__:
             if attr != "_FillValue":
                 duplicate['lat'].setncattr(attr, original['latitude'].__dict__[attr])
-
         for attr in original['longitude'].__dict__:
             if attr != "_FillValue":
                 duplicate['lon'].setncattr(attr, original['longitude'].__dict__[attr])
 
-        time = 6
         # copy the rest of the variables
+        hour = 6
         for variable in variables:
             # check to use the lat/lon dimension names
             dimension = original[variable].dimensions
@@ -209,31 +223,38 @@ def nc_georeference(fc_tstamp):
             # create the variable
             duplicate.createVariable(varname=variable, datatype='f4', dimensions=dimension)
 
-            # copy the arrays of data
+            # copy the arrays of data and set the metadata/properties
             date = datetime.datetime.strptime(fc_tstamp, "%Y%m%d%H")
             date = datetime.datetime.strftime(date, "%Y-%m-%d %H:00:00")
             if variable == 'time':
-                duplicate[variable][:] = [time]
-                time = time + 6
+                duplicate[variable][:] = [hour]
+                hour = hour + 6
                 duplicate[variable].long_name = original[variable].long_name
                 duplicate[variable].units = "hours since " + date
                 duplicate[variable].axis = "T"
+                # also set the begin date of this data
+                begin = datetime.datetime.strptime(fc_tstamp, "%Y%m%d%H")
+                begin = begin + datetime.timedelta(hours=hour)
+                begin = datetime.datetime.strftime(begin, "%Y%m%d%H")
+                duplicate[variable].begin_date = begin
             if variable == 'lat':
                 duplicate[variable][:] = original[variable][:]
                 duplicate[variable].long_name = original[variable].long_name
+                duplicate[variable].begin_date = fc_tstamp
                 duplicate[variable].units = original[variable].units
                 duplicate[variable].axis = "Y"
             if variable == 'lon':
                 duplicate[variable][:] = original[variable][:]
                 duplicate[variable].long_name = original[variable].long_name
+                duplicate[variable].begin_date = fc_tstamp
                 duplicate[variable].units = original[variable].units
                 duplicate[variable].axis = "X"
             else:
                 duplicate[variable][:] = original[variable][:]
                 duplicate[variable].long_name = original[variable].long_name
+                duplicate[variable].begin_date = fc_tstamp
                 duplicate[variable].units = original[variable].units
                 duplicate[variable].axis = "lat lon"
-
 
         # close the files, delete the one you just did, start again
         original.close()
@@ -245,7 +266,6 @@ def nc_georeference(fc_tstamp):
 
 
 def new_ncml(fc_tstamp):
-    # todo fill in the correct gaps, write the file to the thredds directory
     print('\nWriting a new ncml file for this date')
     ncfolder = app_configuration()['threddsdatadir']
     ncml = os.path.join(ncfolder, 'gfs.ncml')
@@ -287,7 +307,6 @@ def set_wmsbounds():
     for variable in variables:
         bounds[variables[variable]] = ''
 
-    # for nc in files:
     path = os.path.join(ncfolder, files)
     dataset = netCDF4.Dataset(path, 'r')
     print('working on file ' + path)
@@ -309,8 +328,6 @@ def set_wmsbounds():
 
         bounds[variables[variable]] = str(minimum) + ',' + str(maximum)
     dataset.close()
-    print(bounds)
-
 
     print('\ndone checking for max/min. writing the file')
     boundsfile = os.path.join(os.path.dirname(__file__), 'public', 'js', 'bounds.js')

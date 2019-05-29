@@ -72,13 +72,11 @@ def get_newgfsdata(request):
     gets called when you press the update gfs button on the main page
     Dependencies: from .gfsdata import *
     """
-    # todo make a way for this function to get called every day so that the data is always the most current?
     fc_tstamp = download_gfs()
     grib_to_netcdf(fc_tstamp)
     nc_georeference(fc_tstamp)
     new_ncml(fc_tstamp)
-    set_wmsbounds()
-
+    # set_wmsbounds()
     return JsonResponse({'Finished': 'Finished'})
 
 

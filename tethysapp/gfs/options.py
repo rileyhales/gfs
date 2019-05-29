@@ -105,7 +105,6 @@ def geojson_colors():
 
 
 def currentgfs():
-    # todo make this read the folder of netcdfs rather than the gribs because nc is what is on the map.
     gfspath = App.get_custom_setting("Local Thredds Folder Path")
     gfs = os.listdir(os.path.join(gfspath, 'gribs'))
     gfs = [n for n in gfs if not n.startswith('.')]
