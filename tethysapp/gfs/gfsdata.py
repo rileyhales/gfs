@@ -44,10 +44,13 @@ def download_gfs():
 
     # delete directory of old downloaded files, remake the directories
     print('deleting old data')
-    shutil.rmtree(os.path.join(threddsdir, 'gribs'))
-    os.mkdir(os.path.join(threddsdir, 'gribs'))
-    downloadpath = os.path.join(threddsdir, 'gribs', fc_tstamp)
+    gribsdir = os.path.join(threddsdir, 'gribs')
+    shutil.rmtree(gribsdir)
+    os.mkdir(gribsdir)
+    os.chmod(gribsdir, 0o777)
+    downloadpath = os.path.join(gribsdir, fc_tstamp)
     os.mkdir(downloadpath)
+    os.chmod(downloadpath, 0o777)
 
     # This is the List of forecast timesteps for 2 days (6-hr increments). download them all
     t_steps = ['006', '012', '018', '024', '030', '036', '042', '048', '054', '060', '066', '072',
@@ -82,6 +85,7 @@ def grib_to_netcdf(fc_tstamp):
     # delete the old data and remake the folder
     shutil.rmtree(ncfolder)
     os.mkdir(ncfolder)
+    os.chmod(ncfolder, 0o777)
 
     # for each grib file you downloaded, open it, convert it to a netcdf
     files = os.listdir(gribs)
@@ -97,11 +101,11 @@ def grib_to_netcdf(fc_tstamp):
         print('converted\n')
 
     # delete everything in the gribs directory (not just the .grb files in case other things are there)
-    # print('deleting the old grib files')
-    # files = os.listdir(gribs)
-    # for file in files:
-    #     os.remove(os.path.join(gribs, file))
-    # print('finished')
+    print('deleting the old grib files')
+    files = os.listdir(gribs)
+    for file in files:
+        os.remove(os.path.join(gribs, file))
+    print('finished')
 
     return
 

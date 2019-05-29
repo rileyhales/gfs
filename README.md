@@ -1,7 +1,7 @@
 # GFS Visualizer Tool Documentation
 This is a Tethys 2/3 compatible app that visualizes GFS data from NOAA. The GFS model produces a new forecast every 6 Hours at 00, 06, 12, 18 UTC each day. Each forecast is divided into 6-hour timesteps and covers the next 16 days. Each of those 6-hour timesteps is downloaded as a separate GRIB2 file of about 600MB. To show this data as a time animated map, you need to convert them to netCDF files. 
 
-© [Riley Hales](http://rileyhales.com), 2019. Based on the [GLDAS Data Visualizer](https://github.com/rileyhales/gfs) (Hales, 2018) Developed at the BYU Hydroinformatics Lab.
+© [Riley Hales](http://rileyhales.com), 2019. Based on the [GLDAS Data Visualizer](https://github.com/rileyhales/gldas) (Hales, 2018) Developed at the BYU Hydroinformatics Lab.
 
 ## App Features
 Since tethys environments by default do not draw from the conda-forge channel, you will need to run these commands before installing the app.
@@ -37,6 +37,10 @@ gfs
 	---><empty directory>
 --->netcdfs
 	---><empty directory>
+~~~~
+You need to be sure that the tethys user has permissions to modify these folders since the app, through the tethys user, will be modifying these files.
+~~~~
+sudo chown -Rv tethys:tethys gfs
 ~~~~ 
 
 You will also need to modify Thredds' settings files to enable WMS services and support for netCDF files on your server. In the folder where you installed Thredds, there should be a file called ```catalog.xml```. 

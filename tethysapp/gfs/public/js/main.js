@@ -76,7 +76,7 @@ updateGEOJSON();                        // asynchronously get geoserver wfs/geoj
 $("#updategfsbtn").click(function () {
     if (confirm('This may take several minutes and you may not have access to the app while this process completes. Are you sure you want to update the GFS data?')) {
         $.ajax({
-            url: '/apps/gfs/ajax/updateGFS/',
+            url: '/apps/gfs/update/',
             async: false,
             data: '',
             dataType: 'json',

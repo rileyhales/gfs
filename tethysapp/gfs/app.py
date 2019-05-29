@@ -24,7 +24,7 @@ class Gfs(TethysAppBase):
     youtubelink = 'https://youtube.com'
     githublink = 'https://github.com/rileyhales/gfs'
     gfslink = 'https://www.ncdc.noaa.gov/data-access/model-data/model-datasets/global-forcast-system-gfs'
-    version = 'Version 1.0.0 - 28 May 2019'
+    version = 'v1.0.1 - 29 May 2019'
 
     def url_maps(self):
         """
