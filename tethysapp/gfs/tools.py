@@ -27,7 +27,7 @@ def pointchart(data):
     # environment settings
     configs = app_configuration()
     path = configs['threddsdatadir']
-    path = os.path.join(path, App.timestamp, 'processed')
+    path = os.path.join(path, configs['timestamp'], 'processed')
 
     # return items
     data['values'] = []
@@ -81,7 +81,7 @@ def polychart(data):
     # environment settings
     configs = app_configuration()
     path = configs['threddsdatadir']
-    path = os.path.join(path, App.timestamp, 'processed')
+    path = os.path.join(path, configs['timestamp'], 'processed')
 
     # return items
     data['values'] = []
@@ -141,7 +141,7 @@ def shpchart(data):
     # environment settings
     configs = app_configuration()
     path = configs['threddsdatadir']
-    path = os.path.join(path, App.timestamp, 'processed')
+    path = os.path.join(path, configs['timestamp'], 'processed')
     wrkpath = configs['app_wksp_path']
 
     # return items

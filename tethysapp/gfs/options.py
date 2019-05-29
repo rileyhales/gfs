@@ -13,7 +13,13 @@ def app_configuration():
         'threddsdatadir': App.get_custom_setting("Local Thredds Folder Path"),
         'threddsurl': App.get_custom_setting("Thredds WMS URL"),
         'geoserverurl': App.get_custom_setting("Geoserver Workspace URL"),
+        'timestamp': gettimestamp(),
     }
+
+
+def gettimestamp():
+    with open(os.path.join(App.get_app_workspace().path, 'timestep.txt'), 'r') as file:
+        return file.read()
 
 
 def gfs_variables():
@@ -105,11 +111,11 @@ def geojson_colors():
 
 
 def currentgfs():
-    gfspath = App.get_custom_setting("Local Thredds Folder Path")
-    gfs = os.listdir(os.path.join(gfspath))
-    gfs = [n for n in gfs if n.startswith('20')]
-    if len(gfs) > 0:
-        gfs = datetime.datetime.strptime(gfs[0], "%Y%m%d%H")
-        App.timestamp = gfs.strftime("%Y%m%d%H")
-        return "This GFS data from " + datetime.datetime.strftime(gfs, "%b %d, %I%p UTC")  # Month Day at Hour am/pm
+    # if there is actually data in the app, then read the file with the timestamp on it
+    path = App.get_custom_setting("Local Thredds Folder Path")
+    timestamp = gettimestamp()
+    path = os.path.join(path, timestamp)
+    if os.path.exists(path):
+        timestamp = datetime.datetime.strptime(timestamp, "%Y%m%d%H")
+        return "This GFS data from " + datetime.datetime.strftime(timestamp, "%b %d, %I%p UTC")
     return "No GFS data detected"
