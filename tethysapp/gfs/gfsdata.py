@@ -38,8 +38,7 @@ def download_gfs():
     print('determined the timestamp to download: ' + fc_tstamp)
 
     # if you already have a folder of data for this timestep, quit this function (you dont need to download it)
-    tmp = os.path.join(threddsdir, 'gribs', fc_tstamp)
-    if os.path.exists(tmp) and len(os.listdir(tmp)) > 5:
+    if os.path.exists(os.path.join(threddsdir, 'gribs', fc_tstamp)):
         print('You already have the most recent data. Skipping download')
         return fc_tstamp
 
@@ -54,8 +53,8 @@ def download_gfs():
     t_steps = ['006', '012', '018', '024', '030', '036', '042', '048', '054', '060', '066', '072',
                '078', '084', '090', '096', '102', '108', '114', '120']
     for step in t_steps:
-        url = 'https://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p25.pl?file=gfs.t' + fc_time + 'z.pgrb2.0p25.f' + step + \
-              "&all_lev=on&all_var=on&&leftlon=-180&rightlon=180&toplat=90&bottomlat=-90&dir=%2Fgfs." + fc_tstamp
+        url = 'https://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p25.pl?file=gfs.t' + fc_time + 'z.pgrb2.0p25.f' + \
+              step + "&all_lev=on&all_var=on&leftlon=-180&rightlon=180&toplat=90&bottomlat=-90&dir=%2Fgfs." + fc_tstamp
         filename = 'gfs_' + fc_tstamp + '_' + step + '.grb'
         print('downloading the file ' + filename)
         filepath = os.path.join(downloadpath, filename)
@@ -77,7 +76,7 @@ def grib_to_netcdf(fc_tstamp):
     # if you already have gfs netcdfs in the netcdfs folder, quit the function
     files = os.listdir(ncfolder)
     ncs = [file for file in files if file.endswith('.nc') and file.startswith('gfs')]
-    if len(os.listdir(ncfolder)) == 10:
+    if len(ncs) > 10:
         print('You already converted the gribs to netcdfs. Skipping conversion')
         return
     # delete the old data and remake the folder
@@ -98,11 +97,11 @@ def grib_to_netcdf(fc_tstamp):
         print('converted\n')
 
     # delete everything in the gribs directory (not just the .grb files in case other things are there)
-    print('deleting the old grib files')
-    files = os.listdir(gribs)
-    for file in files:
-        os.remove(os.path.join(gribs, file))
-    print('finished')
+    # print('deleting the old grib files')
+    # files = os.listdir(gribs)
+    # for file in files:
+    #     os.remove(os.path.join(gribs, file))
+    # print('finished')
 
     return
 
@@ -233,28 +232,19 @@ def nc_georeference(fc_tstamp):
                 duplicate[variable].units = "hours since " + date
                 duplicate[variable].axis = "T"
                 # also set the begin date of this data
-                begin = datetime.datetime.strptime(fc_tstamp, "%Y%m%d%H")
-                begin = begin + datetime.timedelta(hours=hour)
-                begin = datetime.datetime.strftime(begin, "%Y%m%d%H")
-                duplicate[variable].begin_date = begin
+                duplicate[variable].begin_date = fc_tstamp
             if variable == 'lat':
                 duplicate[variable][:] = original[variable][:]
-                duplicate[variable].long_name = original[variable].long_name
-                duplicate[variable].begin_date = fc_tstamp
-                duplicate[variable].units = original[variable].units
                 duplicate[variable].axis = "Y"
             if variable == 'lon':
                 duplicate[variable][:] = original[variable][:]
-                duplicate[variable].long_name = original[variable].long_name
-                duplicate[variable].begin_date = fc_tstamp
-                duplicate[variable].units = original[variable].units
                 duplicate[variable].axis = "X"
             else:
                 duplicate[variable][:] = original[variable][:]
-                duplicate[variable].long_name = original[variable].long_name
-                duplicate[variable].begin_date = fc_tstamp
-                duplicate[variable].units = original[variable].units
                 duplicate[variable].axis = "lat lon"
+            duplicate[variable].long_name = original[variable].long_name
+            duplicate[variable].begin_date = fc_tstamp
+            duplicate[variable].units = original[variable].unit
 
         # close the files, delete the one you just did, start again
         original.close()

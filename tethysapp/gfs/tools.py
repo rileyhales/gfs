@@ -48,16 +48,19 @@ def pointchart(data):
     dataset.close()
 
     # extract values at each timestep
+    i = 1
     for nc in files:
         # get the time value for each file
         dataset = netCDF4.Dataset(os.path.join(path, nc), 'r')
-        t_value = (dataset['time'].__dict__['begin_date'])
+        t_value = dataset['time'].__dict__['begin_date']
         t_value = datetime.datetime.strptime(t_value, "%Y%m%d%H")
-        t_step = calendar.timegm(t_value.utctimetuple()) * 1000
+        t_delta = 6 * i
+        i += 1
+        t_step = t_value + datetime.timedelta(hours=t_delta)
+        t_step = calendar.timegm(t_step.utctimetuple()) * 1000
         # slice the array at the area you want
         val = float(dataset[var][0, adj_lat_ind, adj_lon_ind].data)
-        print(val)
-        data['values'].append((t_step, val, t_value.month, t_value.year))
+        data['values'].append((t_step, val))
         dataset.close()
 
     return data
@@ -101,19 +104,22 @@ def polychart(data):
     dataset.close()
 
     # extract values at each timestep
+    i = 1
     for nc in files:
-        # set the time value for each file
-        dataset = netCDF4.Dataset(path + '/' + nc, 'r')
-        t_value = (dataset['time'].__dict__['begin_date'])
+        # get the time value for each file
+        dataset = netCDF4.Dataset(os.path.join(path, nc), 'r')
+        t_value = dataset['time'].__dict__['begin_date']
         t_value = datetime.datetime.strptime(t_value, "%Y%m%d%H")
-        t_step = calendar.timegm(t_value.utctimetuple()) * 1000
-        for time, var in enumerate(dataset['time'][:]):
-            # slice the array, drop nan values, get the mean, append to list of values
-            array = dataset[var][0, minlat:maxlat, minlon:maxlon].data
-            array[array < -9000] = numpy.nan  # If you have fill values, change the comparator to git rid of it
-            array = array.flatten()
-            array = array[~numpy.isnan(array)]
-            data['values'].append((t_step, float(array.mean()), t_value.month, t_value.year))
+        t_delta = 6 * i
+        i += 1
+        t_step = t_value + datetime.timedelta(hours=t_delta)
+        t_step = calendar.timegm(t_step.utctimetuple()) * 1000
+        # slice the array at the area you want
+        array = dataset[var][0, minlat:maxlat, minlon:maxlon].data
+        array[array < -9000] = numpy.nan  # If you have fill values, change the comparator to git rid of it
+        array = array.flatten()
+        array = array[~numpy.isnan(array)]
+        data['values'].append((t_step, float(array.mean())))
         dataset.close()
 
     return data
@@ -169,7 +175,10 @@ def shpchart(data):
         # create the timesteps for the highcharts plot
         t_value = (nc_obj['time'].__dict__['begin_date'])
         t_step = datetime.datetime.strptime(t_value, "%Y%m%d%H")
-        time = calendar.timegm(t_step.utctimetuple()) * 1000, t_step.month, t_step.year
+        t_delta = 6 * i
+        i += 1
+        t_step = t_step + datetime.timedelta(hours=t_delta)
+        time = calendar.timegm(t_step.utctimetuple()) * 1000
 
         # file paths and settings
         shppath = os.path.join(wrkpath, 'shapefiles', region, region.replace(' ', '') + '.shp')
@@ -181,7 +190,7 @@ def shpchart(data):
             newtiff.write(array, 1)
 
         stats = rasterstats.zonal_stats(shppath, gtiffpath, stats="mean")
-        data['values'].append((time, stats[0]['mean'], t_step.month, t_step.year))
+        data['values'].append((time, stats[0]['mean']))
 
     if os.path.isdir(geotiffdir):
         shutil.rmtree(geotiffdir)
