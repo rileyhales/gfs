@@ -77,7 +77,7 @@ def get_newgfsdata(request):
     grib_to_netcdf(threddspath, timestamp)
     nc_georeference(threddspath, timestamp)
     new_ncml(threddspath, timestamp)
-    remove_olddata(threddspath, timestamp)
+    cleanup(threddspath, timestamp)
     set_wmsbounds(threddspath, timestamp)
 
     return JsonResponse({'Finished': 'Finished'})

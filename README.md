@@ -1,4 +1,4 @@
-# GFS Visualizer Tool Documentation
+# GFS Visualization Tool Documentation
 This is a Tethys 2/3 compatible app that visualizes GFS data from NOAA. The GFS model produces a new forecast every 6 Hours at 00, 06, 12, 18 UTC each day. Each forecast is divided into 6-hour timesteps and covers the next 16 days. Each of those 6-hour timesteps is downloaded as a separate GRIB2 file of about 600MB. To show this data as a time animated map, you need to convert them to netCDF files. 
 
 © [Riley Hales](http://rileyhales.com), 2019. Based on the [GLDAS Data Visualizer](https://github.com/rileyhales/gldas) (Hales, 2018) Developed at the BYU Hydroinformatics Lab.
