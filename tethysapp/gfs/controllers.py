@@ -1,9 +1,11 @@
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 from django.shortcuts import render
 from tethys_sdk.gizmos import SelectInput, RangeSlider
 
 from .app import Gfs as App
 from .options import gfs_variables, wms_colors, geojson_colors, currentgfs
+from .gfsworkflow import run_gfs_workflow
 
 
 @login_required()
@@ -78,3 +80,9 @@ def home(request):
     }
 
     return render(request, 'gfs/home.html', context)
+
+
+@login_required()
+def update(request):
+    status = run_gfs_workflow()
+    return JsonResponse({'Workflow Status': status})

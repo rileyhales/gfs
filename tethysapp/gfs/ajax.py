@@ -5,7 +5,7 @@ from django.http import JsonResponse
 
 from .options import *
 from .tools import shpchart, pointchart, polychart
-from .gfsdata import *
+from .gfsworkflow import *
 
 
 @login_required()

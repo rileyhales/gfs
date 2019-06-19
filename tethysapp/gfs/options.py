@@ -14,11 +14,12 @@ def app_configuration():
         'threddsurl': App.get_custom_setting("Thredds WMS URL"),
         'geoserverurl': App.get_custom_setting("Geoserver Workspace URL"),
         'timestamp': gettimestamp(),
+        'logfile': os.path.join(App.get_app_workspace().path, 'workflow.log')
     }
 
 
 def gettimestamp():
-    with open(os.path.join(App.get_app_workspace().path, 'timestep.txt'), 'r') as file:
+    with open(os.path.join(App.get_app_workspace().path, 'timestamp.txt'), 'r') as file:
         return file.read()
 
 

@@ -60,9 +60,9 @@ class Gfs(TethysAppBase):
                 controller='gfs.ajax.get_shapeaverage',
             ),
             UrlMap(
-                name='updateGFS',
+                name='update',
                 url='gfs/update',
-                controller='gfs.ajax.get_newgfsdata'
+                controller='gfs.controllers.update'
             )
 
         )
