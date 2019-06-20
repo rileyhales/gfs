@@ -1,55 +1,26 @@
-Workflow initiated on 06/19/19 at 22:05
+Workflow initiated on 06/20/19 at 15:08
 
 Setting the Environment
-determined the timestamp to download: 2019061906
+determined the timestamp to download: 2019062012
 Creating APP WORKSPACE (GeoTIFF) file structure for 
 Creating THREDDS file structure for 
 All done setting up folders, on to do work
 
-Beginning to process  on 06/19/19 at 22:05
+Beginning to process  on 06/20/19 at 15:08
 
 Starting GFS Grib Downloads for 
-downloading the file 2019061912.grb
-downloading the file 2019061918.grb
-downloading the file 2019062000.grb
-downloading the file 2019062006.grb
-downloading the file 2019062012.grb
-downloading the file 2019062018.grb
-downloading the file 2019062100.grb
-downloading the file 2019062106.grb
-downloading the file 2019062112.grb
 downloading the file 2019062118.grb
 downloading the file 2019062200.grb
-
-HTTPError 502 downloading 2019062200.grb from
-https://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p25.pl?file=gfs.t06z.pgrb2.0p25.f066&all_lev=on&all_var=on&subregion=&leftlon=-180&rightlon=180&toplat=90&bottomlat=-90&dir=%2Fgfs.20190619%2F06
-Internal Server Error: /apps/gfs/update/
-Traceback (most recent call last):
-  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/contrib/sessions/backends/db.py", line 87, in save
-    obj.save(force_insert=must_create, force_update=not must_create, using=using)
-  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/db/models/base.py", line 808, in save
-    force_update=force_update, update_fields=update_fields)
-  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/db/models/base.py", line 838, in save_base
-    updated = self._save_table(raw, cls, force_insert, force_update, using, update_fields)
-  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/db/models/base.py", line 907, in _save_table
-    raise DatabaseError("Forced update did not affect any rows.")
-django.db.utils.DatabaseError: Forced update did not affect any rows.
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/contrib/sessions/middleware.py", line 58, in process_response
-    request.session.save()
-  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/contrib/sessions/backends/db.py", line 94, in save
-    raise UpdateError
-django.contrib.sessions.backends.base.UpdateError
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/core/handlers/base.py", line 131, in get_response
-    response = middleware_method(request, response)
-  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/contrib/sessions/middleware.py", line 61, in process_response
-    "The request's session was deleted before the "
-django.core.exceptions.SuspiciousOperation: The request's session was deleted before the request completed. The user may have logged out in a concurrent request, for example.
-"GET /apps/gfs/update/ HTTP/1.1" 500 100966
+downloading the file 2019062206.grb
+downloading the file 2019062212.grb
+downloading the file 2019062218.grb
+downloading the file 2019062300.grb
+downloading the file 2019062306.grb
+downloading the file 2019062312.grb
+downloading the file 2019062318.grb
+downloading the file 2019062400.grb
+downloading the file 2019062406.grb
+downloading the file 2019062412.grb
+downloading the file 2019062418.grb
+downloading the file 2019062500.grb
+downloading the file 2019062506.grb

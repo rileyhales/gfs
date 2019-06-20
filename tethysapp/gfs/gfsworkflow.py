@@ -26,6 +26,7 @@ def setenvironment():
         now = now - datetime.timedelta(days=1)
         timestamp = now.strftime("%Y%m%d") + '18'
     logging.info('determined the timestamp to download: ' + timestamp)
+    timestamp = '2019061906'
 
     # set folder paths for the environment
     configuration = app_configuration()
@@ -50,7 +51,7 @@ def setenvironment():
         return threddspath, wrksppath, timestamp, redundant
 
     # create the file structure and their permissions for the new data
-    logging.info('Creating APP WORKSPACE (GeoTIFF) file structure for ' )
+    logging.info('Creating APP WORKSPACE (GeoTIFF) file structure')
     new_dir = os.path.join(wrksppath, 'GeoTIFFs')
     if os.path.exists(new_dir):
         shutil.rmtree(new_dir)
@@ -61,7 +62,7 @@ def setenvironment():
         shutil.rmtree(new_dir)
     os.mkdir(new_dir)
     os.chmod(new_dir, 0o777)
-    logging.info('Creating THREDDS file structure for ' )
+    logging.info('Creating THREDDS file structure')
     new_dir = os.path.join(threddspath, 'gfs')
     if os.path.exists(new_dir):
         shutil.rmtree(new_dir)
@@ -84,7 +85,7 @@ def setenvironment():
 
 
 def download_gfs(threddspath, timestamp):
-    logging.info('\nStarting GFS Grib Downloads for ' )
+    logging.info('\nStarting GFS Grib Downloads')
     # set filepaths
     gribsdir = os.path.join(threddspath, 'gfs', timestamp, 'gribs')
 
@@ -92,7 +93,7 @@ def download_gfs(threddspath, timestamp):
     if not os.path.exists(gribsdir):
         logging.info('There is no download folder, you must have already processed them. Skipping download stage.')
         return
-    elif len(os.listdir(gribsdir)) >= 40:
+    elif len(os.listdir(gribsdir)) >= 28:
         logging.info('There are already 40 forecast steps in here. Dont need to download them')
         return
     # otherwise, remove anything in the folder before starting (in case there was a partial download)
@@ -111,11 +112,11 @@ def download_gfs(threddspath, timestamp):
 
     # this is where the actual downloads happen. set the url, filepath, then download
     subregions = {
-        'global': 'subregion=&leftlon=-180&rightlon=180&toplat=90&bottomlat=-90',
+        'global': 'leftlon=-180&rightlon=180&toplat=90&bottomlat=-90',
     }
     for step in fc_steps:
         url = 'https://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p25.pl?file=gfs.t' + time + 'z.pgrb2.0p25.f' + step + \
-              '&all_lev=on&all_var=on&' + subregions['global'] + '&dir=%2Fgfs.' + fc_date + '%2F' + time
+              '&lev_surface=on&all_var=on&' + subregions['global'] + '&dir=%2Fgfs.' + fc_date + '%2F' + time
 
         fc_timestamp = datetime.datetime.strptime(timestamp, "%Y%m%d%H")
         file_timestep = fc_timestamp + datetime.timedelta(hours=int(step))
@@ -290,13 +291,13 @@ def new_ncml(threddspath, timestamp):
             '<netcdf xmlns="http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2">\n'
             '    <variable name="time" type="int" shape="time">\n'
             '        <attribute name="units" value="hours since ' + date + '"/>\n'
-                                                                           '        <attribute name="_CoordinateAxisType" value="Time" />\n'
-                                                                           '        <values start="6" increment="6" />\n'
-                                                                           '    </variable>\n'
-                                                                           '    <aggregation dimName="time" type="joinExisting" recheckEvery="1 hour">\n'
-                                                                           '        <scan location="' + timestamp + '/processed/"/>\n'
-                                                                                                                    '    </aggregation>\n'
-                                                                                                                    '</netcdf>'
+            '        <attribute name="_CoordinateAxisType" value="Time" />\n'
+            '        <values start="6" increment="6" />\n'
+            '    </variable>\n'
+            '    <aggregation dimName="time" type="joinExisting" recheckEvery="1 hour">\n'
+            '        <scan location="' + timestamp + '/processed/"/>\n'
+            '    </aggregation>\n'
+            '</netcdf>'
         )
     logging.info('Wrote New .ncml')
     return
@@ -338,7 +339,7 @@ def run_gfs_workflow():
         return 'Workflow Aborted: already run for most recent data'
 
     # run the workflow
-    logging.info('\nBeginning to process '  + ' on ' + datetime.datetime.utcnow().strftime("%D at %R"))
+    logging.info('\nBeginning to process on ' + datetime.datetime.utcnow().strftime("%D at %R"))
     # download each forecast model, convert them to netcdfs and tiffs
     succeed = download_gfs(threddspath, timestamp)
     if not succeed:
@@ -347,7 +348,7 @@ def run_gfs_workflow():
     # generate color scales and ncml aggregation files
     new_ncml(threddspath, timestamp)
     # cleanup the workspace by removing old files
-    cleanup(threddspath, wrksppath, timestamp)
+    cleanup(threddspath, timestamp)
 
     logging.info('\n        All regions and models finished- writing the timestamp used on this run to a txt file')
     with open(os.path.join(wrksppath, 'timestamp.txt'), 'w') as file:
