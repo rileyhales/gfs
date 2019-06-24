@@ -36,7 +36,7 @@ function basemaps() {
 
 ////////////////////////////////////////////////////////////////////////  WMS LAYERS FOR GLDAS
 function newLayer() {
-    let url = threddsbase + 'gfs.ncml';
+    let url = threddsbase + 'wms.ncml';
     let wmsLayer = L.tileLayer.wms(url, {
         // version: '1.3.0',
         layers: 'gust',
@@ -66,7 +66,7 @@ function newLayer() {
 let legend = L.control({position: 'topright'});
 legend.onAdd = function (mapObj) {
     let div = L.DomUtil.create('div', 'legend');
-    let url = threddsbase + 'gfs.ncml' + "?REQUEST=GetLegendGraphic&LAYER=" + $("#variables").val() + "&PALETTE=" + $('#colorscheme').val() + "&COLORSCALERANGE=" + bounds[$("#variables").val()];
+    let url = threddsbase + 'wms.ncml' + "?REQUEST=GetLegendGraphic&LAYER=" + $("#variables").val() + "&PALETTE=" + $('#colorscheme').val() + "&COLORSCALERANGE=" + bounds[$("#variables").val()];
     div.innerHTML = '<img src="' + url + '" alt="legend" style="width:100%; float:right;">';
     return div
 };

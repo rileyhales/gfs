@@ -1,26 +1,1367 @@
-Workflow initiated on 06/20/19 at 15:08
+Workflow initiated on 06/24/19 at 15:11
+You chose the clobber option so the timestamps and all the data folders will be overwritten
+Clobber complete. Files marked for execution
 
-Setting the Environment
-determined the timestamp to download: 2019062012
-Creating APP WORKSPACE (GeoTIFF) file structure for 
-Creating THREDDS file structure for 
+Setting the Environment for the GFS Workflow
+determined the timestamp to download: 2019062406
+Creating APP WORKSPACE (GeoTIFF) file structure
+Creating THREDDS file structure
 All done setting up folders, on to do work
 
-Beginning to process  on 06/20/19 at 15:08
+Beginning to process on 06/24/19 at 15:11
 
-Starting GFS Grib Downloads for 
-downloading the file 2019062118.grb
-downloading the file 2019062200.grb
-downloading the file 2019062206.grb
-downloading the file 2019062212.grb
-downloading the file 2019062218.grb
-downloading the file 2019062300.grb
-downloading the file 2019062306.grb
-downloading the file 2019062312.grb
-downloading the file 2019062318.grb
-downloading the file 2019062400.grb
-downloading the file 2019062406.grb
+Starting GFS grib Downloads
 downloading the file 2019062412.grb
 downloading the file 2019062418.grb
 downloading the file 2019062500.grb
 downloading the file 2019062506.grb
+downloading the file 2019062512.grb
+downloading the file 2019062518.grb
+Internal Server Error: /apps/sfpt/animation/
+Traceback (most recent call last):
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/template/base.py", line 507, in parse
+    compile_func = self.tags[command]
+KeyError: 'static'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/core/handlers/base.py", line 249, in _legacy_get_response
+    response = self._get_response(request)
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/contrib/auth/decorators.py", line 23, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/Users/rileyhales/tethys/src/tethys_apps/tethysapp/sfpt/controllers.py", line 36, in animation
+    return render(request, 'sfpt/animationmap.html', context)
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/shortcuts.py", line 30, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/template/loader.py", line 67, in render_to_string
+    template = get_template(template_name, using=using)
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/template/loader.py", line 21, in get_template
+    return engine.get_template(template_name)
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/template/backends/django.py", line 39, in get_template
+    return Template(self.engine.get_template(template_name), self)
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/template/engine.py", line 162, in get_template
+    template, origin = self.find_template(template_name)
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/template/engine.py", line 136, in find_template
+    name, template_dirs=dirs, skip=skip,
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/template/loaders/base.py", line 44, in get_template
+    contents, origin, origin.template_name, self.engine,
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/template/base.py", line 191, in __init__
+    self.nodelist = self.compile_nodelist()
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/template/base.py", line 230, in compile_nodelist
+    return parser.parse()
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/template/base.py", line 515, in parse
+    raise self.error(token, e)
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/template/base.py", line 513, in parse
+    compiled_result = compile_func(self, token)
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/template/loader_tags.py", line 312, in do_extends
+    nodelist = parser.parse()
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/template/base.py", line 515, in parse
+    raise self.error(token, e)
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/template/base.py", line 513, in parse
+    compiled_result = compile_func(self, token)
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/template/loader_tags.py", line 255, in do_block
+    nodelist = parser.parse(('endblock',))
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/template/base.py", line 509, in parse
+    self.invalid_block_tag(token, command, parse_until)
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/template/base.py", line 565, in invalid_block_tag
+    get_text_list(["'%s'" % p for p in parse_until], 'or'),
+django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 6: 'static', expected 'endblock'. Did you forget to register or load this tag?
+"GET /apps/sfpt/animation/ HTTP/1.1" 500 174191
+downloading the file 2019062600.grb
+downloading the file 2019062606.grb
+downloading the file 2019062612.grb
+downloading the file 2019062618.grb
+downloading the file 2019062700.grb
+downloading the file 2019062706.grb
+downloading the file 2019062712.grb
+downloading the file 2019062718.grb
+downloading the file 2019062800.grb
+downloading the file 2019062806.grb
+downloading the file 2019062812.grb
+downloading the file 2019062818.grb
+downloading the file 2019062900.grb
+downloading the file 2019062906.grb
+downloading the file 2019062912.grb
+downloading the file 2019062918.grb
+downloading the file 2019063000.grb
+downloading the file 2019063006.grb
+downloading the file 2019063012.grb
+downloading the file 2019063018.grb
+downloading the file 2019070100.grb
+downloading the file 2019070106.grb
+Finished Downloads
+
+Starting Grib Conversions
+There are 28 compatible files.
+creating netcdf file2019062718.nc
+ecCodes library found using name 'eccodes'.
+missing from GRIB stream: 'number'
+copying the data for variable vis to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable gust to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable hindex to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable orog to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable t to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sdwe to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sde to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cpofp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cprat to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable acpcp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable watr to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lhtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable shtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable uflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable vflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lsm to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable siconc to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable al to the netcdf
+missing from GRIB stream: 'number'
+finished with this grib file
+
+creating netcdf file2019063000.nc
+missing from GRIB stream: 'number'
+copying the data for variable vis to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable gust to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable hindex to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable orog to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable t to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sdwe to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sde to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cpofp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cprat to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable acpcp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable watr to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lhtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable shtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable uflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable vflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lsm to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable siconc to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable al to the netcdf
+missing from GRIB stream: 'number'
+finished with this grib file
+
+creating netcdf file2019062518.nc
+missing from GRIB stream: 'number'
+copying the data for variable vis to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable gust to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable hindex to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable orog to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable t to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sdwe to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sde to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cpofp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cprat to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable acpcp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable watr to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lhtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable shtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable uflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable vflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lsm to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable siconc to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable al to the netcdf
+missing from GRIB stream: 'number'
+finished with this grib file
+
+creating netcdf file2019062900.nc
+missing from GRIB stream: 'number'
+copying the data for variable vis to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable gust to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable hindex to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable orog to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable t to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sdwe to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sde to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cpofp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cprat to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable acpcp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable watr to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lhtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable shtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable uflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable vflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lsm to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable siconc to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable al to the netcdf
+missing from GRIB stream: 'number'
+finished with this grib file
+
+creating netcdf file2019063012.nc
+missing from GRIB stream: 'number'
+copying the data for variable vis to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable gust to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable hindex to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable orog to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable t to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sdwe to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sde to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cpofp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cprat to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable acpcp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable watr to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lhtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable shtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable uflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable vflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lsm to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable siconc to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable al to the netcdf
+missing from GRIB stream: 'number'
+finished with this grib file
+
+creating netcdf file2019063006.nc
+missing from GRIB stream: 'number'
+copying the data for variable vis to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable gust to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable hindex to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable orog to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable t to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sdwe to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sde to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cpofp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cprat to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable acpcp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable watr to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lhtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable shtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable uflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable vflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lsm to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable siconc to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable al to the netcdf
+missing from GRIB stream: 'number'
+finished with this grib file
+
+creating netcdf file2019062912.nc
+missing from GRIB stream: 'number'
+copying the data for variable vis to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable gust to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable hindex to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable orog to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable t to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sdwe to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sde to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cpofp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cprat to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable acpcp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable watr to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lhtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable shtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable uflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable vflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lsm to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable siconc to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable al to the netcdf
+missing from GRIB stream: 'number'
+finished with this grib file
+
+creating netcdf file2019062906.nc
+missing from GRIB stream: 'number'
+copying the data for variable vis to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable gust to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable hindex to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable orog to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable t to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sdwe to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sde to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cpofp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cprat to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable acpcp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable watr to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lhtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable shtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable uflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable vflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lsm to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable siconc to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable al to the netcdf
+missing from GRIB stream: 'number'
+finished with this grib file
+
+creating netcdf file2019062418.nc
+missing from GRIB stream: 'number'
+copying the data for variable vis to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable gust to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable hindex to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable orog to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable t to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sdwe to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sde to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cpofp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cprat to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable acpcp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable watr to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lhtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable shtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable uflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable vflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lsm to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable siconc to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable al to the netcdf
+missing from GRIB stream: 'number'
+finished with this grib file
+
+creating netcdf file2019062800.nc
+missing from GRIB stream: 'number'
+copying the data for variable vis to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable gust to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable hindex to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable orog to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable t to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sdwe to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sde to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cpofp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cprat to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable acpcp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable watr to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lhtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable shtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable uflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable vflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lsm to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable siconc to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable al to the netcdf
+missing from GRIB stream: 'number'
+finished with this grib file
+
+creating netcdf file2019062618.nc
+missing from GRIB stream: 'number'
+copying the data for variable vis to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable gust to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable hindex to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable orog to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable t to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sdwe to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sde to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cpofp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cprat to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable acpcp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable watr to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lhtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable shtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable uflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable vflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lsm to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable siconc to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable al to the netcdf
+missing from GRIB stream: 'number'
+finished with this grib file
+
+creating netcdf file2019062812.nc
+missing from GRIB stream: 'number'
+copying the data for variable vis to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable gust to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable hindex to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable orog to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable t to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sdwe to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sde to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cpofp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cprat to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable acpcp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable watr to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lhtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable shtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable uflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable vflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lsm to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable siconc to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable al to the netcdf
+missing from GRIB stream: 'number'
+finished with this grib file
+
+creating netcdf file2019062806.nc
+missing from GRIB stream: 'number'
+copying the data for variable vis to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable gust to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable hindex to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable orog to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable t to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sdwe to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sde to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cpofp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cprat to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable acpcp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable watr to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lhtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable shtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable uflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable vflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lsm to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable siconc to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable al to the netcdf
+missing from GRIB stream: 'number'
+finished with this grib file
+
+creating netcdf file2019062606.nc
+missing from GRIB stream: 'number'
+copying the data for variable vis to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable gust to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable hindex to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable orog to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable t to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sdwe to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sde to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cpofp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cprat to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable acpcp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable watr to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lhtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable shtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable uflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable vflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lsm to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable siconc to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable al to the netcdf
+missing from GRIB stream: 'number'
+finished with this grib file
+
+creating netcdf file2019062612.nc
+missing from GRIB stream: 'number'
+copying the data for variable vis to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable gust to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable hindex to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable orog to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable t to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sdwe to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sde to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cpofp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cprat to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable acpcp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable watr to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lhtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable shtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable uflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable vflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lsm to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable siconc to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable al to the netcdf
+missing from GRIB stream: 'number'
+finished with this grib file
+
+creating netcdf file2019062412.nc
+missing from GRIB stream: 'number'
+copying the data for variable vis to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable gust to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable hindex to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable orog to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable t to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sdwe to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sde to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cpofp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cprat to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable acpcp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable watr to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lhtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable shtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable uflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable vflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lsm to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable siconc to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable al to the netcdf
+missing from GRIB stream: 'number'
+finished with this grib file
+
+creating netcdf file2019062600.nc
+missing from GRIB stream: 'number'
+copying the data for variable vis to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable gust to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable hindex to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable orog to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable t to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sdwe to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sde to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cpofp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cprat to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable acpcp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable watr to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lhtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable shtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable uflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable vflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lsm to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable siconc to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable al to the netcdf
+missing from GRIB stream: 'number'
+finished with this grib file
+
+creating netcdf file2019062818.nc
+missing from GRIB stream: 'number'
+copying the data for variable vis to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable gust to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable hindex to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable orog to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable t to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sdwe to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sde to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cpofp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cprat to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable acpcp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable watr to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lhtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable shtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable uflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable vflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lsm to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable siconc to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable al to the netcdf
+missing from GRIB stream: 'number'
+finished with this grib file
+
+creating netcdf file2019062506.nc
+missing from GRIB stream: 'number'
+copying the data for variable vis to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable gust to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable hindex to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable orog to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable t to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sdwe to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sde to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cpofp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cprat to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable acpcp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable watr to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lhtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable shtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable uflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable vflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lsm to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable siconc to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable al to the netcdf
+missing from GRIB stream: 'number'
+finished with this grib file
+
+creating netcdf file2019062512.nc
+missing from GRIB stream: 'number'
+copying the data for variable vis to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable gust to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable hindex to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable orog to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable t to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sdwe to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sde to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cpofp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cprat to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable acpcp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable watr to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lhtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable shtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable uflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable vflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lsm to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable siconc to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable al to the netcdf
+missing from GRIB stream: 'number'
+finished with this grib file
+
+creating netcdf file2019062706.nc
+missing from GRIB stream: 'number'
+copying the data for variable vis to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable gust to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable hindex to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable orog to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable t to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sdwe to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sde to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cpofp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cprat to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable acpcp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable watr to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lhtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable shtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable uflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable vflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lsm to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable siconc to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable al to the netcdf
+missing from GRIB stream: 'number'
+finished with this grib file
+
+creating netcdf file2019062712.nc
+missing from GRIB stream: 'number'
+copying the data for variable vis to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable gust to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable hindex to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable orog to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable t to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sdwe to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sde to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cpofp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cprat to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable acpcp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable watr to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lhtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable shtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable uflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable vflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lsm to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable siconc to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable al to the netcdf
+missing from GRIB stream: 'number'
+finished with this grib file
+
+creating netcdf file2019070100.nc
+missing from GRIB stream: 'number'
+copying the data for variable vis to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable gust to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable hindex to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable orog to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable t to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sdwe to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sde to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cpofp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cprat to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable acpcp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable watr to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lhtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable shtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable uflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable vflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lsm to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable siconc to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable al to the netcdf
+missing from GRIB stream: 'number'
+finished with this grib file
+
+creating netcdf file2019063018.nc
+missing from GRIB stream: 'number'
+copying the data for variable vis to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable gust to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable hindex to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable orog to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable t to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sdwe to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sde to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cpofp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cprat to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable acpcp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable watr to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lhtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable shtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable uflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable vflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lsm to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable siconc to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable al to the netcdf
+missing from GRIB stream: 'number'
+finished with this grib file
+
+creating netcdf file2019062500.nc
+missing from GRIB stream: 'number'
+copying the data for variable vis to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable gust to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable hindex to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable orog to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable t to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sdwe to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sde to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cpofp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cprat to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable acpcp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable watr to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lhtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable shtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable uflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable vflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lsm to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable siconc to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable al to the netcdf
+missing from GRIB stream: 'number'
+finished with this grib file
+
+creating netcdf file2019062918.nc
+missing from GRIB stream: 'number'
+copying the data for variable vis to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable gust to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable hindex to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable orog to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable t to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sdwe to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sde to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cpofp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cprat to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable acpcp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable watr to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lhtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable shtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable uflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable vflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lsm to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable siconc to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable al to the netcdf
+missing from GRIB stream: 'number'
+finished with this grib file
+
+creating netcdf file2019062700.nc
+missing from GRIB stream: 'number'
+copying the data for variable vis to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable gust to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable hindex to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable orog to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable t to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sdwe to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sde to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cpofp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cprat to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable acpcp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable watr to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lhtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable shtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable uflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable vflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lsm to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable siconc to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable al to the netcdf
+missing from GRIB stream: 'number'
+finished with this grib file
+
+creating netcdf file2019070106.nc
+missing from GRIB stream: 'number'
+copying the data for variable vis to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable gust to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable hindex to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable orog to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable t to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sdwe to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable sde to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cpofp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable cprat to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable acpcp to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable watr to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lhtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable shtfl to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable uflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable vflx to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable lsm to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable siconc to the netcdf
+missing from GRIB stream: 'number'
+copying the data for variable al to the netcdf
+missing from GRIB stream: 'number'
+finished with this grib file
+
+Conversion Completed
+
+Writing a new ncml file for this date
+Wrote New .ncml
+Getting rid of old data folders
+Done
+
+All finished- writing the timestamp used on this run to a txt file
+
+
+GFS Workflow completed successfully on 06/24/19 at 15:17
+If you have configured other models, they will begin processing now.
+
+
+
+Not Found: /apps/sfpt/animation/loader.gif
+"GET /apps/sfpt/animation/loader.gif HTTP/1.1" 404 6627
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 3621
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 3621
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 3621
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 3621
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 3621
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 3621
+Internal Server Error: /apps/sfpt/animation/
+Traceback (most recent call last):
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/template/base.py", line 507, in parse
+    compile_func = self.tags[command]
+KeyError: 'static'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/core/handlers/base.py", line 249, in _legacy_get_response
+    response = self._get_response(request)
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/contrib/auth/decorators.py", line 23, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/Users/rileyhales/tethys/src/tethys_apps/tethysapp/sfpt/controllers.py", line 36, in animation
+    return render(request, 'sfpt/animationmap.html', context)
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/shortcuts.py", line 30, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/template/loader.py", line 67, in render_to_string
+    template = get_template(template_name, using=using)
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/template/loader.py", line 21, in get_template
+    return engine.get_template(template_name)
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/template/backends/django.py", line 39, in get_template
+    return Template(self.engine.get_template(template_name), self)
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/template/engine.py", line 162, in get_template
+    template, origin = self.find_template(template_name)
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/template/engine.py", line 136, in find_template
+    name, template_dirs=dirs, skip=skip,
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/template/loaders/base.py", line 44, in get_template
+    contents, origin, origin.template_name, self.engine,
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/template/base.py", line 191, in __init__
+    self.nodelist = self.compile_nodelist()
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/template/base.py", line 230, in compile_nodelist
+    return parser.parse()
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/template/base.py", line 515, in parse
+    raise self.error(token, e)
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/template/base.py", line 513, in parse
+    compiled_result = compile_func(self, token)
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/template/loader_tags.py", line 312, in do_extends
+    nodelist = parser.parse()
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/template/base.py", line 515, in parse
+    raise self.error(token, e)
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/template/base.py", line 513, in parse
+    compiled_result = compile_func(self, token)
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/template/loader_tags.py", line 255, in do_block
+    nodelist = parser.parse(('endblock',))
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/template/base.py", line 509, in parse
+    self.invalid_block_tag(token, command, parse_until)
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/template/base.py", line 565, in invalid_block_tag
+    get_text_list(["'%s'" % p for p in parse_until], 'or'),
+django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 14: 'static', expected 'endblock'. Did you forget to register or load this tag?
+"GET /apps/sfpt/animation/ HTTP/1.1" 500 175744
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 3621

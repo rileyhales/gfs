@@ -3,7 +3,7 @@ import os
 import datetime
 
 
-def app_configuration():
+def app_settings():
     """
     Gets the settings for the app for use in other functions and ajax for leaflet
     Dependencies: os, App (app)
@@ -29,53 +29,21 @@ def gfs_variables():
     """
     return {
         'Albedo': 'al',
-        'Best (4-layer) lifted index': '4lftx',
-        'Categorical freezing rain': 'cfrzr',
-        'Categorical ice pellets': 'cicep',
-        'Categorical rain': 'crain',
-        'Categorical snow': 'csnow',
-        'Convective available potential energy': 'cape',
-        'Convective inhibition': 'cin',
         'Convective precipitation (water)': 'acpcp',
         'Convective precipitation rate': 'cprat',
-        'Downward long-wave radiation flux': 'dlwrf',
-        'Downward short-wave radiation flux': 'dswrf',
-        'Field capacity': 'fldcp',
-        'Land-sea coverage (nearest neighbor) [land=1,sea=0]': 'landn',
-        'Land-sea mask': 'lsm',
         'Latent heat net flux': 'lhtfl',
-        'Meridional flux of gravity wave stress': 'v-gwd',
         'Momentum flux, u component': 'uflx',
         'Momentum flux, v component': 'vflx',
-        'Orography': 'orog',
         'Percent frozen precipitation': 'cpofp',
-        'Planetary boundary layer height': 'hpbl',
-        'Potential evaporation rate': 'pevpr',
-        'Precipitation rate': 'prate',
         'Sea ice area fraction': 'siconc',
         'Sensible heat net flux': 'shtfl',
         'Snow depth': 'sde',
-        'Sunshine duration': 'SUNSD',
-        'Surface lifted index': 'lftx',
         'Surface pressure': 'sp',
         'Temperature': 't',
-        'Total precipitation': 'tp',
-        'Upward long-wave radiation flux': 'ulwrf',
-        'Upward short-wave radiation flux': 'uswrf',
         'Visibility': 'vis',
         'Water equivalent of accumulated snow depth': 'sdwe',
         'Water runoff': 'watr',
-        'Wilting point': 'wilt',
         'Wind speed (gust)': 'gust',
-        'Zonal flux of gravity wave stress': 'u-gwd'
-        # 'Initial time of forecast': 'time',
-        # 'Ground heat flux': 'gflux',
-        # 'Haines index': 'hindex',
-        # 'Original grib coordinate for key: level(surface)': 'surface',
-        # 'Time': 'valid_time',
-        # 'Time since forecast reference time': 'step',
-        # 'Latitude': 'latitude',
-        # 'Longitude': 'longitude',
     }
 
 

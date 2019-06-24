@@ -9,7 +9,7 @@ import netCDF4
 import numpy
 
 from .app import Gfs as App
-from .options import app_configuration
+from .options import app_settings
 
 
 def pointchart(data):
@@ -25,7 +25,7 @@ def pointchart(data):
     coords = data['coords']
 
     # environment settings
-    configs = app_configuration()
+    configs = app_settings()
     path = configs['threddsdatadir']
     path = os.path.join(path, configs['timestamp'], 'processed')
 
@@ -79,7 +79,7 @@ def polychart(data):
     coords = data['coords'][0]  # 5x2 array 1 row/[lat,lon]/corner (1st repeated), clockwise from bottom-left
 
     # environment settings
-    configs = app_configuration()
+    configs = app_settings()
     path = configs['threddsdatadir']
     path = os.path.join(path, configs['timestamp'], 'processed')
 
@@ -139,7 +139,7 @@ def shpchart(data):
     region = data['region']
 
     # environment settings
-    configs = app_configuration()
+    configs = app_settings()
     path = configs['threddsdatadir']
     path = os.path.join(path, configs['timestamp'], 'processed')
     wrkpath = configs['app_wksp_path']

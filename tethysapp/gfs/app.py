@@ -38,6 +38,13 @@ class Gfs(TethysAppBase):
                 controller='gfs.controllers.home'
             ),
 
+            # url maps for data processing workflow
+            UrlMap(
+                name='runWorkflows',
+                url='gfs/runWorkflows',
+                controller='gfs.controllers.run_workflows'
+            ),
+
             # url maps for ajax calls
             UrlMap(
                 name='getCustomSettings',
@@ -59,12 +66,6 @@ class Gfs(TethysAppBase):
                 url='gfs/ajax/getShapeAverage',
                 controller='gfs.ajax.get_shapeaverage',
             ),
-            UrlMap(
-                name='update',
-                url='gfs/update',
-                controller='gfs.controllers.update'
-            )
-
         )
         return url_maps
 
