@@ -200,6 +200,7 @@ def grib_to_netcdf(threddspath, timestamp):
             newnetcdf[variable][:] = obj[variable].data
             newnetcdf[variable].units = obj[variable].units
             newnetcdf[variable].long_name = obj[variable].long_name
+            newnetcdf[variable].begin_date = timestamp
             obj.close()
 
         logging.info('finished with this grib file\n')
