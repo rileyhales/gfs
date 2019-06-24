@@ -47,24 +47,12 @@ def setenvironment():
         else:
             # check to see if there are remnants of partially completed runs and dont destroy old folders
             redundant = False
-            chk_hisp = os.path.join(wrksppath, 'GeoTIFFs_resampled')
-            chk_centr = os.path.join(wrksppath, 'GeoTIFFs_resampled')
-            if os.path.exists(chk_hisp) and os.path.exists(chk_centr):
+            test = os.path.join(threddspath, timestamp, 'netcdfs')
+            if os.path.exists(test):
                 logging.info('There are directories for this timestep but the workflow wasn\'t finished. Analyzing...')
                 return threddspath, wrksppath, timestamp, redundant
 
     # create the file structure and their permissions for the new data
-    logging.info('Creating APP WORKSPACE (GeoTIFF) file structure')
-    new_dir = os.path.join(wrksppath, 'GeoTIFFs')
-    if os.path.exists(new_dir):
-        shutil.rmtree(new_dir)
-    os.mkdir(new_dir)
-    os.chmod(new_dir, 0o777)
-    new_dir = os.path.join(wrksppath, 'GeoTIFFs_resampled')
-    if os.path.exists(new_dir):
-        shutil.rmtree(new_dir)
-    os.mkdir(new_dir)
-    os.chmod(new_dir, 0o777)
     logging.info('Creating THREDDS file structure')
     new_dir = os.path.join(threddspath)
     if os.path.exists(new_dir):

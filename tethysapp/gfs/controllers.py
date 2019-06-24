@@ -61,22 +61,12 @@ def home(request):
         initial='#ffffff'
     )
 
-    opacity_geojson = RangeSlider(
-        display_text='Boundary Opacity',
-        name='opacity_geojson',
-        min=.0,
-        max=1,
-        step=.1,
-        initial=.2,
-    )
-
     context = {
         'variables': variables,
         'current_gfs_time': current_gfs_time,
         'colorscheme': colorscheme,
         'opacity_raster': opacity_raster,
         'colors_geojson': colors_geojson,
-        'opacity_geojson': opacity_geojson,
         'youtubelink': App.youtubelink,
         'githublink': App.githublink,
         'gfslink': App.gfslink,

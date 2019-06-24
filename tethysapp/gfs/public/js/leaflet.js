@@ -81,7 +81,7 @@ function layerPopups(feature, layer) {
 // declare a placeholder layer for all the geojson layers you want to add
 let jsonparams = {
     onEachFeature: layerPopups,
-    style: {color: $("#colors_geojson").val(), opacity: $("#opacity_geojson").val()}
+    style: {color: $("#colors_geojson").val(), opacity: 1, fillOpacity: 0}
 };
 let africa = L.geoJSON(false, jsonparams);
 let asia = L.geoJSON(false, jsonparams);
@@ -144,7 +144,8 @@ function styleGeoJSON() {
     // determine the styling to apply
     let style = {
         color: $("#colors_geojson").val(),
-        opacity: $("#opacity_geojson").val(),
+        opacity: 1,
+        fillOpacity: 0,
     };
     // apply it to all the geojson layers
     for (let i = 0; i < geojsons.length; i++) {
