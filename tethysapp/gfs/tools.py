@@ -30,7 +30,7 @@ def pointchart(data):
     path = os.path.join(path, configs['timestamp'], 'netcdfs')
 
     # return items
-    data['values'] = []
+    values = []
 
     # list the netcdfs to be processed
     allfiles = os.listdir(path)
@@ -48,21 +48,19 @@ def pointchart(data):
     dataset.close()
 
     # extract values at each timestep
-    i = 1
     for nc in files:
         # get the time value for each file
         dataset = netCDF4.Dataset(os.path.join(path, nc), 'r')
         t_value = dataset['time'].__dict__['begin_date']
         t_value = datetime.datetime.strptime(t_value, "%Y%m%d%H")
-        t_delta = 6 * i
-        i += 1
-        t_step = t_value + datetime.timedelta(hours=t_delta)
-        t_step = calendar.timegm(t_step.utctimetuple()) * 1000
+        t_value = calendar.timegm(t_value.utctimetuple()) * 1000
         # slice the array at the area you want
         val = float(dataset[var][0, adj_lat_ind, adj_lon_ind].data)
-        data['values'].append((t_step, val))
+        values.append((t_value, val))
         dataset.close()
 
+    values.sort()
+    data['values'] = values
     return data
 
 
@@ -84,7 +82,7 @@ def polychart(data):
     path = os.path.join(path, configs['timestamp'], 'netcdfs')
 
     # return items
-    data['values'] = []
+    values = []
 
     # list the netcdfs to be processed
     allfiles = os.listdir(path)
@@ -95,6 +93,8 @@ def polychart(data):
     dataset = netCDF4.Dataset(os.path.join(path, str(files[0])), 'r')
     nc_lons = dataset['lon'][:]
     nc_lats = dataset['lat'][:]
+    print(nc_lons)
+    print(nc_lats)
     data['units'] = dataset[var].__dict__['units']
     # get a bounding box of the rectangle in terms of the index number of their lat/lons
     minlon = (numpy.abs(nc_lons - coords[1][0])).argmin()
@@ -102,26 +102,30 @@ def polychart(data):
     maxlat = (numpy.abs(nc_lats - coords[1][1])).argmin()
     minlat = (numpy.abs(nc_lats - coords[3][1])).argmin()
     dataset.close()
+    print(coords[1])
+    print(coords[3])
+    print(minlon)
+    print(maxlon)
+    print(minlat)
+    print(maxlat)
 
     # extract values at each timestep
-    i = 1
     for nc in files:
         # get the time value for each file
         dataset = netCDF4.Dataset(os.path.join(path, nc), 'r')
         t_value = dataset['time'].__dict__['begin_date']
         t_value = datetime.datetime.strptime(t_value, "%Y%m%d%H")
-        t_delta = 6 * i
-        i += 1
-        t_step = t_value + datetime.timedelta(hours=t_delta)
-        t_step = calendar.timegm(t_step.utctimetuple()) * 1000
+        t_value = calendar.timegm(t_value.utctimetuple()) * 1000
         # slice the array at the area you want
-        array = dataset[var][0, minlat:maxlat, minlon:maxlon].data
+        array = dataset[var][minlat:maxlat, minlon:maxlon].data
         array[array < -9000] = numpy.nan  # If you have fill values, change the comparator to git rid of it
         array = array.flatten()
         array = array[~numpy.isnan(array)]
-        data['values'].append((t_step, float(array.mean())))
+        values.append((t_value, float(array.mean())))
         dataset.close()
 
+    values.sort()
+    data['values'] = values
     return data
 
 
@@ -145,7 +149,7 @@ def shpchart(data):
     wrkpath = configs['app_wksp_path']
 
     # return items
-    data['values'] = []
+    values = []
 
     # list the netcdfs to be processed
     allfiles = os.listdir(path)
@@ -176,7 +180,6 @@ def shpchart(data):
         t_value = (nc_obj['time'].__dict__['begin_date'])
         t_step = datetime.datetime.strptime(t_value, "%Y%m%d%H")
         t_delta = 6 * i
-        i += 1
         t_step = t_step + datetime.timedelta(hours=t_delta)
         time = calendar.timegm(t_step.utctimetuple()) * 1000
 
@@ -190,9 +193,11 @@ def shpchart(data):
             newtiff.write(array, 1)
 
         stats = rasterstats.zonal_stats(shppath, gtiffpath, stats="mean")
-        data['values'].append((time, stats[0]['mean']))
+        values.append((time, stats[0]['mean']))
 
     if os.path.isdir(geotiffdir):
         shutil.rmtree(geotiffdir)
 
+    values.sort()
+    data['values'] = values
     return data

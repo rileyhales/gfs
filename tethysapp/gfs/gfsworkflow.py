@@ -102,7 +102,7 @@ def download_gfs(threddspath, timestamp):
                 '090', '096', '102', '108', '114', '120', '126', '132', '138', '144', '150', '156', '162', '168']
 
     # this is where the actual downloads happen. set the url, filepath, then download
-    subregion = 'leftlon=-180&rightlon=180&toplat=90&bottomlat=-90'
+    subregion = 'subregion=&leftlon=-180&rightlon=180&toplat=90&bottomlat=-90'
 
     for step in fc_steps:
         url = 'https://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p25.pl?file=gfs.t' + time + 'z.pgrb2.0p25.f' + step + \
@@ -156,6 +156,8 @@ def grib_to_netcdf(threddspath, timestamp):
         os.mkdir(netcdfs)
         os.chmod(netcdfs, 0o777)
 
+    date = datetime.datetime.strptime(timestamp, "%Y%m%d%H")
+
     files = os.listdir(gribs)
     grib_files = [grib for grib in files if grib.endswith('.grb')]
     logging.info('There are ' + str(len(files)) + ' compatible files.')
@@ -176,9 +178,13 @@ def grib_to_netcdf(threddspath, timestamp):
         newnetcdf.createVariable(varname='lon', datatype='f4', dimensions='lon')
         newnetcdf['lon'].axis = 'lon'
 
+        begindate = date + datetime.timedelta(hours=time)
+        begindate = begindate.strftime("%Y%m%d%H")
+        time += 6
+
         # set the value of the time variable data
         newnetcdf['time'][:] = [time]
-        time += 6
+        newnetcdf['time'].begin_date = begindate
 
         # read a file to get the lat/lon variable data
         gribpath = os.path.join(gribs, file)
@@ -190,9 +196,8 @@ def grib_to_netcdf(threddspath, timestamp):
 
         for variable in gfs_variables().values():
             logging.info('copying the data for variable ' + variable + ' to the netcdf')
-            if variable not in ['lat', 'lon']:
-                newnetcdf.createVariable(varname=variable, datatype='f4', dimensions=('time', 'lat', 'lon'))
-                newnetcdf[variable].axis = 'lat lon'
+            newnetcdf.createVariable(varname=variable, datatype='f4', dimensions=('time', 'lat', 'lon'))
+            newnetcdf[variable].axis = 'lat lon'
 
             gribpath = os.path.join(gribs, file)
             obj = xarray.open_dataset(gribpath, engine='cfgrib', backend_kwargs={
@@ -200,7 +205,7 @@ def grib_to_netcdf(threddspath, timestamp):
             newnetcdf[variable][:] = obj[variable].data
             newnetcdf[variable].units = obj[variable].units
             newnetcdf[variable].long_name = obj[variable].long_name
-            newnetcdf[variable].begin_date = timestamp
+            newnetcdf[variable].begin_date = begindate
             obj.close()
 
         logging.info('finished with this grib file\n')
