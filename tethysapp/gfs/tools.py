@@ -93,8 +93,6 @@ def polychart(data):
     dataset = netCDF4.Dataset(os.path.join(path, str(files[0])), 'r')
     nc_lons = dataset['lon'][:]
     nc_lats = dataset['lat'][:]
-    print(nc_lons)
-    print(nc_lats)
     data['units'] = dataset[var].__dict__['units']
     # get a bounding box of the rectangle in terms of the index number of their lat/lons
     minlon = (numpy.abs(nc_lons - coords[1][0])).argmin()
@@ -102,12 +100,6 @@ def polychart(data):
     maxlat = (numpy.abs(nc_lats - coords[1][1])).argmin()
     minlat = (numpy.abs(nc_lats - coords[3][1])).argmin()
     dataset.close()
-    print(coords[1])
-    print(coords[3])
-    print(minlon)
-    print(maxlon)
-    print(minlat)
-    print(maxlat)
 
     # extract values at each timestep
     for nc in files:
@@ -117,7 +109,7 @@ def polychart(data):
         t_value = datetime.datetime.strptime(t_value, "%Y%m%d%H")
         t_value = calendar.timegm(t_value.utctimetuple()) * 1000
         # slice the array at the area you want
-        array = dataset[var][minlat:maxlat, minlon:maxlon].data
+        array = dataset[var][0, minlat:maxlat, minlon:maxlon].data
         array[array < -9000] = numpy.nan  # If you have fill values, change the comparator to git rid of it
         array = array.flatten()
         array = array[~numpy.isnan(array)]
@@ -178,10 +170,8 @@ def shpchart(data):
 
         # create the timesteps for the highcharts plot
         t_value = (nc_obj['time'].__dict__['begin_date'])
-        t_step = datetime.datetime.strptime(t_value, "%Y%m%d%H")
-        t_delta = 6 * i
-        t_step = t_step + datetime.timedelta(hours=t_delta)
-        time = calendar.timegm(t_step.utctimetuple()) * 1000
+        t_value = datetime.datetime.strptime(t_value, "%Y%m%d%H")
+        t_value = calendar.timegm(t_value.utctimetuple()) * 1000
 
         # file paths and settings
         shppath = os.path.join(wrkpath, 'shapefiles', region, region.replace(' ', '') + '.shp')
@@ -193,7 +183,7 @@ def shpchart(data):
             newtiff.write(array, 1)
 
         stats = rasterstats.zonal_stats(shppath, gtiffpath, stats="mean")
-        values.append((time, stats[0]['mean']))
+        values.append((t_value, stats[0]['mean']))
 
     if os.path.isdir(geotiffdir):
         shutil.rmtree(geotiffdir)

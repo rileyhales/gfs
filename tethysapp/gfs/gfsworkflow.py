@@ -37,7 +37,7 @@ def setenvironment():
     with open(timefile, 'r') as file:
         lasttime = file.readline()
         if lasttime == timestamp:
-            # use the redundant check to exacpt the function because its already been run
+            # use the redundant check to skip the function because its already been run
             redundant = True
             logging.info('The last recorded timestamp is the timestamp we determined, aborting workflow')
             return threddspath, wrksppath, timestamp, redundant
@@ -101,12 +101,9 @@ def download_gfs(threddspath, timestamp):
     fc_steps = ['006', '012', '018', '024', '030', '036', '042', '048', '054', '060', '066', '072', '078', '084',
                 '090', '096', '102', '108', '114', '120', '126', '132', '138', '144', '150', '156', '162', '168']
 
-    # this is where the actual downloads happen. set the url, filepath, then download
-    subregion = 'subregion=&leftlon=-180&rightlon=180&toplat=90&bottomlat=-90'
-
     for step in fc_steps:
         url = 'https://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p25.pl?file=gfs.t' + time + 'z.pgrb2.0p25.f' + step + \
-              '&lev_surface=on&all_var=on&' + subregion + '&dir=%2Fgfs.' + fc_date + '%2F' + time
+              '&lev_surface=on&all_var=on&&dir=%2Fgfs.' + fc_date + '%2F' + time
 
         fc_timestamp = datetime.datetime.strptime(timestamp, "%Y%m%d%H")
         file_timestep = fc_timestamp + datetime.timedelta(hours=int(step))
@@ -162,6 +159,10 @@ def grib_to_netcdf(threddspath, timestamp):
     grib_files = [grib for grib in files if grib.endswith('.grb')]
     logging.info('There are ' + str(len(files)) + ' compatible files.')
     time = 6
+
+    latitudes = [-90 + (i * .25) for i in range(721)]
+    longitudes = [-180 + (i * .25) for i in range(1440)]
+
     for file in grib_files:
         # create the new netcdf
         ncname = file.replace('.grb', '.nc')
@@ -190,8 +191,10 @@ def grib_to_netcdf(threddspath, timestamp):
         gribpath = os.path.join(gribs, file)
         obj = xarray.open_dataset(gribpath, engine='cfgrib', backend_kwargs={
             'filter_by_keys': {'typeOfLevel': 'surface', 'cfVarName': 'vis'}})
-        newnetcdf['lat'][:] = obj['latitude'].data
-        newnetcdf['lon'][:] = obj['longitude'].data
+        # newnetcdf['lat'][:] = obj['latitude'].data
+        # newnetcdf['lon'][:] = obj['longitude'].data
+        newnetcdf['lat'][:] = latitudes
+        newnetcdf['lon'][:] = longitudes
         obj.close()
 
         for variable in gfs_variables().values():
