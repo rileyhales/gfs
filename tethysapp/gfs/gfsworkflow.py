@@ -3,6 +3,7 @@ import shutil
 import xarray
 import netCDF4
 import requests
+import numpy
 
 from .options import *
 
@@ -243,6 +244,36 @@ def new_ncml(threddspath, timestamp):
     return
 
 
+def set_wmsbounds(threddspath, timestamp):
+    logging.info('\nSetting new WMS bounds')
+    # setting the environment file paths
+    netcdfs = os.path.join(threddspath, timestamp, 'netcdfs')
+    bounds = {}
+
+    for variable in gfs_variables().values():
+        logging.info('Checking the variable ' + variable)
+        maximum = -10000
+        minimum = 10000
+        for file in os.listdir(netcdfs):
+            path = os.path.join(netcdfs, file)
+            nc = netCDF4.Dataset(path, mode='r')
+            data = nc[variable][:]
+            tmp_max = numpy.amax(data)
+            tmp_min = numpy.amin(data)
+            if tmp_max > maximum:
+                maximum = int(tmp_max)
+            if tmp_min < minimum:
+                minimum = int(tmp_min)
+        bounds[variable] = str(minimum) + ',' + str(maximum)
+
+    boundsfile = os.path.join(os.path.dirname(__file__), 'public', 'js', 'bounds.js')
+    logging.info('the js file is at ' + boundsfile)
+    with open(boundsfile, 'w') as file:
+        file.write('const bounds = ' + str(bounds) + ';')
+    logging.info('wrote the js file')
+    return
+
+
 def cleanup(threddspath, timestamp):
     # delete anything that isn't the new folder of data (named for the timestamp) or the new wms.ncml file
     logging.info('Getting rid of old data folders')
@@ -282,6 +313,7 @@ def run_gfs_workflow():
         return 'Workflow Aborted- Downloading Errors Occurred'
     grib_to_netcdf(threddspath, timestamp)
     new_ncml(threddspath, timestamp)
+    set_wmsbounds(threddspath, timestamp)
     cleanup(threddspath, timestamp)
 
     logging.info('\nAll finished- writing the timestamp used on this run to a txt file')

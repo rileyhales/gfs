@@ -28,6 +28,7 @@ def gfs_variables():
     List of the plottable variables from the GFS model
     """
     return {
+        'Temperature': 't',
         'Albedo': 'al',
         'Convective precipitation (water)': 'acpcp',
         'Convective precipitation rate': 'cprat',
@@ -39,7 +40,6 @@ def gfs_variables():
         'Sensible heat net flux': 'shtfl',
         'Snow depth': 'sde',
         'Surface pressure': 'sp',
-        'Temperature': 't',
         'Visibility': 'vis',
         'Water equivalent of accumulated snow depth': 'sdwe',
         'Water runoff': 'watr',

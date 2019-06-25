@@ -37,9 +37,10 @@ function basemaps() {
 ////////////////////////////////////////////////////////////////////////  WMS LAYERS FOR GLDAS
 function newLayer() {
     let url = threddsbase + 'wms.ncml';
+    let variable = $("#variables").val()
     let wmsLayer = L.tileLayer.wms(url, {
         // version: '1.3.0',
-        layers: 'gust',
+        layers: variable,
         dimension: 'time',
         useCache: true,
         crossOrigin: false,
@@ -48,7 +49,7 @@ function newLayer() {
         opacity: $("#opacity_raster").val(),
         BGCOLOR: '0x000000',
         styles: 'boxfill/' + $('#colorscheme').val(),
-        colorscalerange: bounds[$("#variables").val()],
+        colorscalerange: bounds[variable],
     });
 
     let timedLayer = L.timeDimension.layer.wms(wmsLayer, {
