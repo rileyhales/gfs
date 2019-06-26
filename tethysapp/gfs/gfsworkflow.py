@@ -5,7 +5,6 @@ import netCDF4
 import requests
 import numpy
 import multiprocessing
-import time as Time
 from .options import *
 
 
@@ -91,10 +90,9 @@ def new_download(fc_steps):
     threddspath = configuration['threddsdatadir']
     gribsdir = os.path.join(threddspath, timestamp, 'gribs')
 
-
     for step in fc_steps:
         url = 'https://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p25.pl?file=gfs.t' + time + 'z.pgrb2.0p25.f' + step + \
-              '&all_leve=on&all_var=on&&dir=%2Fgfs.' + fc_date + '%2F' + time
+              '&all_lev=on&all_var=on&&dir=%2Fgfs.' + fc_date + '%2F' + time
 
         fc_timestamp = datetime.datetime.strptime(timestamp, "%Y%m%d%H")
         file_timestep = fc_timestamp + datetime.timedelta(hours=int(step))
@@ -147,11 +145,14 @@ def download_gfs(threddspath, timestamp):
     logging.info('ok imma start the multi stuff')
     pool = multiprocessing.Pool(processes=3)
     finished = pool.map(new_download, fc_steps)
-    finished.get
-    while not finished:
-        Time.sleep(10)
+    pool.close()
+    pool.join()
 
-    return True
+    if len(finished) == sum(finished):
+        # if they're all true (True = 1)
+        return True
+    else:
+        return False
 
 
 def grib_to_netcdf(threddspath, timestamp):
