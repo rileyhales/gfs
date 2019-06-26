@@ -23,28 +23,38 @@ def gettimestamp():
         return file.read()
 
 
+def gfs_forecastlevels():
+    return [
+        # ('Height Above Ground', 'heightAboveGround'),
+        ('Height Above Sea', 'heightAboveSea'),
+        ('Hybrid', 'hybrid'),
+        # ('Isobaric (hPa)', 'isobaricInhPa'),
+        ('Isotherm Zero', 'isothermZero'),
+        ('Max Wind', 'maxWind'),
+        ('Mean Sea Level', 'meanSea'),
+        ('Other', 'unknown'),
+        ('Potential Vorticity', 'potentialVorticity'),
+        # ('Pressure From Ground Layer', 'pressureFromGroundLayer'),
+        ('Sigma', 'sigma'),
+        ('Sigma Layer', 'sigmaLayer'),
+        ('Surface', 'surface'),
+        ('Tropopause', 'tropopause'),
+    ]
+
+
 def gfs_variables():
-    """
-    List of the plottable variables from the GFS model
-    """
-    return {
-        'Temperature': 't',
-        'Albedo': 'al',
-        'Convective precipitation (water)': 'acpcp',
-        'Convective precipitation rate': 'cprat',
-        'Latent heat net flux': 'lhtfl',
-        'Momentum flux, u component': 'uflx',
-        'Momentum flux, v component': 'vflx',
-        'Percent frozen precipitation': 'cpofp',
-        'Sea ice area fraction': 'siconc',
-        'Sensible heat net flux': 'shtfl',
-        'Snow depth': 'sde',
-        'Surface pressure': 'sp',
-        'Visibility': 'vis',
-        'Water equivalent of accumulated snow depth': 'sdwe',
-        'Water runoff': 'watr',
-        'Wind speed (gust)': 'gust',
-    }
+    return [
+        ('Best (4-layer) lifted index', '4lftx'), ('Convective available potential energy', 'cape'),
+        ('Convective inhibition', 'cin'), ('Cloud mixing ratio', 'clwmr'), ('Cloud water', 'cwat'),
+        ('Geopotential Height', 'gh'), ('Graupel (snow pellets)', 'grle'), ('hybrid level', 'hybrid'),
+        ('ICAO Standard Atmosphere reference height', 'icaht'), ('Ice water mixing ratio', 'icmr'),
+        ('Surface lifted index', 'lftx'), ('Mean Sea Level Pressure (Eta model reduction)', 'mslet'),
+        ('Orography', 'orog'), ('Precipitation rate', 'prate'), ('Pressure', 'pres'),
+        ('Pressure reduced to MSL', 'prmsl'), ('Potential temperature', 'pt'), ('Precipitable water', 'pwat'),
+        ('Relative humidity', 'r'), ('Rain mixing ratio', 'rwmr'), ('Snow mixing ratio', 'snmr'),
+        ('Surface pressure', 'sp'), ('Temperature', 't'), ('Total ozone', 'tozne'), ('U component of wind', 'u'),
+        ('V component of wind', 'v'), ('Vertical speed shear', 'vwsh'), ('Vertical velocity', 'w')
+    ]
 
 
 def wms_colors():
@@ -89,3 +99,29 @@ def currentgfs():
         timestamp = datetime.datetime.strptime(timestamp, "%Y%m%d%H")
         return "This GFS data from " + datetime.datetime.strftime(timestamp, "%b %d, %I%p UTC")
     return "No GFS data detected"
+
+
+def structure():
+    return {
+        'heightAboveSea': [('Temperature', 't'), ('U component of wind', 'u'), ('V component of wind', 'v')],
+        'hybrid': [('Cloud mixing ratio', 'clwmr'), ('Graupel (snow pellets)', 'grle'), ('hybrid level', 'hybrid'),
+                   ('Ice water mixing ratio', 'icmr'), ('Rain mixing ratio', 'rwmr'), ('Snow mixing ratio', 'snmr')],
+        'isothermZero': [('Geopotential Height', 'gh'), ('Relative humidity', 'r')],
+        'maxWind': [('Geopotential Height', 'gh'), ('ICAO Standard Atmosphere reference height', 'icaht'),
+                    ('Pressure', 'pres'), ('Temperature', 't'), ('U component of wind', 'u'),
+                    ('V component of wind', 'v')],
+        'meanSea': [('Mean Sea Level Pressure (Eta model reduction)', 'mslet'), ('Pressure reduced to MSL', 'prmsl')],
+        'potentialVorticity': [('Geopotential Height', 'gh'), ('Pressure', 'pres'), ('Temperature', 't'),
+                               ('U component of wind', 'u'), ('V component of wind', 'v'),
+                               ('Vertical speed shear', 'vwsh')],
+        'sigma': [('Potential temperature', 'pt'), ('Relative humidity', 'r'), ('Temperature', 't'),
+                  ('U component of wind', 'u'), ('V component of wind', 'v'), ('Vertical velocity', 'w')],
+        'sigmaLayer': [('Relative humidity', 'r')],
+        'surface': [('Best (4-layer) lifted index', '4lftx'), ('Convective available potential energy', 'cape'),
+                    ('Convective inhibition', 'cin'), ('Surface lifted index', 'lftx'), ('Orography', 'orog'),
+                    ('Precipitation rate', 'prate'), ('Surface pressure', 'sp')],
+        'tropopause': [('Geopotential Height', 'gh'), ('ICAO Standard Atmosphere reference height', 'icaht'),
+                       ('Pressure', 'pres'), ('Temperature', 't'), ('U component of wind', 'u'),
+                       ('V component of wind', 'v'), ('Vertical speed shear', 'vwsh')],
+        'unknown': [('Cloud water', 'cwat'), ('Geopotential Height', 'gh'), ('Precipitable water', 'pwat'),
+                    ('Relative humidity', 'r'), ('Total ozone', 'tozne')]}

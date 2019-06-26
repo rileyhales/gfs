@@ -66,8 +66,20 @@
 {% block app_navigation_items %}
   <li class="title" role="button" id="datatoggle">GFS Data Controls</li>
   <div id="datacontrols">
-    {% gizmo select_input variables %}
-<!--    <a class="btn btn-default btn-block" role="button" id="updategfsbtn">Check for updated GFS Data</a>-->
+    {% gizmo select_input layers %}
+
+    <div id="heightAboveSea_wrap" style="display: none">{% gizmo select_input heightAboveSea_vars %}</div>
+    <div id="hybrid_wrap" style="display: none">{% gizmo select_input hybrid_vars %}</div>
+    <div id="isothermZero_wrap" style="display: none">{% gizmo select_input isothermZero_vars %}</div>
+    <div id="maxWind_wrap" style="display: none">{% gizmo select_input maxWind_vars %}</div>
+    <div id="meanSea_wrap" style="display: none">{% gizmo select_input meanSea_vars %}</div>
+    <div id="potentialVorticity_wrap" style="display: none">{% gizmo select_input potentialVorticity_vars %}</div>
+    <div id="sigma_wrap" style="display: none">{% gizmo select_input sigma_vars %}</div>
+    <div id="sigmaLayer_wrap" style="display: none">{% gizmo select_input sigmalayer_vars %}</div>
+    <div id="surface_wrap">{% gizmo select_input surface_vars %}</div>
+    <div id="tropopause_wrap" style="display: none">{% gizmo select_input tropopause_vars %}</div>
+    <div id="unknown_wrap" style="display: none">{% gizmo select_input unknown_vars %}</div>
+    
     <div style="text-align: center; padding: 4px;"><strong>{{ current_gfs_time }}</strong></div>
     <div id="mouse-position" class="well well-sm" style="text-align: center"></div>
   </div>

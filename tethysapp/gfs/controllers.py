@@ -8,7 +8,7 @@ import logging
 import datetime
 import os
 from .app import Gfs as App
-from .options import gfs_variables, wms_colors, geojson_colors, currentgfs, app_settings
+from .options import gfs_forecastlevels, gfs_variables, wms_colors, geojson_colors, currentgfs, app_settings, structure
 from .gfsworkflow import run_gfs_workflow
 
 
@@ -17,19 +17,103 @@ def home(request):
     """
     Controller for the app home page.
     """
-    variables = gfs_variables()
-    options = []
-    for key in sorted(variables.keys()):
-        tuple1 = (key, variables[key])
-        options.append(tuple1)
-    del tuple1, key, variables
-
-    variables = SelectInput(
-        display_text='Select GFS Variable',
-        name='variables',
+    layers = SelectInput(
+        display_text='GFS Forecast Layers',
+        name='layers',
         multiple=False,
         original=True,
-        options=options,
+        options=gfs_forecastlevels,
+        initial='surface'
+    )
+
+    reference = structure()
+
+    heightAboveSea_vars = SelectInput(
+        display_text='Height Above Sea GFS Variables',
+        name='heightAboveSea_vars',
+        multiple=False,
+        original=True,
+        options=reference['heightAboveSea'],
+    )
+
+    hybrid_vars = SelectInput(
+        display_text='Hybrid GFS Variables',
+        name='hybrid_vars',
+        multiple=False,
+        original=True,
+        options=reference['hybrid'],
+    )
+
+    isothermZero_vars = SelectInput(
+        display_text='Isotherm GFS Variables',
+        name='isothermZero_vars',
+        multiple=False,
+        original=True,
+        options=reference['isothermZero'],
+    )
+
+    maxWind_vars = SelectInput(
+        display_text='Wind GFS Variables',
+        name='maxWind_vars',
+        multiple=False,
+        original=True,
+        options=reference['maxWind'],
+    )
+
+    meanSea_vars = SelectInput(
+        display_text='Mean Sea GFS Variables',
+        name='meansea_vars',
+        multiple=False,
+        original=True,
+        options=reference['meanSea'],
+    )
+
+    potentialVorticity_vars = SelectInput(
+        display_text='Potential Vorticity GFS Variables',
+        name='potentialVorticity_vars',
+        multiple=False,
+        original=True,
+        options=reference['potentialVorticity'],
+    )
+
+    sigma_vars = SelectInput(
+        display_text='Sigma GFS Variables',
+        name='sigma_vars',
+        multiple=False,
+        original=True,
+        options=reference['sigma'],
+    )
+
+    sigmalayer_vars = SelectInput(
+        display_text='Sigma Layer GFS Variables',
+        name='sigmaLayer_vars',
+        multiple=False,
+        original=True,
+        options=reference['sigmaLayer'],
+    )
+
+    surface_vars = SelectInput(
+        display_text='Surface GFS Variables',
+        name='surface_vars',
+        multiple=False,
+        original=True,
+        options=reference['surface'],
+    )
+
+    tropopause_vars = SelectInput(
+        display_text='Tropopause GFS Variables',
+        name='tropopause_vars',
+        multiple=False,
+        original=True,
+        options=reference['tropopause'],
+    )
+
+    unknown_vars = SelectInput(
+        display_text='Other GFS Variables',
+        name='unknown_vars',
+        multiple=False,
+        original=True,
+        options=reference['unknown'],
     )
 
     current_gfs_time = currentgfs()
@@ -40,7 +124,6 @@ def home(request):
         multiple=False,
         original=True,
         options=wms_colors(),
-        initial='rainbow'
     )
 
     opacity_raster = RangeSlider(
@@ -62,7 +145,20 @@ def home(request):
     )
 
     context = {
-        'variables': variables,
+        'layers': layers,
+
+        'heightAboveSea_vars': heightAboveSea_vars,
+        'hybrid_vars': hybrid_vars,
+        'isothermZero_vars': isothermZero_vars,
+        'maxWind_vars': maxWind_vars,
+        'meanSea_vars': meanSea_vars,
+        'potentialVorticity_vars': potentialVorticity_vars,
+        'sigma_vars': sigma_vars,
+        'sigmalayer_vars': sigmalayer_vars,
+        'surface_vars': surface_vars,
+        'tropopause_vars': tropopause_vars,
+        'unknown_vars': unknown_vars,
+
         'current_gfs_time': current_gfs_time,
         'colorscheme': colorscheme,
         'opacity_raster': opacity_raster,

@@ -129,3 +129,40 @@ $("#datatoggle").click(function () {
 $("#displaytoggle").click(function () {
     $("#displaycontrols").toggle();
 });
+
+$("#layers").change(function () {
+    let layer = this.options[this.selectedIndex].value;
+    let controls = [
+        $("#heightAboveSea_wrap"), $("#hybrid_wrap"), $("#isothermZero_wrap"), $("#maxWind_wrap"),
+        $("#meanSea_wrap"), $("#potentialVorticity_wrap"), $("#sigma_wrap"), $("#sigmaLayer_wrap"),
+        $("#surface_wrap"), $("#tropopause_wrap"), $("#unknown_wrap"),
+    ];
+    for (let control in controls) {
+        controls[control].hide();
+    }
+
+    if (layer === 'heightAboveSea') {
+        $("#heightAboveSea_wrap").show();
+    } else if (layer === 'hybrid') {
+        $("#hybrid_wrap").show();
+    } else if (layer === 'isothermZero') {
+        $("#isothermZero_wrap").show();
+    } else if (layer === 'maxWind') {
+        $("#maxWind_wrap").show();
+    } else if (layer === 'meanSea') {
+        $("#meanSea_wrap").show();
+    } else if (layer === 'unknown') {
+        $("#unknown_wrap").show();
+    } else if (layer === 'potentialVorticity') {
+        $("#potentialVorticity_wrap").show();
+    } else if (layer === 'sigma') {
+        $("#sigma_wrap").show();
+    } else if (layer === 'sigmaLayer') {
+        $("#sigmaLayer_wrap").show();
+    } else if (layer === 'surface') {
+        $("#surface_wrap").show();
+    } else if (layer === 'tropopause') {
+        $("#tropopause_wrap").show();
+    }
+
+});

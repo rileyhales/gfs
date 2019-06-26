@@ -1,27 +1,21 @@
-Workflow initiated on 06/25/19 at 19:28
+Workflow initiated on 06/26/19 at 03:38
 
 Setting the Environment for the GFS Workflow
-determined the timestamp to download: 2019062506
-The last recorded timestamp is the timestamp we determined, aborting workflow
+determined the timestamp to download: 2019062518
+Creating THREDDS file structure
+All done setting up folders, on to do work
 
-Setting new WMS bounds
-Checking the variable t
-Checking the variable al
-Checking the variable acpcp
-Checking the variable cprat
-Checking the variable lhtfl
-Checking the variable uflx
-Checking the variable vflx
-Checking the variable cpofp
-Checking the variable siconc
-Checking the variable shtfl
-Checking the variable sde
-Checking the variable sp
-Checking the variable vis
-Checking the variable sdwe
-Checking the variable watr
-Checking the variable gust
-the js file is at /Users/rileyhales/tethys/src/tethys_apps/tethysapp/gfs/public/js/bounds.js
-wrote the js file
-Not Found: /favicon.ico
-"GET /favicon.ico HTTP/1.1" 404 3621
+Beginning to process on 06/26/19 at 03:38
+
+Starting GFS grib Downloads
+ok imma start the multi stuff
+downloading the file 2019062518.grb
+downloading the file 2019062518.grb
+downloading the file 2019062518.grb
+downloading the file 2019062518.grb
+downloading the file 2019062518.grb
+downloading the file 2019062518.grb
+downloading the file 2019062519.grb
+downloading the file 2019062519.grb
+downloading the file 2019062519.grb
+downloading the file 2019062519.grb
