@@ -1,27 +1,11 @@
-Workflow initiated on 06/25/19 at 19:28
+Workflow initiated on 06/26/19 at 15:17
 
 Setting the Environment for the GFS Workflow
-determined the timestamp to download: 2019062506
-The last recorded timestamp is the timestamp we determined, aborting workflow
+determined the timestamp to download: 2019062606
+There are directories for this timestep but the workflow wasn't finished. Analyzing...
 
-Setting new WMS bounds
-Checking the variable t
-Checking the variable al
-Checking the variable acpcp
-Checking the variable cprat
-Checking the variable lhtfl
-Checking the variable uflx
-Checking the variable vflx
-Checking the variable cpofp
-Checking the variable siconc
-Checking the variable shtfl
-Checking the variable sde
-Checking the variable sp
-Checking the variable vis
-Checking the variable sdwe
-Checking the variable watr
-Checking the variable gust
-the js file is at /Users/rileyhales/tethys/src/tethys_apps/tethysapp/gfs/public/js/bounds.js
-wrote the js file
-Not Found: /favicon.ico
-"GET /favicon.ico HTTP/1.1" 404 3621
+Beginning to process on 06/26/19 at 15:17
+
+Starting GFS grib Downloads
+downloading the file 2019062612.grb
+downloading the file 2019062618.grb
