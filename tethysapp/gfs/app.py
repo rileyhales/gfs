@@ -50,6 +50,10 @@ class Gfs(TethysAppBase):
                 name='getCustomSettings',
                 url='gfs/ajax/getCustomSettings',
                 controller='gfs.ajax.get_customsettings'
+            ),UrlMap(
+                name='getLevelsForVar',
+                url='gfs/ajax/getLevelsForVar',
+                controller='gfs.ajax.get_levels_for_variable'
             ),
             UrlMap(
                 name='getPointSeries',

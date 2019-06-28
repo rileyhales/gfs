@@ -73,31 +73,38 @@ legend.addTo(mapObj);                   // add the legend graphic to the map
 updateGEOJSON();                        // asynchronously get geoserver wfs/geojson data for the regions
 
 ////////////////////////////////////////////////////////////////////////  EVENT LISTENERS
-$("#updategfsbtn").click(function () {
-    if (confirm('This may take several minutes and you may not have access to the app while this process completes. Are you sure you want to update the GFS data?')) {
-        $.ajax({
-            url: '/apps/gfs/update/',
-            async: false,
-            data: '',
-            dataType: 'json',
-            contentType: "application/json",
-            method: 'POST',
-            success: function (result) {
-                location.reload();
-            },
-        });
-    }
-});
-
 $("#variables").change(function () {
-    clearMap();
-    for (let i = 0; i < geojsons.length; i++) {
-        geojsons[i][0].addTo(mapObj)
-    }
-    layerObj = newLayer();
-    controlsObj = makeControls();
-    getDrawnChart(drawnItems);
-    legend.addTo(mapObj);
+    let level_div = $("#levels");
+    level_div.empty();
+    $.ajax({
+        url: '/apps/gfs/ajax/getLevelsForVar/',
+        async: true,
+        data: JSON.stringify({variable: this.options[this.selectedIndex].value}),
+        dataType: 'json',
+        contentType: "application/json",
+        method: 'POST',
+        success: function (result) {
+            let levels = result['levels'];
+            // if (levels.length === 1) {
+            //     level_div.hide()
+            // } else {
+            //     level_div.show()
+            // }
+            for (let i = 0; i < levels.length; i++){
+                level_div.append('<option value="' + levels[i][1] + '">' + levels[i][0] + "</option>");
+            }
+
+            clearMap();
+            for (let i = 0; i < geojsons.length; i++) {
+                geojsons[i][0].addTo(mapObj)
+            }
+            layerObj = newLayer();
+            controlsObj = makeControls();
+            getDrawnChart(drawnItems);
+            legend.addTo(mapObj);
+            // todo change the measurements options
+        },
+    });
 });
 
 $("#opacity_raster").change(function () {
@@ -105,6 +112,16 @@ $("#opacity_raster").change(function () {
 });
 
 $('#colorscheme').change(function () {
+    clearMap();
+    for (let i = 0; i < geojsons.length; i++) {
+        geojsons[i][0].addTo(mapObj)
+    }
+    layerObj = newLayer();
+    controlsObj = makeControls();
+    legend.addTo(mapObj);
+});
+
+$('#levels').change(function () {
     clearMap();
     for (let i = 0; i < geojsons.length; i++) {
         geojsons[i][0].addTo(mapObj)
@@ -128,41 +145,4 @@ $("#datatoggle").click(function () {
 
 $("#displaytoggle").click(function () {
     $("#displaycontrols").toggle();
-});
-
-$("#layers").change(function () {
-    let layer = this.options[this.selectedIndex].value;
-    let controls = [
-        $("#heightAboveSea_wrap"), $("#hybrid_wrap"), $("#isothermZero_wrap"), $("#maxWind_wrap"),
-        $("#meanSea_wrap"), $("#potentialVorticity_wrap"), $("#sigma_wrap"), $("#sigmaLayer_wrap"),
-        $("#surface_wrap"), $("#tropopause_wrap"), $("#unknown_wrap"),
-    ];
-    for (let control in controls) {
-        controls[control].hide();
-    }
-
-    if (layer === 'heightAboveSea') {
-        $("#heightAboveSea_wrap").show();
-    } else if (layer === 'hybrid') {
-        $("#hybrid_wrap").show();
-    } else if (layer === 'isothermZero') {
-        $("#isothermZero_wrap").show();
-    } else if (layer === 'maxWind') {
-        $("#maxWind_wrap").show();
-    } else if (layer === 'meanSea') {
-        $("#meanSea_wrap").show();
-    } else if (layer === 'unknown') {
-        $("#unknown_wrap").show();
-    } else if (layer === 'potentialVorticity') {
-        $("#potentialVorticity_wrap").show();
-    } else if (layer === 'sigma') {
-        $("#sigma_wrap").show();
-    } else if (layer === 'sigmaLayer') {
-        $("#sigmaLayer_wrap").show();
-    } else if (layer === 'surface') {
-        $("#surface_wrap").show();
-    } else if (layer === 'tropopause') {
-        $("#tropopause_wrap").show();
-    }
-
 });

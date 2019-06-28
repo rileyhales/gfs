@@ -3,9 +3,9 @@ import ast
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 
-from .options import *
 from .tools import shpchart, pointchart, polychart
 from .gfsworkflow import *
+from .options import *
 
 
 @login_required()
@@ -66,21 +66,11 @@ def get_shapeaverage(request):
     return JsonResponse(data)
 
 
-@login_required()
-def get_newgfsdata(request):
-    """
-    gets called when you press the update gfs button on the main page
-    Dependencies: from .gfsdata import *
-    """
-    threddspath, timestamp = setenvironment()
-    download_gfs(threddspath, timestamp)
-    grib_to_netcdf(threddspath, timestamp)
-    nc_georeference(threddspath, timestamp)
-    new_ncml(threddspath, timestamp)
-    cleanup(threddspath, timestamp)
-    set_wmsbounds(threddspath, timestamp)
-
-    return JsonResponse({'Finished': 'Finished'})
+def get_levels_for_variable(request):
+    data = ast.literal_eval(request.body.decode('utf-8'))
+    variable = data['variable']
+    levels = structure_byvars()[variable]
+    return JsonResponse({'levels': levels})
 
 
 @login_required()
