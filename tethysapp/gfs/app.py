@@ -1,6 +1,11 @@
 from tethys_sdk.base import TethysAppBase, url_map_maker
 from tethys_sdk.app_settings import CustomSetting
 
+# todo figure out why the ncml isn't getting all the variables that it should
+# todo add the measurement heights to the workflow
+# todo check the charts still plot
+# todo the data are upside down and backwards
+
 
 class Gfs(TethysAppBase):
     """
@@ -22,7 +27,7 @@ class Gfs(TethysAppBase):
     youtubelink = 'https://youtube.com'
     githublink = 'https://github.com/rileyhales/gfs'
     gfslink = 'https://www.ncdc.noaa.gov/data-access/model-data/model-datasets/global-forcast-system-gfs'
-    version = 'v1.2 - 24 June 2019'
+    version = 'development 26 June 2019'
 
     def url_maps(self):
         """
@@ -47,10 +52,6 @@ class Gfs(TethysAppBase):
 
             # url maps for ajax calls
             UrlMap(
-                name='getCustomSettings',
-                url='gfs/ajax/getCustomSettings',
-                controller='gfs.ajax.get_customsettings'
-            ),UrlMap(
                 name='getLevelsForVar',
                 url='gfs/ajax/getLevelsForVar',
                 controller='gfs.ajax.get_levels_for_variable'

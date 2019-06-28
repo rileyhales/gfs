@@ -15,26 +15,7 @@ $.ajaxSetup({
 });
 
 
-////////////////////////////////////////////////////////////////////////  AJAX FUNCTIONS
-function getThreddswms() {
-    $.ajax({
-        url: '/apps/gfs/ajax/getCustomSettings/',
-        async: false,
-        data: '',
-        dataType: 'json',
-        contentType: "application/json",
-        method: 'POST',
-        success: function (result) {
-            threddsbase = result['threddsurl'];
-            geoserverbase = result['geoserverurl']
-        },
-    });
-}
-
-////////////////////////////////////////////////////////////////////////  LOAD THE MAP
-let threddsbase;
-let geoserverbase;
-getThreddswms();                        // sets the value of threddsbase and geoserverbase
+// threddsbase and geoserverurl defined in base.html
 const mapObj = map();                   // used by legend and draw controls
 const basemapObj = basemaps();          // used in the make controls function
 

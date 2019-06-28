@@ -40,7 +40,6 @@ def home(request):
         name='heights',
         multiple=False,
         original=True,
-        # options=,
     )
 
     current_gfs_time = currentgfs()
@@ -75,8 +74,8 @@ def home(request):
         'variables': variables,
         'levels': levels,
         'heights': heights,
-
         'current_gfs_time': current_gfs_time,
+
         'colorscheme': colorscheme,
         'opacity_raster': opacity_raster,
         'colors_geojson': colors_geojson,
@@ -85,6 +84,8 @@ def home(request):
         'githublink': App.githublink,
         'gfslink': App.gfslink,
         'version': App.version,
+
+        'settings': app_configuration()
     }
 
     return render(request, 'gfs/home.html', context)
@@ -97,13 +98,13 @@ def run_workflows(request):
     """
     # Check for user permissions here rather than with a decorator so that we can log the failure
     if not User.is_superuser:
-        logging.basicConfig(filename=app_settings()['logfile'], filemode='a', level=logging.INFO, format='%(message)s')
+        logging.basicConfig(filename=app_configuration()['logfile'], filemode='a', level=logging.INFO, format='%(message)s')
         logging.info('A non-superuser tried to run this workflow on ' + datetime.datetime.utcnow().strftime("%D at %R"))
         logging.info('The user was ' + str(request.user))
         return JsonResponse({'Unauthorized User': 'You do not have permission to run the workflow. Ask a superuser.'})
 
     # enable logging to track the progress of the workflow and for debugging
-    logging.basicConfig(filename=app_settings()['logfile'], filemode='w', level=logging.INFO, format='%(message)s')
+    logging.basicConfig(filename=app_configuration()['logfile'], filemode='w', level=logging.INFO, format='%(message)s')
     logging.info('Workflow initiated on ' + datetime.datetime.utcnow().strftime("%D at %R"))
 
     # Set the clobber option so that the right folders get deleted/regenerated in the set_environment functions

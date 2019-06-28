@@ -3,7 +3,7 @@ import os
 import datetime
 
 
-def app_settings():
+def app_configuration():
     """
     Gets the settings for the app for use in other functions and ajax for leaflet
     Dependencies: os, App (app)

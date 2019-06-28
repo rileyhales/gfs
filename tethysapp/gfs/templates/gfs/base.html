@@ -11,10 +11,6 @@
 
 {% block header_buttons %}
   <div style="text-align: center; color: white; padding: 8px"><strong>{{ version }}</strong></div>
-  <div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom"
-       title="How To Use This Page">
-    <a data-toggle="modal" data-target="#help-modal"><span class="glyphicon glyphicon-question-sign"></span></a>
-  </div>
   <div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom" title="Download GFS Data">
     <a href="{{ gfslink }}" target="_blank"><span class="glyphicon glyphicon-download-alt"></span></a>
   </div>
@@ -29,23 +25,6 @@
 {% endblock %}
 
 {% block after_app_content %}
-  <div class="modal fade" id="help-modal" tabindex="-1" role="dialog" aria-labelledby="help-modal-label">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                  aria-hidden="true">&times;</span></button>
-          <h5 class="modal-title" id="help-modal-label">How To Use This Page</h5>
-        </div>
-        <div class="modal-body">
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <div class="modal fade" id="data-modal" tabindex="-1" role="dialog" aria-labelledby="data-modal-label">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -106,6 +85,11 @@
 
 {% block scripts %}
   {{ block.super }}
+  <script>
+    let threddsbase = "{{ settings.threddsurl }}";
+    let geoserverbase = "{{ settings.geoserverurl }}";
+  </script>
+
   <!-- Allows csrf verification with AJAX -->
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
 
