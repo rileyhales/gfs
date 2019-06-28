@@ -25,6 +25,7 @@ function map() {
 
 function basemaps() {
     // create the basemap layers
+    // todo use esri leaflet
     let Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}');
     let Esri_WorldTerrain = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/tile/{z}/{y}/{x}', {maxZoom: 13});
     let Esri_Imagery_Labels = L.esri.basemapLayer('ImageryLabels');
@@ -36,8 +37,8 @@ function basemaps() {
 
 ////////////////////////////////////////////////////////////////////////  WMS LAYERS FOR GLDAS
 function newLayer() {
-    let url = threddsbase + 'wms.ncml';
-    let variable = $("#variables").val()
+    let url = threddsbase + $("#levels").val() + '_wms.ncml';
+    let variable = $("#variables").val();
     let wmsLayer = L.tileLayer.wms(url, {
         // version: '1.3.0',
         layers: variable,
@@ -49,7 +50,7 @@ function newLayer() {
         opacity: $("#opacity_raster").val(),
         BGCOLOR: '0x000000',
         styles: 'boxfill/' + $('#colorscheme').val(),
-        colorscalerange: bounds[variable],
+        // colorscalerange: bounds[variable],
     });
 
     let timedLayer = L.timeDimension.layer.wms(wmsLayer, {
@@ -65,9 +66,9 @@ function newLayer() {
 
 ////////////////////////////////////////////////////////////////////////  LEGEND DEFINITIONS
 let legend = L.control({position: 'topright'});
-legend.onAdd = function (mapObj) {
+legend.onAdd = function () {
     let div = L.DomUtil.create('div', 'legend');
-    let url = threddsbase + 'wms.ncml' + "?REQUEST=GetLegendGraphic&LAYER=" + $("#variables").val() + "&PALETTE=" + $('#colorscheme').val() + "&COLORSCALERANGE=" + bounds[$("#variables").val()];
+    let url = threddsbase + $("#levels").val() + '_wms.ncml' + "?REQUEST=GetLegendGraphic&LAYER=" + $("#variables").val() + "&PALETTE=" + $('#colorscheme').val(); // + "&COLORSCALERANGE=" + bounds[$("#variables").val()];
     div.innerHTML = '<img src="' + url + '" alt="legend" style="width:100%; float:right;">';
     return div
 };

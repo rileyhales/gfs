@@ -5,10 +5,10 @@ from tethys_sdk.gizmos import SelectInput, RangeSlider
 from django.contrib.auth.models import User
 
 import logging
+from .options import *
 import datetime
 import os
 from .app import Gfs as App
-from .options import gfs_variables, wms_colors, geojson_colors, currentgfs, app_settings
 from .gfsworkflow import run_gfs_workflow
 
 
@@ -17,19 +17,30 @@ def home(request):
     """
     Controller for the app home page.
     """
-    variables = gfs_variables()
-    options = []
-    for key in sorted(variables.keys()):
-        tuple1 = (key, variables[key])
-        options.append(tuple1)
-    del tuple1, key, variables
 
     variables = SelectInput(
-        display_text='Select GFS Variable',
+        display_text='GFS Forecast Variables',
         name='variables',
         multiple=False,
         original=True,
-        options=options,
+        options=gfs_variables,
+        initial='al'
+    )
+
+    levels = SelectInput(
+        display_text='Available Forecast Levels',
+        name='levels',
+        multiple=False,
+        original=True,
+        options=structure_byvars()['al'],
+    )
+
+    heights = SelectInput(
+        display_text='Measurement Heights',
+        name='heights',
+        multiple=False,
+        original=True,
+        # options=,
     )
 
     current_gfs_time = currentgfs()
@@ -40,7 +51,6 @@ def home(request):
         multiple=False,
         original=True,
         options=wms_colors(),
-        initial='rainbow'
     )
 
     opacity_raster = RangeSlider(
@@ -63,10 +73,14 @@ def home(request):
 
     context = {
         'variables': variables,
+        'levels': levels,
+        'heights': heights,
+
         'current_gfs_time': current_gfs_time,
         'colorscheme': colorscheme,
         'opacity_raster': opacity_raster,
         'colors_geojson': colors_geojson,
+
         'youtubelink': App.youtubelink,
         'githublink': App.githublink,
         'gfslink': App.gfslink,

@@ -73,31 +73,38 @@ legend.addTo(mapObj);                   // add the legend graphic to the map
 updateGEOJSON();                        // asynchronously get geoserver wfs/geojson data for the regions
 
 ////////////////////////////////////////////////////////////////////////  EVENT LISTENERS
-$("#updategfsbtn").click(function () {
-    if (confirm('This may take several minutes and you may not have access to the app while this process completes. Are you sure you want to update the GFS data?')) {
-        $.ajax({
-            url: '/apps/gfs/update/',
-            async: false,
-            data: '',
-            dataType: 'json',
-            contentType: "application/json",
-            method: 'POST',
-            success: function (result) {
-                location.reload();
-            },
-        });
-    }
-});
-
 $("#variables").change(function () {
-    clearMap();
-    for (let i = 0; i < geojsons.length; i++) {
-        geojsons[i][0].addTo(mapObj)
-    }
-    layerObj = newLayer();
-    controlsObj = makeControls();
-    getDrawnChart(drawnItems);
-    legend.addTo(mapObj);
+    let level_div = $("#levels");
+    level_div.empty();
+    $.ajax({
+        url: '/apps/gfs/ajax/getLevelsForVar/',
+        async: true,
+        data: JSON.stringify({variable: this.options[this.selectedIndex].value}),
+        dataType: 'json',
+        contentType: "application/json",
+        method: 'POST',
+        success: function (result) {
+            let levels = result['levels'];
+            // if (levels.length === 1) {
+            //     level_div.hide()
+            // } else {
+            //     level_div.show()
+            // }
+            for (let i = 0; i < levels.length; i++){
+                level_div.append('<option value="' + levels[i][1] + '">' + levels[i][0] + "</option>");
+            }
+
+            clearMap();
+            for (let i = 0; i < geojsons.length; i++) {
+                geojsons[i][0].addTo(mapObj)
+            }
+            layerObj = newLayer();
+            controlsObj = makeControls();
+            getDrawnChart(drawnItems);
+            legend.addTo(mapObj);
+            // todo change the measurements options
+        },
+    });
 });
 
 $("#opacity_raster").change(function () {
@@ -105,6 +112,16 @@ $("#opacity_raster").change(function () {
 });
 
 $('#colorscheme').change(function () {
+    clearMap();
+    for (let i = 0; i < geojsons.length; i++) {
+        geojsons[i][0].addTo(mapObj)
+    }
+    layerObj = newLayer();
+    controlsObj = makeControls();
+    legend.addTo(mapObj);
+});
+
+$('#levels').change(function () {
     clearMap();
     for (let i = 0; i < geojsons.length; i++) {
         geojsons[i][0].addTo(mapObj)
