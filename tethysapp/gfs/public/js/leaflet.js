@@ -25,7 +25,6 @@ function map() {
 
 function basemaps() {
     // create the basemap layers
-    // todo use esri leaflet
     let Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}');
     let Esri_WorldTerrain = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/tile/{z}/{y}/{x}', {maxZoom: 13});
     let Esri_Imagery_Labels = L.esri.basemapLayer('ImageryLabels');

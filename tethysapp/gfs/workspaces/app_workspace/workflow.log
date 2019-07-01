@@ -1,180 +1,127 @@
-Workflow initiated on 06/28/19 at 21:17
+Workflow initiated on 07/01/19 at 18:45
+You chose the clobber option so the timestamps and all the data folders will be overwritten
+Clobber complete. Files marked for execution
 
 Setting the Environment for the GFS Workflow
-determined the timestamp to download: 2019062812
+determined the timestamp to download: 2019070112
+Creating THREDDS file structure
+Internal Server Error: /apps/gfs/runWorkflows/
+Traceback (most recent call last):
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/core/handlers/base.py", line 249, in _legacy_get_response
+    response = self._get_response(request)
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/contrib/auth/decorators.py", line 23, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/Users/rileyhales/tethys/src/tethys_apps/tethysapp/gfs/controllers.py", line 123, in run_workflows
+    gfs_status = run_gfs_workflow()
+  File "/Users/rileyhales/tethys/src/tethys_apps/tethysapp/gfs/gfsworkflow.py", line 265, in run_gfs_workflow
+    threddspath, wrksppath, timestamp, redundant = setenvironment()
+  File "/Users/rileyhales/tethys/src/tethys_apps/tethysapp/gfs/gfsworkflow.py", line 55, in setenvironment
+    new_dir = os.path.join(threddspath)
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/posixpath.py", line 80, in join
+    a = os.fspath(a)
+TypeError: expected str, bytes or os.PathLike object, not NoneType
+"GET /apps/gfs/runWorkflows/?clobber=true HTTP/1.1" 500 97462
+Workflow initiated on 07/01/19 at 18:45
+You chose the clobber option so the timestamps and all the data folders will be overwritten
+Clobber complete. Files marked for execution
+
+Setting the Environment for the GFS Workflow
+determined the timestamp to download: 2019070112
 Creating THREDDS file structure
 All done setting up folders, on to do work
 
-Beginning to process on 06/28/19 at 21:17
+Beginning to process on 07/01/19 at 18:45
 
 Starting GFS grib Downloads
-downloading 2019062818.grb (step 006 of 036)
-  Download took 18.3015398979187
-downloading 2019062900.grb (step 012 of 036)
-  Download took 14.291816234588623
-downloading 2019062906.grb (step 018 of 036)
-  Download took 21.006315231323242
-downloading 2019062912.grb (step 024 of 036)
-  Download took 12.98595404624939
-downloading 2019062918.grb (step 030 of 036)
-  Download took 16.463610887527466
-downloading 2019063000.grb (step 036 of 036)
-  Download took 10.999764919281006
+downloading 2019070118.grb (step 006 of 012)
+  Download took 27.88843083381653
+downloading 2019070200.grb (step 012 of 012)
+  Download took 19.226961851119995
 Finished Downloads
 
 Starting Grib Conversions
 
 working on level atmosphere
-converting 2019063000.grb
-converting 2019062900.grb
-converting 2019062912.grb
-converting 2019062906.grb
-converting 2019062818.grb
-converting 2019062918.grb
+converting 2019070118.grb
+converting 2019070200.grb
 
 working on level depthBelowLandLayer
-converting 2019063000.grb
-converting 2019062900.grb
-converting 2019062912.grb
-converting 2019062906.grb
-converting 2019062818.grb
-converting 2019062918.grb
+converting 2019070118.grb
+converting 2019070200.grb
 
 working on level heightAboveGround
-converting 2019063000.grb
-converting 2019062900.grb
-converting 2019062912.grb
-converting 2019062906.grb
-converting 2019062818.grb
-converting 2019062918.grb
+converting 2019070118.grb
+converting 2019070200.grb
 
 working on level heightAboveGroundLayer
-converting 2019063000.grb
-converting 2019062900.grb
-converting 2019062912.grb
-converting 2019062906.grb
-converting 2019062818.grb
-converting 2019062918.grb
+converting 2019070118.grb
+converting 2019070200.grb
 
 working on level heightAboveSea
-converting 2019063000.grb
-converting 2019062900.grb
-converting 2019062912.grb
-converting 2019062906.grb
-converting 2019062818.grb
-converting 2019062918.grb
+converting 2019070118.grb
+converting 2019070200.grb
 
 working on level hybrid
-converting 2019063000.grb
-converting 2019062900.grb
-converting 2019062912.grb
-converting 2019062906.grb
-converting 2019062818.grb
-converting 2019062918.grb
+converting 2019070118.grb
+converting 2019070200.grb
 
 working on level isothermZero
-converting 2019063000.grb
-converting 2019062900.grb
-converting 2019062912.grb
-converting 2019062906.grb
-converting 2019062818.grb
-converting 2019062918.grb
+converting 2019070118.grb
+converting 2019070200.grb
 
 working on level isobaricInPa
-converting 2019063000.grb
-converting 2019062900.grb
-converting 2019062912.grb
-converting 2019062906.grb
-converting 2019062818.grb
-converting 2019062918.grb
+converting 2019070118.grb
+converting 2019070200.grb
 
 working on level isobaricInhPa
-converting 2019063000.grb
-converting 2019062900.grb
-converting 2019062912.grb
-converting 2019062906.grb
-converting 2019062818.grb
-converting 2019062918.grb
+converting 2019070118.grb
+converting 2019070200.grb
 
 working on level maxWind
-converting 2019063000.grb
-converting 2019062900.grb
-converting 2019062912.grb
-converting 2019062906.grb
-converting 2019062818.grb
-converting 2019062918.grb
+converting 2019070118.grb
+converting 2019070200.grb
 
 working on level meanSea
-converting 2019063000.grb
-converting 2019062900.grb
-converting 2019062912.grb
-converting 2019062906.grb
-converting 2019062818.grb
-converting 2019062918.grb
+converting 2019070118.grb
+converting 2019070200.grb
 
 working on level nominalTop
-converting 2019063000.grb
-converting 2019062900.grb
-converting 2019062912.grb
-converting 2019062906.grb
-converting 2019062818.grb
-converting 2019062918.grb
+converting 2019070118.grb
+converting 2019070200.grb
 
 working on level potentialVorticity
-converting 2019063000.grb
-converting 2019062900.grb
-converting 2019062912.grb
-converting 2019062906.grb
-converting 2019062818.grb
-converting 2019062918.grb
+converting 2019070118.grb
+converting 2019070200.grb
 
 working on level pressureFromGroundLayer
-converting 2019063000.grb
-converting 2019062900.grb
-converting 2019062912.grb
-converting 2019062906.grb
-converting 2019062818.grb
-converting 2019062918.grb
+converting 2019070118.grb
+converting 2019070200.grb
 
 working on level sigma
-converting 2019063000.grb
-converting 2019062900.grb
-converting 2019062912.grb
-converting 2019062906.grb
-converting 2019062818.grb
-converting 2019062918.grb
+converting 2019070118.grb
+converting 2019070200.grb
 
 working on level sigmaLayer
-converting 2019063000.grb
-converting 2019062900.grb
-converting 2019062912.grb
-converting 2019062906.grb
-converting 2019062818.grb
-converting 2019062918.grb
+converting 2019070118.grb
+converting 2019070200.grb
 
 working on level surface
-converting 2019063000.grb
-converting 2019062900.grb
-converting 2019062912.grb
-converting 2019062906.grb
-converting 2019062818.grb
-converting 2019062918.grb
+converting 2019070118.grb
+converting 2019070200.grb
 
 working on level tropopause
-converting 2019063000.grb
-converting 2019062900.grb
-converting 2019062912.grb
-converting 2019062906.grb
-converting 2019062818.grb
-converting 2019062918.grb
+converting 2019070118.grb
+converting 2019070200.grb
 
 working on level unknown
-converting 2019063000.grb
-converting 2019062900.grb
-converting 2019062912.grb
-converting 2019062906.grb
-converting 2019062818.grb
-converting 2019062918.grb
+converting 2019070118.grb
+converting 2019070200.grb
 Conversion Completed
 
 Writing a new ncml file for this date
@@ -203,6 +150,4 @@ Done
 All finished- writing the timestamp used on this run to a txt file
 
 
-GFS Workflow completed successfully on 06/28/19 at 21:21
-Not Found: /favicon.ico
-"GET /favicon.ico HTTP/1.1" 404 3621
+GFS Workflow completed successfully on 07/01/19 at 18:47

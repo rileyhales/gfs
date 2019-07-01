@@ -3,7 +3,6 @@ import shutil
 import pygrib
 import netCDF4
 import requests
-import numpy
 import time as Time
 from .options import *
 
@@ -21,7 +20,7 @@ def setenvironment():
         timestamp = now.strftime("%Y%m%d") + '12'
     elif now.hour >= 6:
         timestamp = now.strftime("%Y%m%d") + '06'
-    elif now.hour >= 0:
+    else:   # now.hour >= 0:
         timestamp = now.strftime("%Y%m%d") + '00'
     logging.info('determined the timestamp to download: ' + timestamp)
 
@@ -96,7 +95,7 @@ def download_gfs(threddspath, timestamp):
     fc_date = datetime.datetime.strptime(timestamp, "%Y%m%d%H").strftime("%Y%m%d")
 
     # This is the List of forecast timesteps for 5 days (6-hr increments). download them all
-    fc_steps = ['006', '012', '018', '024', '030', '036']  # , '042', '048', '054', '060', '066', '072', '078', '084']
+    fc_steps = ['006', '012', '018', '024', '030', '036', '042', '048', '054', '060', '066', '072']  # , '078', '084']
     # '090', '096', '102', '108', '114', '120', '126', '132', '138', '144', '150', '156', '162', '168']
 
     for step in fc_steps:
@@ -214,25 +213,28 @@ def grib_to_netcdf(threddspath, timestamp):
 def new_ncml(threddspath, timestamp):
     logging.info('\nWriting a new ncml file for this date')
     # create a new ncml file by filling in the template with the right dates and writing to a file
+    date = datetime.datetime.strptime(timestamp, "%Y%m%d%H")
+    date = date.strftime("%Y-%m-%d %H:00:00")
+    netcdfs = os.listdir(os.path.join(threddspath, timestamp, 'netcdfs'))
     for level in gfs_forecastlevels():
         ncml = os.path.join(threddspath, level + '_wms.ncml')
-        date = datetime.datetime.strptime(timestamp, "%Y%m%d%H")
-        date = date.strftime("%Y-%m-%d %H:00:00")
+        level_ncs = [nc for nc in netcdfs if nc.startswith(level) and nc.endswith('.nc')]
         with open(ncml, 'w') as file:
             file.write(
                 '<netcdf xmlns="http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2">\n'
-                '    <variable name="time" type="int" shape="time">\n'
-                '        <attribute name="units" value="hours since ' + date + '"/>\n'
-                '        <attribute name="_CoordinateAxisType" value="Time" />\n'
-                '        <values start="0" increment="6" />\n'
-                '    </variable>\n'
-                '    <aggregation dimName="time" type="joinExisting" recheckEvery="5 minutes">\n'
-                '        <scan location="' + timestamp + '/netcdfs/" suffix=".nc">\n'
-                '           <filter>\n'
-                '               <include wildcard="' + level + '_*"/>\n'
-                '           </filter>\n'
-                '        </scan>\n'
-                '    </aggregation>\n'
+                '   <variable name="time" type="int" shape="time">\n'
+                '      <attribute name="units" value="hours since ' + date + '"/>\n'
+                '      <attribute name="_CoordinateAxisType" value="Time" />\n'
+                '       <values start="0" increment="6" />\n'
+                '   </variable>\n'
+                '   <aggregation dimName="time" type="joinExisting" recheckEvery="5 minutes">\n'
+            )
+            for nc in level_ncs:
+                file.write(
+                    '      <netcdf location="' + timestamp + '/netcdfs/' + nc + '"/>\n'
+                )
+            file.write(
+                '   </aggregation>\n'
                 '</netcdf>'
             )
         logging.info('wrote ncml for ' + level)
