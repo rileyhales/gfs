@@ -98,6 +98,7 @@ function getDrawnChart(drawnItems) {
             coords: coords,
             geojson: geojson[0],
             variable: $('#variables').val(),
+            level: $("#levels").val()
         };
 
         // decide which ajax url you need based on drawing type
@@ -133,6 +134,7 @@ function getShapeChart(selectedregion) {
     let data = {
         variable: $('#variables').val(),
         region: selectedregion,
+        level: $("#levels").val()
     };
     if (selectedregion === 'lastregion') {
         // if we want to update, change the region to the last completed region

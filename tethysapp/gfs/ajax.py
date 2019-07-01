@@ -4,7 +4,6 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 
 from .tools import shpchart, pointchart, polychart
-from .gfsworkflow import *
 from .options import *
 
 
@@ -19,10 +18,9 @@ def get_pointseries(request):
     data['type'] = '(Values at a Point)'
 
     variables = gfs_variables()
-    for key in variables:
-        if variables[key] == data['variable']:
-            name = key
-            data['name'] = name
+    for option in variables:
+        if option[1] == data['variable']:
+            data['name'] = option[0]
             break
     return JsonResponse(data)
 
@@ -38,10 +36,9 @@ def get_polygonaverage(request):
     data['type'] = '(Averaged over a Polygon)'
 
     variables = gfs_variables()
-    for key in variables:
-        if variables[key] == data['variable']:
-            name = key
-            data['name'] = name
+    for option in variables:
+        if option[1] == data['variable']:
+            data['name'] = option[0]
             break
     return JsonResponse(data)
 
@@ -58,10 +55,9 @@ def get_shapeaverage(request):
     data['type'] = '(Average for ' + data['region'] + ')'
 
     variables = gfs_variables()
-    for key in variables:
-        if variables[key] == data['variable']:
-            name = key
-            data['name'] = name
+    for option in variables:
+        if option[1] == data['variable']:
+            data['name'] = option[0]
             break
     return JsonResponse(data)
 

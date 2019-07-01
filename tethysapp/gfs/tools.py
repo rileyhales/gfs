@@ -23,6 +23,7 @@ def pointchart(data):
     # input parameters
     var = str(data['variable'])
     coords = data['coords']
+    level = data['level']
 
     # environment settings
     configs = app_configuration()
@@ -34,7 +35,7 @@ def pointchart(data):
 
     # list the netcdfs to be processed
     allfiles = os.listdir(path)
-    files = [nc for nc in allfiles if nc.endswith('.nc')]
+    files = [nc for nc in allfiles if nc.startswith(level) and nc.endswith('.nc')]
     files.sort()
 
     # get a list of the latitudes and longitudes and the units
@@ -75,6 +76,7 @@ def polychart(data):
     # input parameters
     var = str(data['variable'])
     coords = data['coords'][0]  # 5x2 array 1 row/[lat,lon]/corner (1st repeated), clockwise from bottom-left
+    level = data['level']
 
     # environment settings
     configs = app_configuration()
@@ -86,7 +88,7 @@ def polychart(data):
 
     # list the netcdfs to be processed
     allfiles = os.listdir(path)
-    files = [nc for nc in allfiles if nc.endswith('.nc')]
+    files = [nc for nc in allfiles if nc.startswith(level) and nc.endswith('.nc')]
     files.sort()
 
     # get a list of the latitudes and longitudes and the units
@@ -133,6 +135,7 @@ def shpchart(data):
     # input parameters
     var = str(data['variable'])
     region = data['region']
+    level = data['level']
 
     # environment settings
     configs = app_configuration()
@@ -145,7 +148,7 @@ def shpchart(data):
 
     # list the netcdfs to be processed
     allfiles = os.listdir(path)
-    files = [nc for nc in allfiles if nc.endswith('.nc')]
+    files = [nc for nc in allfiles if nc.startswith(level) and nc.endswith('.nc')]
     files.sort()
 
     # Remove old geotiffs before filling it

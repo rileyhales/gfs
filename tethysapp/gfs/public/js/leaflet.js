@@ -49,7 +49,7 @@ function newLayer() {
         opacity: $("#opacity_raster").val(),
         BGCOLOR: '0x000000',
         styles: 'boxfill/' + $('#colorscheme').val(),
-        // colorscalerange: bounds[variable],
+        colorscalerange: bounds[variable],
     });
 
     let timedLayer = L.timeDimension.layer.wms(wmsLayer, {
@@ -67,7 +67,7 @@ function newLayer() {
 let legend = L.control({position: 'topright'});
 legend.onAdd = function () {
     let div = L.DomUtil.create('div', 'legend');
-    let url = threddsbase + $("#levels").val() + '_wms.ncml' + "?REQUEST=GetLegendGraphic&LAYER=" + $("#variables").val() + "&PALETTE=" + $('#colorscheme').val(); // + "&COLORSCALERANGE=" + bounds[$("#variables").val()];
+    let url = threddsbase + $("#levels").val() + '_wms.ncml' + "?REQUEST=GetLegendGraphic&LAYER=" + $("#variables").val() + "&PALETTE=" + $('#colorscheme').val() + "&COLORSCALERANGE=" + bounds[$("#variables").val()];
     div.innerHTML = '<img src="' + url + '" alt="legend" style="width:100%; float:right;">';
     return div
 };

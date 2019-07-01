@@ -35,12 +35,12 @@ def home(request):
         options=structure_byvars()['al'],
     )
 
-    heights = SelectInput(
-        display_text='Measurement Heights',
-        name='heights',
-        multiple=False,
-        original=True,
-    )
+    # heights = SelectInput(
+    #     display_text='Measurement Heights',
+    #     name='heights',
+    #     multiple=False,
+    #     original=True,
+    # )
 
     current_gfs_time = currentgfs()
 
@@ -73,7 +73,7 @@ def home(request):
     context = {
         'variables': variables,
         'levels': levels,
-        'heights': heights,
+        # 'heights': heights,
         'current_gfs_time': current_gfs_time,
 
         'colorscheme': colorscheme,

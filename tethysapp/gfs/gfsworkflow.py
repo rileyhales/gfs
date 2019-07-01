@@ -3,6 +3,7 @@ import shutil
 import pygrib
 import netCDF4
 import requests
+import numpy
 import time as Time
 from .options import *
 
@@ -13,7 +14,7 @@ def setenvironment():
     """
     logging.info('\nSetting the Environment for the GFS Workflow')
     # determine the most day and hour of the day timestamp of the most recent GFS forecast
-    now = datetime.datetime.utcnow() - datetime.timedelta(hours=6)
+    now = datetime.datetime.utcnow() - datetime.timedelta(hours=48)
     if now.hour >= 18:
         timestamp = now.strftime("%Y%m%d") + '18'
     elif now.hour >= 12:
@@ -77,11 +78,15 @@ def download_gfs(threddspath, timestamp):
     # set filepaths
     gribsdir = os.path.join(threddspath, timestamp, 'gribs')
 
+    # This is the List of forecast timesteps for 5 days (6-hr increments). download them all
+    fc_steps = ['006', '012', '018']  # , '024', '030', '036', '042', '048', '054', '060', '066', '072', '078', '084']
+    # '090', '096', '102', '108', '114', '120', '126', '132', '138', '144', '150', '156', '162', '168']
+
     # if you already have a folder with data for this timestep, quit this function (you dont need to download it)
     if not os.path.exists(gribsdir):
         logging.info('There is no download folder, you must have already processed them. Skipping download stage.')
         return True
-    elif len(os.listdir(gribsdir)) >= 5:
+    elif len(os.listdir(gribsdir)) >= len(fc_steps):
         logging.info('There are already 28 forecast steps in here. Dont need to download them')
         return True
     # otherwise, remove anything in the folder before starting (in case there was a partial download)
@@ -94,19 +99,16 @@ def download_gfs(threddspath, timestamp):
     time = datetime.datetime.strptime(timestamp, "%Y%m%d%H").strftime("%H")
     fc_date = datetime.datetime.strptime(timestamp, "%Y%m%d%H").strftime("%Y%m%d")
 
-    # This is the List of forecast timesteps for 5 days (6-hr increments). download them all
-    fc_steps = ['006', '012', '018', '024', '030', '036', '042', '048', '054', '060', '066', '072']  # , '078', '084']
-    # '090', '096', '102', '108', '114', '120', '126', '132', '138', '144', '150', '156', '162', '168']
-
     for step in fc_steps:
         url = 'https://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p25.pl?file=gfs.t' + time + 'z.pgrb2.0p25.f' + step + \
-              '&all_lev=on&all_var=on&dir=%2Fgfs.' + fc_date + '%2F' + time
+              '&subregion=&leftlon=-180&rightlon=180&toplat=90&bottomlat=-90&all_lev=on&all_var=on&dir=%2Fgfs.' + \
+              fc_date + '%2F' + time
 
-        fc_timestamp = datetime.datetime.strptime(timestamp, "%Y%m%d%H")
-        file_timestep = fc_timestamp + datetime.timedelta(hours=int(step))
-        filename_timestep = datetime.datetime.strftime(file_timestep, "%Y%m%d%H")
+        file_timestep = datetime.datetime.strptime(timestamp, "%Y%m%d%H")
+        file_timestep = file_timestep + datetime.timedelta(hours=int(step))
+        file_timestep = file_timestep.strftime("%Y%m%d%H")
+        filename = file_timestep + '.grb'
 
-        filename = filename_timestep + '.grb'
         logging.info('downloading ' + filename + ' (step ' + step + ' of ' + fc_steps[-1] + ')')
         filepath = os.path.join(gribsdir, filename)
         start = Time.time()
@@ -157,6 +159,7 @@ def grib_to_netcdf(threddspath, timestamp):
         time = 6
         latitudes = [-90 + (i * .25) for i in range(721)]
         longitudes = [-180 + (i * .25) for i in range(1440)]
+        time_dt = datetime.datetime.strptime(timestamp, "%Y%m%d%H")
         for file in files:
             # create the new netcdf
             logging.info('converting ' + file)
@@ -164,12 +167,16 @@ def grib_to_netcdf(threddspath, timestamp):
             ncpath = os.path.join(netcdfs, ncname)
             new_nc = netCDF4.Dataset(ncpath, 'w', clobber=True, format='NETCDF4', diskless=False)
 
+            data_time = time_dt + datetime.timedelta(hours=time)
+            data_time = data_time.strftime("%Y%m%d%H")
+
             new_nc.createDimension('time', 1)
             new_nc.createDimension('lat', 721)
             new_nc.createDimension('lon', 1440)
 
             new_nc.createVariable(varname='time', datatype='f4', dimensions='time')
             new_nc['time'].axis = 'T'
+            new_nc['time'].begin_date = data_time
             new_nc.createVariable(varname='lat', datatype='f4', dimensions='lat')
             new_nc['lat'].axis = 'lat'
             new_nc.createVariable(varname='lon', datatype='f4', dimensions='lon')
@@ -177,7 +184,6 @@ def grib_to_netcdf(threddspath, timestamp):
 
             # set the value of the time variable data
             new_nc['time'][:] = [time]
-            time += 6
 
             # read a file to get the lat/lon variable data
             new_nc['lat'][:] = latitudes
@@ -196,10 +202,11 @@ def grib_to_netcdf(threddspath, timestamp):
                         new_nc[short].units = variable.units
                         new_nc[short].long_name = variable.name
                         new_nc[short].gfs_level = level
-                        new_nc[short].begin_date = timestamp
+                        new_nc[short].begin_date = data_time
                         new_nc[short].axis = 'lat lon'
                     except:
                         pass
+            time += 6
             new_nc.close()
             gribfile.close()
 
@@ -221,12 +228,12 @@ def new_ncml(threddspath, timestamp):
         level_ncs = [nc for nc in netcdfs if nc.startswith(level) and nc.endswith('.nc')]
         with open(ncml, 'w') as file:
             file.write(
-                '<netcdf xmlns="http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2">\n'
-                '   <variable name="time" type="int" shape="time">\n'
-                '      <attribute name="units" value="hours since ' + date + '"/>\n'
-                '      <attribute name="_CoordinateAxisType" value="Time" />\n'
-                '       <values start="0" increment="6" />\n'
-                '   </variable>\n'
+                '<netcdf xmlns="http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2">\n' +
+                '   <variable name="time" type="int" shape="time">\n' +
+                '      <attribute name="units" value="hours since ' + date + '"/>\n' +
+                '      <attribute name="_CoordinateAxisType" value="Time" />\n' +
+                '       <values start="0" increment="6" />\n' +
+                '   </variable>\n' +
                 '   <aggregation dimName="time" type="joinExisting" recheckEvery="5 minutes">\n'
             )
             for nc in level_ncs:
@@ -234,10 +241,50 @@ def new_ncml(threddspath, timestamp):
                     '      <netcdf location="' + timestamp + '/netcdfs/' + nc + '"/>\n'
                 )
             file.write(
-                '   </aggregation>\n'
+                '   </aggregation>\n' +
                 '</netcdf>'
             )
         logging.info('wrote ncml for ' + level)
+    return
+
+
+def set_wmsbounds(threddspath, timestamp):
+    logging.info('\nSetting new WMS bounds')
+    # setting the environment file paths
+    netcdfs = os.path.join(threddspath, timestamp, 'netcdfs')
+    allncs = os.listdir(netcdfs)
+    bounds = {}
+
+    for level in gfs_forecastlevels():
+        ncs = [nc for nc in allncs if nc.startswith(level)]
+        test = netCDF4.Dataset(os.path.join(netcdfs, ncs[0]), mode='r')
+        variables = test.variables
+        test.close()
+
+        maximum = -10000
+        minimum = 10000
+        for nc in ncs:
+            for var in variables:
+                try:
+                    path = os.path.join(netcdfs, nc)
+                    test = netCDF4.Dataset(path, mode='r')
+                    data = test[var][:]
+                    tmp_max = numpy.amax(data)
+                    tmp_min = numpy.amin(data)
+                    if tmp_max > maximum:
+                        maximum = int(tmp_max)
+                    if tmp_min < minimum:
+                        minimum = int(tmp_min)
+                except:
+                    pass
+                test.close()
+        bounds[var] = str(minimum) + ',' + str(maximum)
+
+    boundsfile = os.path.join(os.path.dirname(__file__), 'public', 'js', 'bounds.js')
+    logging.info('the js file is at ' + boundsfile)
+    with open(boundsfile, 'w') as file:
+        file.write('const bounds = ' + str(bounds) + ';')
+    logging.info('wrote the js file')
     return
 
 
@@ -276,7 +323,7 @@ def run_gfs_workflow():
         return 'Workflow Aborted- Downloading Errors Occurred'
     grib_to_netcdf(threddspath, timestamp)
     new_ncml(threddspath, timestamp)
-    # set_wmsbounds(threddspath, timestamp)
+    set_wmsbounds(threddspath, timestamp)
     cleanup(threddspath, timestamp)
 
     logging.info('\nAll finished- writing the timestamp used on this run to a txt file')
