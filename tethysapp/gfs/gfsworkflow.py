@@ -3,6 +3,7 @@ import shutil
 import pygrib
 import netCDF4
 import requests
+import numpy
 import time as Time
 from .options import *
 
@@ -78,7 +79,7 @@ def download_gfs(threddspath, timestamp):
     # set filepaths
     gribsdir = os.path.join(threddspath, timestamp, 'gribs')
 
-    # This is the List of forecast timesteps for 5 days (6-hr increments). download them all
+    # This is the List of forecast timesteps for 7 days (6-hr increments)
     fc_steps = ['006', '012', '018', '024', '030', '036']  # , '042', '048', '054', '060', '066', '072', '078', '084']
     # '090', '096', '102', '108', '114', '120', '126', '132', '138', '144', '150', '156', '162', '168']
 
@@ -87,7 +88,7 @@ def download_gfs(threddspath, timestamp):
         logging.info('There is no download folder, you must have already processed them. Skipping download stage.')
         return True
     elif len(os.listdir(gribsdir)) >= len(fc_steps):
-        logging.info('There are already the correct forecast steps in here. Skipping download stage.')
+        logging.info('There is already gfs data here. Skipping download stage.')
         return True
     # otherwise, remove anything in the folder before starting (in case there was a partial download)
     else:
@@ -101,8 +102,7 @@ def download_gfs(threddspath, timestamp):
 
     for step in fc_steps:
         url = 'https://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p25.pl?file=gfs.t' + time + 'z.pgrb2.0p25.f' + step + \
-              '&subregion=&leftlon=-180&rightlon=180&toplat=90&bottomlat=-90&all_lev=on&all_var=on&dir=%2Fgfs.' + \
-              fc_date + '%2F' + time
+              '&all_lev=on&all_var=on&dir=%2Fgfs.' + fc_date + '%2F' + time
 
         file_timestep = datetime.datetime.strptime(timestamp, "%Y%m%d%H")
         file_timestep = file_timestep + datetime.timedelta(hours=int(step))
@@ -116,7 +116,7 @@ def download_gfs(threddspath, timestamp):
             with requests.get(url, stream=True) as r:
                 r.raise_for_status()
                 with open(filepath, 'wb') as f:
-                    for chunk in r.iter_content(chunk_size=10240):
+                    for chunk in r.iter_content(chunk_size=102400):
                         if chunk:  # filter out keep-alive new chunks
                             f.write(chunk)
         except requests.HTTPError as e:
@@ -160,10 +160,9 @@ def set_wmsbounds(threddspath, timestamp):
         formatted[var] = str(bounds[0]) + ',' + str(bounds[1])
 
     boundsfile = os.path.join(os.path.dirname(__file__), 'public', 'js', 'bounds.js')
-    logging.info('the js file is at ' + boundsfile)
     with open(boundsfile, 'w') as file:
         file.write('const bounds = ' + str(formatted) + ';')
-    logging.info('wrote the js file')
+    logging.info('Wrote boundaries to ' + boundsfile)
     return
 
 
@@ -190,14 +189,13 @@ def grib_to_netcdf(threddspath, timestamp):
     files = os.listdir(gribs)
     files = [grib for grib in files if grib.endswith('.grb')]
     for level in gfs_forecastlevels():
-        logging.info('\nworking on level ' + level)
+        logging.info('working on level ' + level)
         time = 6
         latitudes = [-90 + (i * .25) for i in range(721)]
         longitudes = [-180 + (i * .25) for i in range(1440)]
         time_dt = datetime.datetime.strptime(timestamp, "%Y%m%d%H")
         for file in files:
             # create the new netcdf
-            logging.info('converting ' + file)
             ncname = level + '_' + file.replace('.grb', '.nc')
             ncpath = os.path.join(netcdfs, ncname)
             new_nc = netCDF4.Dataset(ncpath, 'w', clobber=True, format='NETCDF4', diskless=False)
@@ -233,12 +231,17 @@ def grib_to_netcdf(threddspath, timestamp):
                 if short not in ['time', 'lat', 'lon']:
                     try:
                         new_nc.createVariable(varname=short, datatype='f4', dimensions=('time', 'lat', 'lon'))
-                        new_nc[short][:] = variable.values
                         new_nc[short].units = variable.units
                         new_nc[short].long_name = variable.name
                         new_nc[short].gfs_level = level
                         new_nc[short].begin_date = data_time
                         new_nc[short].axis = 'lat lon'
+
+                        # get array, flip vertical, split and concat to shift from 0-360 degrees to 180-180
+                        data = numpy.flip(variable.values, 0)
+                        data = numpy.hsplit(data, 2)
+                        data = numpy.concatenate((data[1], data[0]), axis=1)
+                        new_nc[short][:] = data
                     except:
                         pass
             time += 6

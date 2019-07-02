@@ -1,8 +1,8 @@
 from tethys_sdk.base import TethysAppBase, url_map_maker
 from tethys_sdk.app_settings import CustomSetting
 
-# todo add the measurement heights to the workflow
-# todo convert 0-360 to 180-180 without using the subregion downloads
+# todo add the measurement heights to the workflow (or at least say what they are)
+# todo add controls to manually set the wms boundaries if the auto set ones aren't right
 
 
 class Gfs(TethysAppBase):
@@ -25,7 +25,7 @@ class Gfs(TethysAppBase):
     youtubelink = 'https://youtube.com'
     githublink = 'https://github.com/rileyhales/gfs'
     gfslink = 'https://www.ncdc.noaa.gov/data-access/model-data/model-datasets/global-forcast-system-gfs'
-    version = 'development 26 June 2019'
+    version = 'development 2 July 2019'
 
     def url_maps(self):
         """

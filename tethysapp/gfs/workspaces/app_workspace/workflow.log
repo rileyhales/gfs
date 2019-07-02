@@ -1,171 +1,84 @@
-Workflow initiated on 07/02/19 at 16:59
+Workflow initiated on 07/02/19 at 19:34
+
+Setting the Environment for the GFS Workflow
+determined the timestamp to download: 2019070112
+Internal Server Error: /apps/gfs/runWorkflows/
+Traceback (most recent call last):
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/core/handlers/base.py", line 249, in _legacy_get_response
+    response = self._get_response(request)
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/contrib/auth/decorators.py", line 23, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/Users/rileyhales/tethys/src/tethys_apps/tethysapp/gfs/controllers.py", line 123, in run_workflows
+    gfs_status = run_gfs_workflow()
+  File "/Users/rileyhales/tethys/src/tethys_apps/tethysapp/gfs/gfsworkflow.py", line 311, in run_gfs_workflow
+    threddspath, wrksppath, timestamp, redundant = setenvironment()
+  File "/Users/rileyhales/tethys/src/tethys_apps/tethysapp/gfs/gfsworkflow.py", line 49, in setenvironment
+    test = os.path.join(threddspath, timestamp, 'netcdfs')
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/posixpath.py", line 80, in join
+    a = os.fspath(a)
+TypeError: expected str, bytes or os.PathLike object, not NoneType
+"GET /apps/gfs/runWorkflows/ HTTP/1.1" 500 96377
+Internal Server Error: /apps/gfs/
+Traceback (most recent call last):
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/core/handlers/base.py", line 249, in _legacy_get_response
+    response = self._get_response(request)
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/contrib/auth/decorators.py", line 23, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/Users/rileyhales/tethys/src/tethys_apps/tethysapp/gfs/controllers.py", line 45, in home
+    current_gfs_time = currentgfs()
+  File "/Users/rileyhales/tethys/src/tethys_apps/tethysapp/gfs/options.py", line 102, in currentgfs
+    path = os.path.join(path, timestamp)
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/posixpath.py", line 80, in join
+    a = os.fspath(a)
+TypeError: expected str, bytes or os.PathLike object, not NoneType
+"GET /apps/gfs/ HTTP/1.1" 500 92537
+Workflow initiated on 07/02/19 at 19:36
 
 Setting the Environment for the GFS Workflow
 determined the timestamp to download: 2019070112
 There are directories for this timestep but the workflow wasn't finished. Analyzing...
 
-Beginning to process on 07/02/19 at 16:59
+Beginning to process on 07/02/19 at 19:36
 
 Starting GFS grib Downloads
-There are already 28 forecast steps in here. Dont need to download them
+There are already the correct forecast steps in here. Skipping download stage.
 
 Setting new WMS bounds
 the js file is at /Users/rileyhales/tethys/src/tethys_apps/tethysapp/gfs/public/js/bounds.js
 wrote the js file
 
 Starting Grib Conversions
-
 working on level atmosphere
-converting 2019070118.grb
-converting 2019070218.grb
-converting 2019070200.grb
-converting 2019070212.grb
-converting 2019070206.grb
-converting 2019070300.grb
-
 working on level depthBelowLandLayer
-converting 2019070118.grb
-converting 2019070218.grb
-converting 2019070200.grb
-converting 2019070212.grb
-converting 2019070206.grb
-converting 2019070300.grb
-
 working on level heightAboveGround
-converting 2019070118.grb
-converting 2019070218.grb
-converting 2019070200.grb
-converting 2019070212.grb
-converting 2019070206.grb
-converting 2019070300.grb
-
 working on level heightAboveGroundLayer
-converting 2019070118.grb
-converting 2019070218.grb
-converting 2019070200.grb
-converting 2019070212.grb
-converting 2019070206.grb
-converting 2019070300.grb
-
 working on level heightAboveSea
-converting 2019070118.grb
-converting 2019070218.grb
-converting 2019070200.grb
-converting 2019070212.grb
-converting 2019070206.grb
-converting 2019070300.grb
-
 working on level hybrid
-converting 2019070118.grb
-converting 2019070218.grb
-converting 2019070200.grb
-converting 2019070212.grb
-converting 2019070206.grb
-converting 2019070300.grb
-
 working on level isothermZero
-converting 2019070118.grb
-converting 2019070218.grb
-converting 2019070200.grb
-converting 2019070212.grb
-converting 2019070206.grb
-converting 2019070300.grb
-
 working on level isobaricInPa
-converting 2019070118.grb
-converting 2019070218.grb
-converting 2019070200.grb
-converting 2019070212.grb
-converting 2019070206.grb
-converting 2019070300.grb
-
 working on level isobaricInhPa
-converting 2019070118.grb
-converting 2019070218.grb
-converting 2019070200.grb
-converting 2019070212.grb
-converting 2019070206.grb
-converting 2019070300.grb
-
 working on level maxWind
-converting 2019070118.grb
-converting 2019070218.grb
-converting 2019070200.grb
-converting 2019070212.grb
-converting 2019070206.grb
-converting 2019070300.grb
-
 working on level meanSea
-converting 2019070118.grb
-converting 2019070218.grb
-converting 2019070200.grb
-converting 2019070212.grb
-converting 2019070206.grb
-converting 2019070300.grb
-
 working on level nominalTop
-converting 2019070118.grb
-converting 2019070218.grb
-converting 2019070200.grb
-converting 2019070212.grb
-converting 2019070206.grb
-converting 2019070300.grb
-
 working on level potentialVorticity
-converting 2019070118.grb
-converting 2019070218.grb
-converting 2019070200.grb
-converting 2019070212.grb
-converting 2019070206.grb
-converting 2019070300.grb
-
 working on level pressureFromGroundLayer
-converting 2019070118.grb
-converting 2019070218.grb
-converting 2019070200.grb
-converting 2019070212.grb
-converting 2019070206.grb
-converting 2019070300.grb
-
 working on level sigma
-converting 2019070118.grb
-converting 2019070218.grb
-converting 2019070200.grb
-converting 2019070212.grb
-converting 2019070206.grb
-converting 2019070300.grb
-
 working on level sigmaLayer
-converting 2019070118.grb
-converting 2019070218.grb
-converting 2019070200.grb
-converting 2019070212.grb
-converting 2019070206.grb
-converting 2019070300.grb
-
 working on level surface
-converting 2019070118.grb
-converting 2019070218.grb
-converting 2019070200.grb
-converting 2019070212.grb
-converting 2019070206.grb
-converting 2019070300.grb
-
 working on level tropopause
-converting 2019070118.grb
-converting 2019070218.grb
-converting 2019070200.grb
-converting 2019070212.grb
-converting 2019070206.grb
-converting 2019070300.grb
-
 working on level unknown
-converting 2019070118.grb
-converting 2019070218.grb
-converting 2019070200.grb
-converting 2019070212.grb
-converting 2019070206.grb
-converting 2019070300.grb
 Conversion Completed
 
 Writing a new ncml file for this date
@@ -194,6 +107,6 @@ Done
 All finished- writing the timestamp used on this run to a txt file
 
 
-GFS Workflow completed successfully on 07/02/19 at 17:03
+GFS Workflow completed successfully on 07/02/19 at 19:40
 Not Found: /favicon.ico
 "GET /favicon.ico HTTP/1.1" 404 3621

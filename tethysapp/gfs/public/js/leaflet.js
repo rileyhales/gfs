@@ -16,7 +16,7 @@ function map() {
             backwardButton: true,
             forwardButton: true,
             timeSliderDragUpdate: true,
-            minSpeed: 1,
+            minSpeed: 2,
             maxSpeed: 6,
             speedStep: 1,
         },
@@ -24,13 +24,14 @@ function map() {
 }
 
 function basemaps() {
-    // create the basemap layers
     let Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}');
     let Esri_WorldTerrain = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/tile/{z}/{y}/{x}', {maxZoom: 13});
     let Esri_Imagery_Labels = L.esri.basemapLayer('ImageryLabels');
     return {
-        "ESRI Imagery": L.layerGroup([Esri_WorldImagery, Esri_Imagery_Labels]).addTo(mapObj),
-        "ESRI Terrain": L.layerGroup([Esri_WorldTerrain, Esri_Imagery_Labels])
+        "ESRI Imagery (labels)": L.layerGroup([Esri_WorldImagery, Esri_Imagery_Labels]).addTo(mapObj),
+        "ESRI Terrain (labels)": L.layerGroup([Esri_WorldTerrain, Esri_Imagery_Labels]),
+        "ESRI Imagery": Esri_WorldImagery,
+        "ESRI Terrain": Esri_WorldTerrain,
     }
 }
 
@@ -52,15 +53,13 @@ function newLayer() {
         colorscalerange: bounds[variable],
     });
 
-    let timedLayer = L.timeDimension.layer.wms(wmsLayer, {
+    return L.timeDimension.layer.wms(wmsLayer, {
         name: 'time',
         requestTimefromCapabilities: true,
         updateTimeDimension: true,
         updateTimeDimensionMode: 'replace',
         cache: 20,
     }).addTo(mapObj);
-
-    return timedLayer
 }
 
 ////////////////////////////////////////////////////////////////////////  LEGEND DEFINITIONS
@@ -104,40 +103,9 @@ const geojsons = [
     [southamerica, 'southamerica', southamerica_json],
 ];
 
-// gets the geojson layers from geoserver wfs and updates the layer
-function getWFSData(geoserverlayer, leafletlayer) {
-    // http://jsfiddle.net/1f2Lxey4/2/
-    let parameters = L.Util.extend({
-        service: 'WFS',
-        version: '1.0.0',
-        request: 'GetFeature',
-        typeName: 'gldas:' + geoserverlayer,
-        maxFeatures: 10000,
-        outputFormat: 'application/json',
-        parseResponse: 'getJson',
-        srsName: 'EPSG:4326',
-        crossOrigin: 'anonymous'
-    });
-    $.ajax({
-        async: true,
-        jsonp: false,
-        url: geoserverbase + L.Util.getParamString(parameters),
-        contentType: 'application/json',
-        success: function (data) {
-            leafletlayer.addData(data).addTo(mapObj);
-        },
-    });
-}
-
 function updateGEOJSON() {
-    if (geoserverbase === 'geojson') {
-        for (let i = 0; i < geojsons.length; i++) {
-            geojsons[i][0].addData(geojsons[i][2]).addTo(mapObj);
-        }
-    } else {
-        for (let i = 0; i < geojsons.length; i++) {
-            getWFSData(geojsons[i][1], geojsons[i][0]);
-        }
+    for (let i = 0; i < geojsons.length; i++) {
+        geojsons[i][0].addData(geojsons[i][2]).addTo(mapObj);
     }
 }
 
