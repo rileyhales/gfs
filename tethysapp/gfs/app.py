@@ -2,8 +2,7 @@ from tethys_sdk.base import TethysAppBase, url_map_maker
 from tethys_sdk.app_settings import CustomSetting
 
 # todo add the measurement heights to the workflow
-# todo check the charts still plot
-# todo the data are upside down and backwards
+# todo convert 0-360 to 180-180 without using the subregion downloads
 
 
 class Gfs(TethysAppBase):

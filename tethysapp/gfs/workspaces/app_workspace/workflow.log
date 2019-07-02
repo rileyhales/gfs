@@ -1,14 +1,199 @@
-Workflow initiated on 07/01/19 at 23:31
+Workflow initiated on 07/02/19 at 16:59
 
 Setting the Environment for the GFS Workflow
-determined the timestamp to download: 2019062918
+determined the timestamp to download: 2019070112
 There are directories for this timestep but the workflow wasn't finished. Analyzing...
 
-Beginning to process on 07/01/19 at 23:31
+Beginning to process on 07/02/19 at 16:59
 
 Starting GFS grib Downloads
-downloading 2019063000.grb (step 006 of 018)
-  Download took 632.0565319061279
-downloading 2019063006.grb (step 012 of 018)
-  Download took 354.48841309547424
-downloading 2019063012.grb (step 018 of 018)
+There are already 28 forecast steps in here. Dont need to download them
+
+Setting new WMS bounds
+the js file is at /Users/rileyhales/tethys/src/tethys_apps/tethysapp/gfs/public/js/bounds.js
+wrote the js file
+
+Starting Grib Conversions
+
+working on level atmosphere
+converting 2019070118.grb
+converting 2019070218.grb
+converting 2019070200.grb
+converting 2019070212.grb
+converting 2019070206.grb
+converting 2019070300.grb
+
+working on level depthBelowLandLayer
+converting 2019070118.grb
+converting 2019070218.grb
+converting 2019070200.grb
+converting 2019070212.grb
+converting 2019070206.grb
+converting 2019070300.grb
+
+working on level heightAboveGround
+converting 2019070118.grb
+converting 2019070218.grb
+converting 2019070200.grb
+converting 2019070212.grb
+converting 2019070206.grb
+converting 2019070300.grb
+
+working on level heightAboveGroundLayer
+converting 2019070118.grb
+converting 2019070218.grb
+converting 2019070200.grb
+converting 2019070212.grb
+converting 2019070206.grb
+converting 2019070300.grb
+
+working on level heightAboveSea
+converting 2019070118.grb
+converting 2019070218.grb
+converting 2019070200.grb
+converting 2019070212.grb
+converting 2019070206.grb
+converting 2019070300.grb
+
+working on level hybrid
+converting 2019070118.grb
+converting 2019070218.grb
+converting 2019070200.grb
+converting 2019070212.grb
+converting 2019070206.grb
+converting 2019070300.grb
+
+working on level isothermZero
+converting 2019070118.grb
+converting 2019070218.grb
+converting 2019070200.grb
+converting 2019070212.grb
+converting 2019070206.grb
+converting 2019070300.grb
+
+working on level isobaricInPa
+converting 2019070118.grb
+converting 2019070218.grb
+converting 2019070200.grb
+converting 2019070212.grb
+converting 2019070206.grb
+converting 2019070300.grb
+
+working on level isobaricInhPa
+converting 2019070118.grb
+converting 2019070218.grb
+converting 2019070200.grb
+converting 2019070212.grb
+converting 2019070206.grb
+converting 2019070300.grb
+
+working on level maxWind
+converting 2019070118.grb
+converting 2019070218.grb
+converting 2019070200.grb
+converting 2019070212.grb
+converting 2019070206.grb
+converting 2019070300.grb
+
+working on level meanSea
+converting 2019070118.grb
+converting 2019070218.grb
+converting 2019070200.grb
+converting 2019070212.grb
+converting 2019070206.grb
+converting 2019070300.grb
+
+working on level nominalTop
+converting 2019070118.grb
+converting 2019070218.grb
+converting 2019070200.grb
+converting 2019070212.grb
+converting 2019070206.grb
+converting 2019070300.grb
+
+working on level potentialVorticity
+converting 2019070118.grb
+converting 2019070218.grb
+converting 2019070200.grb
+converting 2019070212.grb
+converting 2019070206.grb
+converting 2019070300.grb
+
+working on level pressureFromGroundLayer
+converting 2019070118.grb
+converting 2019070218.grb
+converting 2019070200.grb
+converting 2019070212.grb
+converting 2019070206.grb
+converting 2019070300.grb
+
+working on level sigma
+converting 2019070118.grb
+converting 2019070218.grb
+converting 2019070200.grb
+converting 2019070212.grb
+converting 2019070206.grb
+converting 2019070300.grb
+
+working on level sigmaLayer
+converting 2019070118.grb
+converting 2019070218.grb
+converting 2019070200.grb
+converting 2019070212.grb
+converting 2019070206.grb
+converting 2019070300.grb
+
+working on level surface
+converting 2019070118.grb
+converting 2019070218.grb
+converting 2019070200.grb
+converting 2019070212.grb
+converting 2019070206.grb
+converting 2019070300.grb
+
+working on level tropopause
+converting 2019070118.grb
+converting 2019070218.grb
+converting 2019070200.grb
+converting 2019070212.grb
+converting 2019070206.grb
+converting 2019070300.grb
+
+working on level unknown
+converting 2019070118.grb
+converting 2019070218.grb
+converting 2019070200.grb
+converting 2019070212.grb
+converting 2019070206.grb
+converting 2019070300.grb
+Conversion Completed
+
+Writing a new ncml file for this date
+wrote ncml for atmosphere
+wrote ncml for depthBelowLandLayer
+wrote ncml for heightAboveGround
+wrote ncml for heightAboveGroundLayer
+wrote ncml for heightAboveSea
+wrote ncml for hybrid
+wrote ncml for isothermZero
+wrote ncml for isobaricInPa
+wrote ncml for isobaricInhPa
+wrote ncml for maxWind
+wrote ncml for meanSea
+wrote ncml for nominalTop
+wrote ncml for potentialVorticity
+wrote ncml for pressureFromGroundLayer
+wrote ncml for sigma
+wrote ncml for sigmaLayer
+wrote ncml for surface
+wrote ncml for tropopause
+wrote ncml for unknown
+Getting rid of old data folders
+Done
+
+All finished- writing the timestamp used on this run to a txt file
+
+
+GFS Workflow completed successfully on 07/02/19 at 17:03
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 3621

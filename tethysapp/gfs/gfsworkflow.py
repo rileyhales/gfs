@@ -3,7 +3,6 @@ import shutil
 import pygrib
 import netCDF4
 import requests
-import numpy
 import time as Time
 from .options import *
 
@@ -23,6 +22,7 @@ def setenvironment():
         timestamp = now.strftime("%Y%m%d") + '06'
     else:   # now.hour >= 0:
         timestamp = now.strftime("%Y%m%d") + '00'
+    timestamp = '2019070112'
     logging.info('determined the timestamp to download: ' + timestamp)
 
     # set folder paths for the environment
@@ -79,7 +79,7 @@ def download_gfs(threddspath, timestamp):
     gribsdir = os.path.join(threddspath, timestamp, 'gribs')
 
     # This is the List of forecast timesteps for 5 days (6-hr increments). download them all
-    fc_steps = ['006', '012', '018']  # , '024', '030', '036', '042', '048', '054', '060', '066', '072', '078', '084']
+    fc_steps = ['006', '012', '018', '024', '030', '036']  # , '042', '048', '054', '060', '066', '072', '078', '084']
     # '090', '096', '102', '108', '114', '120', '126', '132', '138', '144', '150', '156', '162', '168']
 
     # if you already have a folder with data for this timestep, quit this function (you dont need to download it)
@@ -87,7 +87,7 @@ def download_gfs(threddspath, timestamp):
         logging.info('There is no download folder, you must have already processed them. Skipping download stage.')
         return True
     elif len(os.listdir(gribsdir)) >= len(fc_steps):
-        logging.info('There are already 28 forecast steps in here. Dont need to download them')
+        logging.info('There are already the correct forecast steps in here. Skipping download stage.')
         return True
     # otherwise, remove anything in the folder before starting (in case there was a partial download)
     else:
@@ -130,6 +130,41 @@ def download_gfs(threddspath, timestamp):
         logging.info('  Download took ' + str(Time.time() - start))
     logging.info('Finished Downloads')
     return True
+
+
+def set_wmsbounds(threddspath, timestamp):
+    logging.info('\nSetting new WMS bounds')
+    # setting the environment file paths
+    gribs = os.path.join(threddspath, timestamp, 'gribs')
+    allgrbs = os.listdir(gribs)
+
+    for grib in allgrbs:
+        path = os.path.join(gribs, grib)
+        file = pygrib.open(path)
+        file.seek(0)
+        db = {}
+        for data in file:
+            minimum = int(data.minimum)
+            maximum = int(data.maximum)
+            shortname = data.shortName
+            if shortname not in db:
+                db[shortname] = [minimum, maximum]
+            else:
+                newmin = min(db[shortname][0], minimum)
+                newmax = max(db[shortname][1], maximum)
+                db[shortname] = [newmin, newmax]
+
+    formatted = {}
+    for var in db:
+        bounds = db[var]
+        formatted[var] = str(bounds[0]) + ',' + str(bounds[1])
+
+    boundsfile = os.path.join(os.path.dirname(__file__), 'public', 'js', 'bounds.js')
+    logging.info('the js file is at ' + boundsfile)
+    with open(boundsfile, 'w') as file:
+        file.write('const bounds = ' + str(formatted) + ';')
+    logging.info('wrote the js file')
+    return
 
 
 def grib_to_netcdf(threddspath, timestamp):
@@ -225,7 +260,7 @@ def new_ncml(threddspath, timestamp):
     netcdfs = os.listdir(os.path.join(threddspath, timestamp, 'netcdfs'))
     for level in gfs_forecastlevels():
         ncml = os.path.join(threddspath, level + '_wms.ncml')
-        level_ncs = [nc for nc in netcdfs if nc.startswith(level) and nc.endswith('.nc')]
+        level_ncs = [nc for nc in netcdfs if nc.startswith(level + '_') and nc.endswith('.nc')]
         with open(ncml, 'w') as file:
             file.write(
                 '<netcdf xmlns="http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2">\n' +
@@ -245,46 +280,6 @@ def new_ncml(threddspath, timestamp):
                 '</netcdf>'
             )
         logging.info('wrote ncml for ' + level)
-    return
-
-
-def set_wmsbounds(threddspath, timestamp):
-    logging.info('\nSetting new WMS bounds')
-    # setting the environment file paths
-    netcdfs = os.path.join(threddspath, timestamp, 'netcdfs')
-    allncs = os.listdir(netcdfs)
-    bounds = {}
-
-    for level in gfs_forecastlevels():
-        ncs = [nc for nc in allncs if nc.startswith(level)]
-        test = netCDF4.Dataset(os.path.join(netcdfs, ncs[0]), mode='r')
-        variables = test.variables
-        test.close()
-
-        maximum = -10000
-        minimum = 10000
-        for nc in ncs:
-            for var in variables:
-                try:
-                    path = os.path.join(netcdfs, nc)
-                    test = netCDF4.Dataset(path, mode='r')
-                    data = test[var][:]
-                    tmp_max = numpy.amax(data)
-                    tmp_min = numpy.amin(data)
-                    if tmp_max > maximum:
-                        maximum = int(tmp_max)
-                    if tmp_min < minimum:
-                        minimum = int(tmp_min)
-                except:
-                    pass
-                test.close()
-        bounds[var] = str(minimum) + ',' + str(maximum)
-
-    boundsfile = os.path.join(os.path.dirname(__file__), 'public', 'js', 'bounds.js')
-    logging.info('the js file is at ' + boundsfile)
-    with open(boundsfile, 'w') as file:
-        file.write('const bounds = ' + str(bounds) + ';')
-    logging.info('wrote the js file')
     return
 
 
@@ -317,15 +312,19 @@ def run_gfs_workflow():
 
     # run the workflow
     logging.info('\nBeginning to process on ' + datetime.datetime.utcnow().strftime("%D at %R"))
-    # download each forecast model, convert them to netcdfs
+
+    # get data from the gribs
     succeeded = download_gfs(threddspath, timestamp)
     if not succeeded:
         return 'Workflow Aborted- Downloading Errors Occurred'
+    set_wmsbounds(threddspath, timestamp)
+
+    # convert to netcdfs
     grib_to_netcdf(threddspath, timestamp)
     new_ncml(threddspath, timestamp)
-    set_wmsbounds(threddspath, timestamp)
-    cleanup(threddspath, timestamp)
 
+    # finish things up
+    cleanup(threddspath, timestamp)
     logging.info('\nAll finished- writing the timestamp used on this run to a txt file')
     with open(os.path.join(wrksppath, 'timestamp.txt'), 'w') as file:
         file.write(timestamp)
