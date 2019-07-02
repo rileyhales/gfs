@@ -1,63 +1,45 @@
-Workflow initiated on 07/02/19 at 19:34
+Workflow initiated on 07/02/19 at 19:49
 
 Setting the Environment for the GFS Workflow
-determined the timestamp to download: 2019070112
-Internal Server Error: /apps/gfs/runWorkflows/
-Traceback (most recent call last):
-  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/core/handlers/exception.py", line 41, in inner
-    response = get_response(request)
-  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/core/handlers/base.py", line 249, in _legacy_get_response
-    response = self._get_response(request)
-  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/core/handlers/base.py", line 187, in _get_response
-    response = self.process_exception_by_middleware(e, request)
-  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/core/handlers/base.py", line 185, in _get_response
-    response = wrapped_callback(request, *callback_args, **callback_kwargs)
-  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/contrib/auth/decorators.py", line 23, in _wrapped_view
-    return view_func(request, *args, **kwargs)
-  File "/Users/rileyhales/tethys/src/tethys_apps/tethysapp/gfs/controllers.py", line 123, in run_workflows
-    gfs_status = run_gfs_workflow()
-  File "/Users/rileyhales/tethys/src/tethys_apps/tethysapp/gfs/gfsworkflow.py", line 311, in run_gfs_workflow
-    threddspath, wrksppath, timestamp, redundant = setenvironment()
-  File "/Users/rileyhales/tethys/src/tethys_apps/tethysapp/gfs/gfsworkflow.py", line 49, in setenvironment
-    test = os.path.join(threddspath, timestamp, 'netcdfs')
-  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/posixpath.py", line 80, in join
-    a = os.fspath(a)
-TypeError: expected str, bytes or os.PathLike object, not NoneType
-"GET /apps/gfs/runWorkflows/ HTTP/1.1" 500 96377
-Internal Server Error: /apps/gfs/
-Traceback (most recent call last):
-  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/core/handlers/exception.py", line 41, in inner
-    response = get_response(request)
-  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/core/handlers/base.py", line 249, in _legacy_get_response
-    response = self._get_response(request)
-  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/core/handlers/base.py", line 187, in _get_response
-    response = self.process_exception_by_middleware(e, request)
-  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/core/handlers/base.py", line 185, in _get_response
-    response = wrapped_callback(request, *callback_args, **callback_kwargs)
-  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/contrib/auth/decorators.py", line 23, in _wrapped_view
-    return view_func(request, *args, **kwargs)
-  File "/Users/rileyhales/tethys/src/tethys_apps/tethysapp/gfs/controllers.py", line 45, in home
-    current_gfs_time = currentgfs()
-  File "/Users/rileyhales/tethys/src/tethys_apps/tethysapp/gfs/options.py", line 102, in currentgfs
-    path = os.path.join(path, timestamp)
-  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/posixpath.py", line 80, in join
-    a = os.fspath(a)
-TypeError: expected str, bytes or os.PathLike object, not NoneType
-"GET /apps/gfs/ HTTP/1.1" 500 92537
-Workflow initiated on 07/02/19 at 19:36
+determined the timestamp to download: 2019070212
+Creating THREDDS file structure
+All done setting up folders, on to do work
 
-Setting the Environment for the GFS Workflow
-determined the timestamp to download: 2019070112
-There are directories for this timestep but the workflow wasn't finished. Analyzing...
-
-Beginning to process on 07/02/19 at 19:36
+Beginning to process on 07/02/19 at 19:49
 
 Starting GFS grib Downloads
-There are already the correct forecast steps in here. Skipping download stage.
+downloading 2019070218.grb (step 006 of 084)
+  Download took 192.86909413337708
+downloading 2019070300.grb (step 012 of 084)
+  Download took 184.73384714126587
+downloading 2019070306.grb (step 018 of 084)
+  Download took 189.6209397315979
+downloading 2019070312.grb (step 024 of 084)
+  Download took 278.73890113830566
+downloading 2019070318.grb (step 030 of 084)
+  Download took 239.687166929245
+downloading 2019070400.grb (step 036 of 084)
+  Download took 169.9250569343567
+downloading 2019070406.grb (step 042 of 084)
+  Download took 175.83219408988953
+downloading 2019070412.grb (step 048 of 084)
+  Download took 194.46685075759888
+downloading 2019070418.grb (step 054 of 084)
+  Download took 162.9688458442688
+downloading 2019070500.grb (step 060 of 084)
+  Download took 168.73286771774292
+downloading 2019070506.grb (step 066 of 084)
+  Download took 151.7095878124237
+downloading 2019070512.grb (step 072 of 084)
+  Download took 143.992938041687
+downloading 2019070518.grb (step 078 of 084)
+  Download took 88.17257308959961
+downloading 2019070600.grb (step 084 of 084)
+  Download took 88.967533826828
+Finished Downloads
 
 Setting new WMS bounds
-the js file is at /Users/rileyhales/tethys/src/tethys_apps/tethysapp/gfs/public/js/bounds.js
-wrote the js file
+Wrote boundaries to /Users/rileyhales/tethys/src/tethys_apps/tethysapp/gfs/public/js/bounds.js
 
 Starting Grib Conversions
 working on level atmosphere
@@ -107,6 +89,25 @@ Done
 All finished- writing the timestamp used on this run to a txt file
 
 
-GFS Workflow completed successfully on 07/02/19 at 19:40
+GFS Workflow completed successfully on 07/02/19 at 20:38
 Not Found: /favicon.ico
 "GET /favicon.ico HTTP/1.1" 404 3621
+Internal Server Error: /apps/gfs/ajax/getPolygonAverage/
+Traceback (most recent call last):
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/core/handlers/base.py", line 249, in _legacy_get_response
+    response = self._get_response(request)
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/rileyhales/tethys/miniconda/envs/tethys/lib/python3.6/site-packages/django/contrib/auth/decorators.py", line 23, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/Users/rileyhales/tethys/src/tethys_apps/tethysapp/gfs/ajax.py", line 35, in get_polygonaverage
+    data = polychart(data)
+  File "/Users/rileyhales/tethys/src/tethys_apps/tethysapp/gfs/tools.py", line 98, in polychart
+    data['units'] = dataset[var].__dict__['units']
+  File "netCDF4/_netCDF4.pyx", line 2344, in netCDF4._netCDF4.Dataset.__getitem__
+IndexError: aptmp not found in /
+"POST /apps/gfs/ajax/getPolygonAverage/ HTTP/1.1" 500 20656

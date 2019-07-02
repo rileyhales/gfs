@@ -14,7 +14,7 @@ def setenvironment():
     """
     logging.info('\nSetting the Environment for the GFS Workflow')
     # determine the most day and hour of the day timestamp of the most recent GFS forecast
-    now = datetime.datetime.utcnow() - datetime.timedelta(hours=48)
+    now = datetime.datetime.utcnow() - datetime.timedelta(hours=6)
     if now.hour >= 18:
         timestamp = now.strftime("%Y%m%d") + '18'
     elif now.hour >= 12:
@@ -23,7 +23,6 @@ def setenvironment():
         timestamp = now.strftime("%Y%m%d") + '06'
     else:   # now.hour >= 0:
         timestamp = now.strftime("%Y%m%d") + '00'
-    timestamp = '2019070112'
     logging.info('determined the timestamp to download: ' + timestamp)
 
     # set folder paths for the environment
@@ -80,7 +79,7 @@ def download_gfs(threddspath, timestamp):
     gribsdir = os.path.join(threddspath, timestamp, 'gribs')
 
     # This is the List of forecast timesteps for 7 days (6-hr increments)
-    fc_steps = ['006', '012', '018', '024', '030', '036']  # , '042', '048', '054', '060', '066', '072', '078', '084']
+    fc_steps = ['006', '012', '018', '024', '030', '036', '042', '048', '054', '060', '066', '072', '078', '084']
     # '090', '096', '102', '108', '114', '120', '126', '132', '138', '144', '150', '156', '162', '168']
 
     # if you already have a folder with data for this timestep, quit this function (you dont need to download it)
@@ -116,7 +115,7 @@ def download_gfs(threddspath, timestamp):
             with requests.get(url, stream=True) as r:
                 r.raise_for_status()
                 with open(filepath, 'wb') as f:
-                    for chunk in r.iter_content(chunk_size=102400):
+                    for chunk in r.iter_content(chunk_size=10240):
                         if chunk:  # filter out keep-alive new chunks
                             f.write(chunk)
         except requests.HTTPError as e:
