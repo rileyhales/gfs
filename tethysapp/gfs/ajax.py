@@ -1,4 +1,5 @@
 import ast
+import shutil
 
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
@@ -51,8 +52,13 @@ def get_shapeaverage(request):
         makestatplots (tools)
     """
     data = ast.literal_eval(request.body.decode('utf-8'))
+    data['user'] = request.user
     data = shpchart(data)
-    data['type'] = '(Average for ' + data['region'] + ')'
+    del data['user']
+    if data['region'] == 'customshape':
+        data['type'] = '(Averaged over user uploaded shapefile)'
+    else:
+        data['type'] = '(Average for ' + data['region'] + ')'
 
     variables = gfs_variables()
     for option in variables:
@@ -62,8 +68,26 @@ def get_shapeaverage(request):
     return JsonResponse(data)
 
 
+@login_required()
 def get_levels_for_variable(request):
     data = ast.literal_eval(request.body.decode('utf-8'))
     variable = data['variable']
     levels = structure_byvars()[variable]
     return JsonResponse({'levels': levels})
+
+
+@login_required()
+def uploadshapefile(request):
+    files = request.FILES.getlist('files')
+    user_workspace = App.get_user_workspace(request.user).path
+    for i in request.POST:
+        print(i)
+
+    for n, file in enumerate(files):
+        if file.name.endswith('.shp'):
+            filename = file.name
+        with open(os.path.join(user_workspace, file.name), 'wb') as dst:
+            for chunk in files[n].chunks():
+                dst.write(chunk)
+
+    return JsonResponse({'customshp': os.path.join(user_workspace, filename)})

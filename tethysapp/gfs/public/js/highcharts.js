@@ -139,6 +139,9 @@ function getShapeChart(selectedregion) {
     if (selectedregion === 'lastregion') {
         // if we want to update, change the region to the last completed region
         data['region'] = currentregion;
+    } else if (selectedregion === 'customshape') {
+        data['region'] = selectedregion;
+        currentregion = selectedregion;
     } else {
         // otherwise, the new selection is the current region on the chart
         currentregion = selectedregion;

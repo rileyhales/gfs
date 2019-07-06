@@ -136,6 +136,7 @@ def shpchart(data):
     var = str(data['variable'])
     region = data['region']
     level = data['level']
+    user = data['user']
 
     # environment settings
     configs = app_configuration()
@@ -177,14 +178,20 @@ def shpchart(data):
         t_value = calendar.timegm(t_value.utctimetuple()) * 1000
 
         # file paths and settings
-        shppath = os.path.join(wrkpath, 'shapefiles', region, region.replace(' ', '') + '.shp')
+        if region == 'customshape':
+            shppath = App.get_user_workspace(user).path
+            shp = [i for i in os.listdir(shppath) if i.endswith('.shp')]
+            shppath = os.path.join(shppath, shp[0])
+        else:
+            region = data['region']
+            shppath = os.path.join(wrkpath, 'shapefiles', region, region.replace(' ', '') + '.shp')
+
         gtiffpath = os.path.join(wrkpath, 'geotiffs', 'geotiff.tif')
         geotransform = rasterio.transform.from_origin(lon.min(), lat.max(), lat[1] - lat[0], lon[1] - lon[0])
 
         with rasterio.open(gtiffpath, 'w', driver='GTiff', height=len(lat), width=len(lon), count=1, dtype='float32',
                            nodata=numpy.nan, crs='+proj=latlong', transform=geotransform) as newtiff:
             newtiff.write(array, 1)
-
         stats = rasterstats.zonal_stats(shppath, gtiffpath, stats="mean")
         values.append((t_value, stats[0]['mean']))
 

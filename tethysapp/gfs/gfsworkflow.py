@@ -25,20 +25,18 @@ def setenvironment():
         timestamp = now.strftime("%Y%m%d") + '00'
     logging.info('determined the timestamp to download: ' + timestamp)
 
-    # set folder paths for the environment
-    configuration = app_configuration()
-    threddspath = configuration['threddsdatadir']
-    wrksppath = configuration['app_wksp_path']
+    # get folder paths for the environment
+    threddspath = app_configuration()['threddsdatadir']
 
     # perform a redundancy check, if the last timestamp is the same as current, abort the workflow
-    timefile = os.path.join(wrksppath, 'timestamp.txt')
+    timefile = os.path.join(threddspath, 'last_run.txt')
     with open(timefile, 'r') as file:
         lasttime = file.readline()
         if lasttime == timestamp:
             # use the redundant check to skip the function because its already been run
             redundant = True
             logging.info('The last recorded timestamp is the timestamp we determined, aborting workflow')
-            return threddspath, wrksppath, timestamp, redundant
+            return threddspath, timestamp, redundant
         elif lasttime == 'clobbered':
             # if you marked clobber is true, dont check for old folders from partially completed workflows
             redundant = False
@@ -48,7 +46,7 @@ def setenvironment():
             test = os.path.join(threddspath, timestamp, 'netcdfs')
             if os.path.exists(test):
                 logging.info('There are directories for this timestep but the workflow wasn\'t finished. Analyzing...')
-                return threddspath, wrksppath, timestamp, redundant
+                return threddspath, timestamp, redundant
 
     # create the file structure and their permissions for the new data
     logging.info('Creating THREDDS file structure')
@@ -70,7 +68,7 @@ def setenvironment():
         os.chmod(new_dir, 0o777)
 
     logging.info('All done setting up folders, on to do work')
-    return threddspath, wrksppath, timestamp, redundant
+    return threddspath, timestamp, redundant
 
 
 def download_gfs(threddspath, timestamp):
@@ -305,7 +303,7 @@ def run_gfs_workflow():
     The controller for running the workflow to download and process data
     """
     # start the workflow by setting the environment
-    threddspath, wrksppath, timestamp, redundant = setenvironment()
+    threddspath, timestamp, redundant = setenvironment()
 
     # if this has already been done for the most recent forecast, abort the workflow
     if redundant:
@@ -328,7 +326,7 @@ def run_gfs_workflow():
     # finish things up
     cleanup(threddspath, timestamp)
     logging.info('\nAll finished- writing the timestamp used on this run to a txt file')
-    with open(os.path.join(wrksppath, 'timestamp.txt'), 'w') as file:
+    with open(os.path.join(threddspath, 'last_run.txt'), 'w') as file:
         file.write(timestamp)
 
     logging.info('\n\nGFS Workflow completed successfully on ' + datetime.datetime.utcnow().strftime("%D at %R"))

@@ -1,9 +1,6 @@
 from tethys_sdk.base import TethysAppBase, url_map_maker
 from tethys_sdk.app_settings import CustomSetting
 
-# todo add the measurement heights to the workflow (or at least say what they are)
-# todo add controls to manually set the wms boundaries if the auto set ones aren't right
-
 
 class Gfs(TethysAppBase):
     """
@@ -68,6 +65,11 @@ class Gfs(TethysAppBase):
                 name='getShapeAverage',
                 url='gfs/ajax/getShapeAverage',
                 controller='gfs.ajax.get_shapeaverage',
+            ),
+            UrlMap(
+                name='uploadShapefile',
+                url='gfs/ajax/uploadShapefile',
+                controller='gfs.ajax.uploadshapefile',
             ),
         )
         return url_maps

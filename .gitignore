@@ -8,3 +8,7 @@
 *.sqlite
 *.DS_Store
 .idea/
+*.dbf
+*.prj
+*.shp
+*.shx

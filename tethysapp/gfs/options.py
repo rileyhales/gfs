@@ -19,7 +19,8 @@ def app_configuration():
 
 
 def gettimestamp():
-    with open(os.path.join(App.get_app_workspace().path, 'timestamp.txt'), 'r') as file:
+    path = App.get_custom_setting("Local Thredds Folder Path")
+    with open(os.path.join(path, 'last_run.txt'), 'r') as file:
         return file.read()
 
 

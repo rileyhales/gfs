@@ -5,8 +5,48 @@
 {% load staticfiles %}
 
 {% block app_content %}
-<div id="outer-container" style="overflow-y: auto">
+  <div id="outer-container" style="overflow-y: auto">
     <div id="map"></div>
     <div id="highchart"></div>
-</div>
+  </div>
+{% endblock %}
+
+{% block after_app_content %}
+  <!-- Upload Shapefile Data Modal -->
+  <div class="modal fade" id="shp-modal" tabindex="-1" role="dialog" aria-labelledby="shp-modal-label">
+    <div class="modal-dialog" role="document">
+      <form action="" method="post" enctype="multipart/form-data">.
+        {% csrf_token %}
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                    aria-hidden="true">X</span></button>
+            <h2 class="modal-title" id="about-modal-onamet-label">Upload A Shapefile</h2>
+          </div>
+          <div class="modal-body">
+            <div>Guidelines for using a custom shapefile:
+              <ul>
+                <li>Your shapefile must contain only polygon data.</li>
+                <li>You must include the 4 files ending in the extensions "prj" "shp", "shx", and "dbf".</li>
+                <li>Your shapefile must use the WGS1984 Geographic Coordinate System or another GCS.</li>
+                <li>The EO data are 1/4 degree spatial resolution. If your polygons are too small, you will get an answer of zero.</li>
+                <li>The more polygons in the shapefile, the longer it will take.</li>
+              </ul>
+            </div>
+            <br>
+            <div class="form-group">
+              <input type="file" class="local-file-upload" id="shapefile-upload" accept=".shp,.prj,.shx,.dbf" multiple>
+            </div>
+            <div>Once you've selected a shapefile, click submit to upload it.</div>
+            <div id="loading" style="display: none; text-align: center"><img
+                    src="https://media.giphy.com/media/jAYUbVXgESSti/giphy.gif"></div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-success" id="uploadshp">Submit</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
 {% endblock %}
