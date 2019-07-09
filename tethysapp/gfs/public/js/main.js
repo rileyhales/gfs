@@ -51,9 +51,19 @@ mapObj.on("mousemove", function (event) {
 let layerObj = newLayer();              // adds the wms raster layer
 let controlsObj = makeControls();       // the layer toggle controls top-right corner
 legend.addTo(mapObj);                   // add the legend graphic to the map
+latlon.addTo(mapObj);                   // add the box showing lat and lon to the map
 updateGEOJSON();                        // asynchronously get geoserver wfs/geojson data for the regions
 
 ////////////////////////////////////////////////////////////////////////  EVENT LISTENERS
+function update() {
+    for (let i = 0; i < geojsons.length; i++) {
+        geojsons[i][0].addTo(mapObj)
+    }
+    layerObj = newLayer();
+    controlsObj = makeControls();
+    legend.addTo(mapObj);
+}
+
 $("#variables").change(function () {
     let level_div = $("#levels");
     level_div.empty();
@@ -66,64 +76,28 @@ $("#variables").change(function () {
         method: 'POST',
         success: function (result) {
             let levels = result['levels'];
-            // if (levels.length === 1) {
-            //     level_div.hide()
-            // } else {
-            //     level_div.show()
-            // }
             for (let i = 0; i < levels.length; i++){
                 level_div.append('<option value="' + levels[i][1] + '">' + levels[i][0] + "</option>");
             }
-
             clearMap();
-            for (let i = 0; i < geojsons.length; i++) {
-                geojsons[i][0].addTo(mapObj)
-            }
-            layerObj = newLayer();
-            controlsObj = makeControls();
+            update();
             getDrawnChart(drawnItems);
-            legend.addTo(mapObj);
-            // todo change the measurements options
         },
     });
 });
+$("#dates").change(function () {clearMap();update();getDrawnChart(drawnItems);});
+// custom dates control
+$('#charttype').change(function () {makechart();});
+$("#levels").change(function () {clearMap();update();});
 
-$("#opacity_raster").change(function () {
-    layerObj.setOpacity($('#opacity_raster').val());
+$("#display").click(function() {
+    $("#displayopts").toggle();
 });
-
-$('#colorscheme').change(function () {
-    clearMap();
-    for (let i = 0; i < geojsons.length; i++) {
-        geojsons[i][0].addTo(mapObj)
-    }
-    layerObj = newLayer();
-    controlsObj = makeControls();
-    legend.addTo(mapObj);
-});
-
-$('#levels').change(function () {
-    clearMap();
-    for (let i = 0; i < geojsons.length; i++) {
-        geojsons[i][0].addTo(mapObj)
-    }
-    layerObj = newLayer();
-    controlsObj = makeControls();
-    legend.addTo(mapObj);
-});
-
-$("#opacity_geojson").change(function () {
-    styleGeoJSON();
-});
-
-$('#colors_geojson').change(function () {
-    styleGeoJSON();
-});
-
-$("#datatoggle").click(function () {
-    $("#datacontrols").toggle();
-});
-
-$("#displaytoggle").click(function () {
-    $("#displaycontrols").toggle();
-});
+$("#use_csrange").change(function () {clearMap();update()});
+$('#colorscheme').change(function () {clearMap();update()});
+$("#opacity").change(function () {layerObj.setOpacity($(this).val())});
+$('#gjClr').change(function () {styleGeoJSON()});
+$("#gjOp").change(function () {styleGeoJSON()});
+$("#gjWt").change(function () {styleGeoJSON()});
+$('#gjFlClr').change(function () {styleGeoJSON()});
+$("#gjFlOp").change(function () {styleGeoJSON()});

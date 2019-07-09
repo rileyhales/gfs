@@ -28,48 +28,60 @@ class Gfs(TethysAppBase):
         """
         Add controllers
         """
-        UrlMap = url_map_maker(self.root_url)
+        urlmap = url_map_maker(self.root_url)
 
         # url maps to navigable pages
         url_maps = (
-            UrlMap(
+            urlmap(
                 name='home',
                 url='gfs',
                 controller='gfs.controllers.home'
             ),
 
             # url maps for data processing workflow
-            UrlMap(
+            urlmap(
                 name='runWorkflows',
                 url='gfs/runWorkflows',
                 controller='gfs.controllers.run_workflows'
             ),
 
             # url maps for ajax calls
-            UrlMap(
+            urlmap(
                 name='getLevelsForVar',
                 url='gfs/ajax/getLevelsForVar',
                 controller='gfs.ajax.get_levels_for_variable'
             ),
-            UrlMap(
-                name='getPointSeries',
-                url='gfs/ajax/getPointSeries',
-                controller='gfs.ajax.get_pointseries',
+            urlmap(
+                name='getChart',
+                url='gfs/ajax/getChart',
+                controller='gfs.ajax.getchart',
             ),
-            UrlMap(
-                name='getPolygonAverage',
-                url='gfs/ajax/getPolygonAverage',
-                controller='gfs.ajax.get_polygonaverage',
-            ),
-            UrlMap(
-                name='getShapeAverage',
-                url='gfs/ajax/getShapeAverage',
-                controller='gfs.ajax.get_shapeaverage',
-            ),
-            UrlMap(
+            urlmap(
                 name='uploadShapefile',
                 url='gfs/ajax/uploadShapefile',
                 controller='gfs.ajax.uploadshapefile',
+            ),
+
+            # url maps for api calls
+            urlmap(
+                name='getcapabilities',
+                url='gfs/api/getcapabilities',
+                controller='gfs.api.getcapabilities',
+            ),
+            urlmap(
+                name='timeseries',
+                url='gfs/api/timeseries',
+                controller='gfs.api.timeseries',
+            ),
+            urlmap(
+                name='gfslevels',
+                url='gfs/api/gfslevels',
+                controller='gfs.api.gfslevels',
+            ),
+            urlmap(
+                name='gfsdates',
+                url='gfs/api/gfsdates',
+                controller='gfs.api.gfsdates',
             ),
         )
         return url_maps

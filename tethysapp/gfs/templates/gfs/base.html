@@ -47,22 +47,36 @@
 {% endblock %}
 
 {% block app_navigation_items %}
-  <li class="title" role="button" id="datatoggle">GFS Data Controls</li>
-  <div id="datacontrols">
+  <li class="title">Data Controls</li>
+    <div style="text-align: center; padding: 4px;"><strong>{{ gfsdate }}</strong></div>
     {% gizmo select_input variables %}
     {% gizmo select_input levels %}
-{#    {% gizmo select_input heights %}#}
-    <div style="text-align: center; padding: 4px;"><strong>{{ current_gfs_time }}</strong></div>
-    <div id="mouse-position" class="well well-sm" style="text-align: center"></div>
-  </div>
-  <button class="btn btn-primary" id="customShpTS">Generate Data with Custom Shapefile</button>
+    {# {% gizmo select_input heights %} #}
 
-  <li class="title" role="button" id="displaytoggle">Display Options</li>
-  <div id="displaycontrols">
-    {% gizmo select_input colorscheme %}
-    {% gizmo range_slider opacity_raster %}
-    {% gizmo select_input colors_geojson %}
+  <button class="btn btn-default btn-block" role="button" id="customShpChart">Timeseries for my own Shapefile</button>
+  <br>
+
+  <div style="text-align: center; padding-bottom: 12px">
+    <button class="btn btn-default" role="button" id="display">View Map Styling Controls</button>
   </div>
+  <div id="displayopts" style="display: none;">
+    <div id="color-scales-gizmo" style="padding-bottom: 12px">
+      <div style="padding-bottom: 4px"><strong>Custom Color Scale Min/Max</strong></div>
+      <div>
+        Min: <input id="cs_min" type="number" style="width: 20%;" value="0">
+        Max: <input id="cs_max" type="number" style="width: 20%;" value="100">
+        Use? <input id="use_csrange" type="checkbox">
+      </div>
+    </div>
+    {% gizmo select_input colorscheme %}
+    {% gizmo range_slider opacity %}
+    {% gizmo select_input gjClr %}
+    {% gizmo range_slider gjOp %}
+    {% gizmo range_slider gjWt %}
+    {% gizmo select_input gjFlClr %}
+    {% gizmo range_slider gjFlOp %}
+  </div>
+
 {% endblock %}
 
 {% block app_actions %}
@@ -92,6 +106,7 @@
   <script>
     let threddsbase = "{{ settings.threddsurl }}";
     let geoserverbase = "{{ settings.geoserverurl }}";
+    let model = "gfs";
   </script>
 
   <!-- Allows csrf verification with AJAX -->

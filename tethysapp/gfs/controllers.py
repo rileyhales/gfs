@@ -19,12 +19,11 @@ def home(request):
     """
 
     variables = SelectInput(
-        display_text='GFS Forecast Variables',
+        display_text='Select GFS Variable',
         name='variables',
         multiple=False,
         original=True,
-        options=gfs_variables,
-        initial='al'
+        options=gfs_variables(),
     )
 
     levels = SelectInput(
@@ -35,57 +34,90 @@ def home(request):
         options=structure_byvars()['al'],
     )
 
-    # heights = SelectInput(
-    #     display_text='Measurement Heights',
-    #     name='heights',
-    #     multiple=False,
-    #     original=True,
-    # )
-
-    current_gfs_time = currentgfs()
+    gfsdate = currentgfs()
 
     colorscheme = SelectInput(
-        display_text='Raster Color Scheme',
+        display_text='GFS Color Scheme',
         name='colorscheme',
         multiple=False,
         original=True,
         options=wms_colors(),
+        initial='rainbow'
     )
 
-    opacity_raster = RangeSlider(
-        display_text='Raster Opacity',
-        name='opacity_raster',
+    opacity = RangeSlider(
+        display_text='GFS Layer Opacity',
+        name='opacity',
         min=.5,
         max=1,
         step=.05,
         initial=1,
     )
 
-    colors_geojson = SelectInput(
-        display_text='Boundary Colors',
-        name='colors_geojson',
+    gj_color = SelectInput(
+        display_text='Boundary Border Colors',
+        name='gjClr',
         multiple=False,
         original=True,
         options=geojson_colors(),
         initial='#ffffff'
     )
 
+    gj_opacity = RangeSlider(
+        display_text='Boundary Border Opacity',
+        name='gjOp',
+        min=0,
+        max=1,
+        step=.1,
+        initial=1,
+    )
+
+    gj_weight = RangeSlider(
+        display_text='Boundary Border Thickness',
+        name='gjWt',
+        min=1,
+        max=5,
+        step=1,
+        initial=2,
+    )
+
+    gj_fillcolor = SelectInput(
+        display_text='Boundary Fill Color',
+        name='gjFlClr',
+        multiple=False,
+        original=True,
+        options=geojson_colors(),
+        initial='rgb(0,0,0,0)'
+    )
+
+    gj_fillopacity = RangeSlider(
+        display_text='Boundary Fill Opacity',
+        name='gjFlOp',
+        min=0,
+        max=1,
+        step=.1,
+        initial=.5,
+    )
+
     context = {
+        # data options
         'variables': variables,
         'levels': levels,
-        # 'heights': heights,
-        'current_gfs_time': current_gfs_time,
+        'gfsdate': gfsdate,
+        # also model specific options
 
+        # display options
         'colorscheme': colorscheme,
-        'opacity_raster': opacity_raster,
-        'colors_geojson': colors_geojson,
+        'opacity': opacity,
+        'gjClr': gj_color,
+        'gjOp': gj_opacity,
+        'gjWt': gj_weight,
+        'gjFlClr': gj_fillcolor,
+        'gjFlOp': gj_fillopacity,
 
-        'youtubelink': App.youtubelink,
-        'githublink': App.githublink,
-        'gfslink': App.gfslink,
+        # metadata
+        'settings': app_settings(),
         'version': App.version,
-
-        'settings': app_configuration()
     }
 
     return render(request, 'gfs/home.html', context)
@@ -98,13 +130,13 @@ def run_workflows(request):
     """
     # Check for user permissions here rather than with a decorator so that we can log the failure
     if not User.is_superuser:
-        logging.basicConfig(filename=app_configuration()['logfile'], filemode='a', level=logging.INFO, format='%(message)s')
+        logging.basicConfig(filename=app_settings()['logfile'], filemode='a', level=logging.INFO, format='%(message)s')
         logging.info('A non-superuser tried to run this workflow on ' + datetime.datetime.utcnow().strftime("%D at %R"))
         logging.info('The user was ' + str(request.user))
         return JsonResponse({'Unauthorized User': 'You do not have permission to run the workflow. Ask a superuser.'})
 
     # enable logging to track the progress of the workflow and for debugging
-    logging.basicConfig(filename=app_configuration()['logfile'], filemode='w', level=logging.INFO, format='%(message)s')
+    logging.basicConfig(filename=app_settings()['logfile'], filemode='w', level=logging.INFO, format='%(message)s')
     logging.info('Workflow initiated on ' + datetime.datetime.utcnow().strftime("%D at %R"))
 
     # Set the clobber option so that the right folders get deleted/regenerated in the set_environment functions

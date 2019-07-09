@@ -3,7 +3,7 @@ import os
 import datetime
 
 
-def app_configuration():
+def app_settings():
     """
     Gets the settings for the app for use in other functions and ajax for leaflet
     Dependencies: os, App (app)
@@ -13,15 +13,30 @@ def app_configuration():
         'threddsdatadir': App.get_custom_setting("Local Thredds Folder Path"),
         'threddsurl': App.get_custom_setting("Thredds WMS URL"),
         'geoserverurl': App.get_custom_setting("Geoserver Workspace URL"),
-        'timestamp': gettimestamp(),
-        'logfile': os.path.join(App.get_app_workspace().path, 'workflow.log')
+        'timestamp': get_gfsdate(),
+        'logfile': os.path.join(App.get_app_workspace().path, 'gfsworkflow.log')
     }
 
 
-def gettimestamp():
-    path = App.get_custom_setting("Local Thredds Folder Path")
-    with open(os.path.join(path, 'last_run.txt'), 'r') as file:
-        return file.read()
+def get_gfsdate():
+    thredds = App.get_custom_setting("Local Thredds Folder Path")
+    file = os.path.join(thredds, 'last_run.txt')
+    if os.path.exists(file):
+        with open(os.path.join(thredds, 'last_run.txt'), 'r') as file:
+            return file.read()
+    else:
+        return 'none'
+
+
+def currentgfs():
+    # if there is actually data in the app, then read the file with the timestamp on it
+    thredds = App.get_custom_setting("Local Thredds Folder Path")
+    timestamp = get_gfsdate()
+    path = os.path.join(thredds, timestamp)
+    if os.path.exists(path):
+        timestamp = datetime.datetime.strptime(timestamp, "%Y%m%d%H")
+        return "This GFS data from " + timestamp.strftime("%b %d, %I%p UTC")
+    return "No GFS data detected"
 
 
 def gfs_variables():
@@ -94,17 +109,6 @@ def geojson_colors():
         ('Teal', '#008080'),
         ('Purple', '#800080'),
     ]
-
-
-def currentgfs():
-    # if there is actually data in the app, then read the file with the timestamp on it
-    path = App.get_custom_setting("Local Thredds Folder Path")
-    timestamp = gettimestamp()
-    path = os.path.join(path, timestamp)
-    if os.path.exists(path):
-        timestamp = datetime.datetime.strptime(timestamp, "%Y%m%d%H")
-        return "This GFS data from " + datetime.datetime.strftime(timestamp, "%b %d, %I%p UTC")
-    return "No GFS data detected"
 
 
 def gfs_forecastlevels():

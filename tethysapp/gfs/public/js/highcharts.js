@@ -12,6 +12,8 @@ Highcharts.setOptions({
     },
 });
 
+let chartdata = null;
+
 // Placeholder chart
 let chart = Highcharts.chart('highchart', {
     title: {
@@ -41,7 +43,7 @@ function newHighchart(data) {
     chart = Highcharts.chart('highchart', {
         title: {
             align: "center",
-            text: data['name'] + ' v Time ' + data['type'],
+            text: data['name'] + ' v Time ' + '(' + data['type'] + ')',
         },
         xAxis: {
             type: 'datetime',
@@ -93,31 +95,26 @@ function getDrawnChart(drawnItems) {
             }
         }
 
-        // setup a parameters json to generate the right timeseries
+        // setup a parameters json to generate the right timeserie
         let data = {
             coords: coords,
-            geojson: geojson[0],
-            variable: $('#variables').val(),
-            level: $("#levels").val()
+            model: model,
+            variable: $("#variables").val(),
+            level: $("#levels").val(),
+            time: $("#dates").val(),
+            loc_type: geojson[0]['geometry']['type']
         };
 
         // decide which ajax url you need based on drawing type
-        let url;
-        let drawtype = geojson[0]['geometry']['type'];
-        if (drawtype === 'Point') {
-            url = '/apps/gfs/ajax/getPointSeries/';
-        } else {
-            url = '/apps/gfs/ajax/getPolygonAverage/';
-        }
-
         $.ajax({
-            url: url,
+            url: '/apps/gfs/ajax/getChart/',
             data: JSON.stringify(data),
             dataType: 'json',
             contentType: "application/json",
             method: 'POST',
             success: function (result) {
-                newHighchart(result);
+                chartdata = result;
+                makechart();
             }
         })
         // If there isn't any geojson, then you actually should refresh the shapefile chart (ie the data is the lastregion)
@@ -127,15 +124,26 @@ function getDrawnChart(drawnItems) {
 }
 
 function getShapeChart(selectedregion) {
+    // if the time range is all times then confirm before executing the spatial averaging
+    if ($("#dates").val() === 'alltimes') {
+        if (!confirm("Computing a timeseries of spatial averages for all available times requires over 200 iterations of file conversions and geoprocessing operations. This may result in a long wait (15+ seconds) or cause errors. Are you sure you want to continue?")) {
+            return
+        }
+    }
+
     drawnItems.clearLayers();
     chart.hideNoData();
     chart.showLoading();
 
+    // setup a parameters json to generate the right timeseries
     let data = {
-        variable: $('#variables').val(),
-        region: selectedregion,
-        level: $("#levels").val()
+        model: model,
+        variable: $("#variables").val(),
+        level: $("#levels").val(),
+        time: $("#dates").val(),
+        loc_type: 'Shapefile'
     };
+
     if (selectedregion === 'lastregion') {
         // if we want to update, change the region to the last completed region
         data['region'] = currentregion;
@@ -144,17 +152,25 @@ function getShapeChart(selectedregion) {
         currentregion = selectedregion;
     } else {
         // otherwise, the new selection is the current region on the chart
+        data['region'] = selectedregion;
         currentregion = selectedregion;
     }
 
     $.ajax({
-        url: '/apps/gfs/ajax/getShapeAverage/',
+        url: '/apps/gfs/ajax/getChart/',
         data: JSON.stringify(data),
         dataType: 'json',
         contentType: "application/json",
         method: 'POST',
         success: function (result) {
-            newHighchart(result);
+            chartdata = result;
+            makechart();
         }
     })
+}
+
+function makechart() {
+    if (chartdata !== null) {
+        newHighchart(chartdata)
+    }
 }

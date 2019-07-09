@@ -34,7 +34,7 @@ $("#uploadshp").click(function () {
     uploadShapefile()
 });
 
-$("#customShpTS").click(function () {
+$("#customShpChart").click(function () {
     if (uploaded_shp) {
         getShapeChart('customshape')
     } else {
