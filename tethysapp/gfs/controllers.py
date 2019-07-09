@@ -101,10 +101,10 @@ def home(request):
 
     context = {
         # data options
+        'model': 'gfs',
         'variables': variables,
         'levels': levels,
         'gfsdate': gfsdate,
-        # also model specific options
 
         # display options
         'colorscheme': colorscheme,
@@ -116,8 +116,10 @@ def home(request):
         'gjFlOp': gj_fillopacity,
 
         # metadata
-        'settings': app_settings(),
+        'githublink': App.githublink,
+        'datawebsite': App.datawebsite,
         'version': App.version,
+        'settings': app_settings(),
     }
 
     return render(request, 'gfs/home.html', context)

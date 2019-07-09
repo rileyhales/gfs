@@ -12,7 +12,6 @@ def app_settings():
         'app_wksp_path': os.path.join(App.get_app_workspace().path, ''),
         'threddsdatadir': App.get_custom_setting("Local Thredds Folder Path"),
         'threddsurl': App.get_custom_setting("Thredds WMS URL"),
-        'geoserverurl': App.get_custom_setting("Geoserver Workspace URL"),
         'timestamp': get_gfsdate(),
         'logfile': os.path.join(App.get_app_workspace().path, 'gfsworkflow.log')
     }

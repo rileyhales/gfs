@@ -19,10 +19,9 @@ class Gfs(TethysAppBase):
     tags = ''
     enable_feedback = False
     feedback_emails = []
-    youtubelink = 'https://youtube.com'
     githublink = 'https://github.com/rileyhales/gfs'
-    gfslink = 'https://www.ncdc.noaa.gov/data-access/model-data/model-datasets/global-forcast-system-gfs'
-    version = 'development 2 July 2019'
+    datawebsite = 'https://www.ncdc.noaa.gov/data-access/model-data/model-datasets/global-forcast-system-gfs'
+    version = 'v2 7/2019'
 
     def url_maps(self):
         """
@@ -98,13 +97,6 @@ class Gfs(TethysAppBase):
                 name='Thredds WMS URL',
                 type=CustomSetting.TYPE_STRING,
                 description="URL to the GLDAS folder on the thredds server (e.g. http://[host]/thredds/gfs/)",
-                required=True,
-            ),
-            CustomSetting(
-                name='Geoserver Workspace URL',
-                type=CustomSetting.TYPE_STRING,
-                description="URL (wfs) of the workspace on geoserver (e.g. https://[host]/geoserver/gfs/ows). \n"
-                            "Enter geojson instead of a url if you experience GeoServer problems.",
                 required=True,
             ),
         )

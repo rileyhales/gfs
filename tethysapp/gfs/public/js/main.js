@@ -52,23 +52,23 @@ let layerObj = newLayer();              // adds the wms raster layer
 let controlsObj = makeControls();       // the layer toggle controls top-right corner
 legend.addTo(mapObj);                   // add the legend graphic to the map
 latlon.addTo(mapObj);                   // add the box showing lat and lon to the map
-updateGEOJSON();                        // asynchronously get geoserver wfs/geojson data for the regions
+addGEOJSON();                           // add the geojson world boundary regions
 
 ////////////////////////////////////////////////////////////////////////  EVENT LISTENERS
 function update() {
-    for (let i = 0; i < geojsons.length; i++) {
-        geojsons[i][0].addTo(mapObj)
+    for (let i in geojsons) {
+        geojsons[i].addTo(mapObj)
     }
     layerObj = newLayer();
     controlsObj = makeControls();
     legend.addTo(mapObj);
 }
-
+// data controls
 $("#variables").change(function () {
     let level_div = $("#levels");
     level_div.empty();
     $.ajax({
-        url: '/apps/gfs/ajax/getLevelsForVar/',
+        url: '/apps/' + model + '/ajax/getLevelsForVar/',
         async: true,
         data: JSON.stringify({variable: this.options[this.selectedIndex].value}),
         dataType: 'json',
@@ -86,13 +86,10 @@ $("#variables").change(function () {
     });
 });
 $("#dates").change(function () {clearMap();update();getDrawnChart(drawnItems);});
-// custom dates control
 $('#charttype').change(function () {makechart();});
 $("#levels").change(function () {clearMap();update();});
-
-$("#display").click(function() {
-    $("#displayopts").toggle();
-});
+// display controls
+$("#display").click(function() {$("#displayopts").toggle();});
 $("#use_csrange").change(function () {clearMap();update()});
 $('#colorscheme').change(function () {clearMap();update()});
 $("#opacity").change(function () {layerObj.setOpacity($(this).val())});

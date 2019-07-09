@@ -13,8 +13,7 @@ from .charts import newchart
 @authentication_classes((TokenAuthentication,))
 def getcapabilities(request):
     return JsonResponse({
-        'api_calls': ['getcapabilities', 'eodatamodels', 'gldasvariables', 'gldasdates', 'gfsdates', 'gfslevels',
-                      'timeseries']
+        'api_calls': ['getcapabilities', 'gfsdates', 'gfslevels','timeseries']
     })
 
 
