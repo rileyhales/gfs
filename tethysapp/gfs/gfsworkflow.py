@@ -321,7 +321,7 @@ def run_gfs_workflow():
     succeeded = download_gfs(threddspath, timestamp)
     if not succeeded:
         return 'Workflow Aborted- Downloading Errors Occurred'
-    # set_wmsbounds(threddspath, timestamp)
+    set_wmsbounds(threddspath, timestamp)
 
     # convert to netcdfs
     grib_to_netcdf(threddspath, timestamp)
