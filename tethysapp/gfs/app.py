@@ -99,6 +99,18 @@ class Gfs(TethysAppBase):
                 description="URL to the GLDAS folder on the thredds server (e.g. http://[host]/thredds/gfs/)",
                 required=True,
             ),
+            CustomSetting(
+                name='GeoserverURL',
+                type=CustomSetting.TYPE_STRING,
+                description="Include http or https but no '/' after /geoserver, ex: https://tethys.byu.edu/geoserver",
+                required=True,
+            ),
+            CustomSetting(
+                name='Geoserver user/pass',
+                type=CustomSetting.TYPE_STRING,
+                description="Admin credentials for uploading shapefiles to geoserver in the format username/password",
+                required=True,
+            ),
         )
         return CustomSettings
 

@@ -1,0 +1,16 @@
+# This file may be committed to your app code.
+version: 2
+# This should match the app - package name in your setup.py
+name: gfs
+setup_path: setup.py
+
+conda:
+  channels:
+    - conda-forge
+  dependencies:
+    - netcdf4
+    - numpy
+    - pandas
+    - rasterstats
+    - rasterio
+    - pygrib
