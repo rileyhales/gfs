@@ -49,6 +49,12 @@ def uploadshapefile(request):
             for chunk in files[n].chunks():
                 dst.write(chunk)
 
+    # check that the user has provided geoserver settings
+    cs = App.get_custom_setting('Geoserver user/pass')
+    gsurl = App.get_custom_setting('GeoserverURL')
+    if cs is None or gsurl is None:
+        return JsonResponse({'status': 'uploaded'})
+
     # rename the files and create a zip archive
     files = os.listdir(user_workspace)
     zippath = os.path.join(user_workspace, str(user) + '.zip')
@@ -59,11 +65,10 @@ def uploadshapefile(request):
 
     # upload the archive to geoserver
     shellpath = os.path.join(App.get_app_workspace().path, 'upload_shapefile.sh')
-    cs = App.get_custom_setting('Geoserver user/pass')
     v1 = cs.split('/')[0]
     v2 = cs.split('/')[1]
     v3 = zippath
-    v4 = App.get_custom_setting('GeoserverURL')
+    v4 = gsurl
     v5 = App.package
     v6 = files[0].split('.')[0]
     subprocess.call(['bash', shellpath, v1, v2, v3, v4, v5, v6])

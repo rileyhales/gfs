@@ -103,13 +103,13 @@ class Gfs(TethysAppBase):
                 name='GeoserverURL',
                 type=CustomSetting.TYPE_STRING,
                 description="Include http or https but no '/' after /geoserver, ex: https://tethys.byu.edu/geoserver",
-                required=True,
+                required=False,
             ),
             CustomSetting(
                 name='Geoserver user/pass',
                 type=CustomSetting.TYPE_STRING,
                 description="Admin credentials for uploading shapefiles to geoserver in the format username/password",
-                required=True,
+                required=False,
             ),
         )
         return CustomSettings
