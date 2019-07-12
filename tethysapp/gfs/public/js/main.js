@@ -59,6 +59,7 @@ function update() {
     for (let i in geojsons) {
         geojsons[i].addTo(mapObj)
     }
+    usershape.addTo(mapObj);
     layerObj = newLayer();
     controlsObj = makeControls();
     legend.addTo(mapObj);
@@ -90,6 +91,8 @@ $('#charttype').change(function () {makechart();});
 $("#levels").change(function () {clearMap();update();});
 // display controls
 $("#display").click(function() {$("#displayopts").toggle();});
+$("#cs_min").change(function () {if ($("#use_csrange").is(":checked")) {clearMap();update()}});
+$("#cs_max").change(function () {if ($("#use_csrange").is(":checked")) {clearMap();update()}});
 $("#use_csrange").change(function () {clearMap();update()});
 $('#colorscheme').change(function () {clearMap();update()});
 $("#opacity").change(function () {layerObj.setOpacity($(this).val())});

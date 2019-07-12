@@ -49,7 +49,7 @@ def setenvironment():
                     logging.info('There are directories for this timestep but the workflow wasn\'t finished. '
                                  'Attempting to resume...')
                     return threddspath, timestamp, redundant
-    except FileNotFoundError:
+    except Exception:
         redundant = False
 
     # create the file structure and their permissions for the new data
