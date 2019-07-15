@@ -37,13 +37,6 @@ class Gfs(TethysAppBase):
                 controller='gfs.controllers.home'
             ),
 
-            # url maps for data processing workflow
-            urlmap(
-                name='runWorkflows',
-                url='gfs/runWorkflows',
-                controller='gfs.controllers.run_workflows'
-            ),
-
             # url maps for ajax calls
             urlmap(
                 name='getLevelsForVar',
@@ -86,7 +79,7 @@ class Gfs(TethysAppBase):
         return url_maps
 
     def custom_settings(self):
-        CustomSettings = (
+        customsettings = (
             CustomSetting(
                 name='Local Thredds Folder Path',
                 type=CustomSetting.TYPE_STRING,
@@ -112,5 +105,4 @@ class Gfs(TethysAppBase):
                 required=False,
             ),
         )
-        return CustomSettings
-
+        return customsettings

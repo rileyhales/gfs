@@ -1,14 +1,16 @@
 import logging
+import sys
 import shutil
 import pygrib
 import netCDF4
 import requests
 import numpy
+import os
+import datetime
 import time as Time
-from .options import *
 
 
-def setenvironment():
+def setenvironment(threddspath):
     """
     Dependencies: os, shutil, datetime, urllib.request, app_settings (options)
     """
@@ -25,9 +27,6 @@ def setenvironment():
         timestamp = now.strftime("%Y%m%d") + '00'
     logging.info('determined the timestamp to download: ' + timestamp)
 
-    # get folder paths for the environment
-    threddspath = app_settings()['threddsdatadir']
-
     # perform a redundancy check, if the last timestamp is the same as current, abort the workflow
     timefile = os.path.join(threddspath, 'last_run.txt')
     try:
@@ -37,7 +36,7 @@ def setenvironment():
                 # use the redundant check to skip the function because its already been run
                 redundant = True
                 logging.info('The last recorded timestamp is the timestamp we determined, aborting workflow')
-                return threddspath, timestamp, redundant
+                return timestamp, redundant
             elif lasttime == 'clobbered':
                 # if you marked clobber is true, dont check for old folders from partially completed workflows
                 redundant = False
@@ -48,7 +47,7 @@ def setenvironment():
                 if os.path.exists(test):
                     logging.info('There are directories for this timestep but the workflow wasn\'t finished. '
                                  'Attempting to resume...')
-                    return threddspath, timestamp, redundant
+                    return timestamp, redundant
     except Exception:
         redundant = False
 
@@ -72,7 +71,7 @@ def setenvironment():
         os.chmod(new_dir, 0o777)
 
     logging.info('All done setting up folders, on to do work')
-    return threddspath, timestamp, redundant
+    return timestamp, redundant
 
 
 def download_gfs(threddspath, timestamp):
@@ -167,7 +166,7 @@ def set_wmsbounds(threddspath, timestamp):
     return
 
 
-def grib_to_netcdf(threddspath, timestamp):
+def grib_to_netcdf(threddspath, timestamp, forecastlevels):
     """
     Dependencies: xarray, netcdf4, os, shutil, app_settings (options)
     """
@@ -189,7 +188,7 @@ def grib_to_netcdf(threddspath, timestamp):
     # for each grib file you downloaded, open it, convert it to a netcdf
     files = os.listdir(gribs)
     files = [grib for grib in files if grib.endswith('.grb')]
-    for level in gfs_forecastlevels():
+    for level in forecastlevels:
         logging.info('working on level ' + level)
         time = 6
         latitudes = [-90 + (i * .25) for i in range(721)]
@@ -256,13 +255,13 @@ def grib_to_netcdf(threddspath, timestamp):
     return
 
 
-def new_ncml(threddspath, timestamp):
+def new_ncml(threddspath, timestamp, forecastlevels):
     logging.info('\nWriting a new ncml file for this date')
     # create a new ncml file by filling in the template with the right dates and writing to a file
     date = datetime.datetime.strptime(timestamp, "%Y%m%d%H")
     date = date.strftime("%Y-%m-%d %H:00:00")
     netcdfs = os.listdir(os.path.join(threddspath, timestamp, 'netcdfs'))
-    for level in gfs_forecastlevels():
+    for level in forecastlevels:
         ncml = os.path.join(threddspath, level + '_wms.ncml')
         level_ncs = [nc for nc in netcdfs if nc.startswith(level + '_') and nc.endswith('.nc')]
         with open(ncml, 'w') as file:
@@ -292,6 +291,7 @@ def cleanup(threddspath, timestamp):
     logging.info('Getting rid of old data folders')
     files = os.listdir(threddspath)
     files.remove(timestamp)
+    files.remove('workflow.log')
     files = [file for file in files if not file.endswith('.ncml')]
     for file in files:
         try:
@@ -302,20 +302,34 @@ def cleanup(threddspath, timestamp):
     return
 
 
-def run_gfs_workflow():
+def workflow(threddspath, clobber='no'):
     """
-    The controller for running the workflow to download and process data
+    Accepts environment settings then runs the workflow functions in the order they should be executed
     """
-    # start the workflow by setting the environment
-    threddspath, timestamp, redundant = setenvironment()
+    # enable logging to track the progress of the workflow and for debugging
+    logfile = os.path.join(threddspath, 'workflow.log')
+    logging.basicConfig(filename=logfile, filemode='w', level=logging.INFO, format='%(message)s')
+    logging.info('Workflow initiated on ' + datetime.datetime.utcnow().strftime("%D at %R"))
+
+    # handle the clobber option
+    if clobber in ['yes', 'true']:
+        logging.info('You chose the clobber option. the timestamps and all the data folders will be overwritten')
+        timefile = os.path.join(threddspath, 'last_run.txt')
+        with open(timefile, 'w') as file:
+            file.write('clobbered')
+
+    forecastlevels = ['atmosphere', 'depthBelowLandLayer', 'heightAboveGround', 'heightAboveGroundLayer',
+                      'heightAboveSea', 'hybrid', 'isothermZero', 'isobaricInPa', 'isobaricInhPa', 'maxWind', 'meanSea',
+                      'nominalTop', 'potentialVorticity', 'pressureFromGroundLayer', 'sigma', 'sigmaLayer', 'surface',
+                      'tropopause', 'unknown']
+
+    # start running the workflow
+    timestamp, redundant = setenvironment(threddspath)
 
     # if this has already been done for the most recent forecast, abort the workflow
     if redundant:
         logging.info('\nWorkflow aborted on ' + datetime.datetime.utcnow().strftime("%D at %R"))
         return 'Workflow Aborted- already run for most recent data'
-
-    # run the workflow
-    logging.info('\nBeginning to process on ' + datetime.datetime.utcnow().strftime("%D at %R"))
 
     # get data from the gribs
     succeeded = download_gfs(threddspath, timestamp)
@@ -324,8 +338,8 @@ def run_gfs_workflow():
     set_wmsbounds(threddspath, timestamp)
 
     # convert to netcdfs
-    grib_to_netcdf(threddspath, timestamp)
-    new_ncml(threddspath, timestamp)
+    grib_to_netcdf(threddspath, timestamp, forecastlevels)
+    new_ncml(threddspath, timestamp, forecastlevels)
 
     # finish things up
     cleanup(threddspath, timestamp)
@@ -337,5 +351,6 @@ def run_gfs_workflow():
     return 'GFS Workflow Completed- Normal Finish'
 
 
+# bash this py file with the argument of the path to store gfs data in the thredds directory (same as custom setting)
 if __name__ == '__main__':
-    run_gfs_workflow()
+    workflow(sys.argv[1])
