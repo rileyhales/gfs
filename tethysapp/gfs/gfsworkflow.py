@@ -286,17 +286,12 @@ def new_ncml(threddspath, timestamp, forecastlevels):
     return
 
 
-def cleanup(threddspath, timestamp):
+def cleanup(threddspath):
     # delete anything that isn't the new folder of data (named for the timestamp) or the new wms.ncml file
     logging.info('Getting rid of old data folders')
     files = os.listdir(threddspath)
-    files.remove(timestamp)
-    files.remove('workflow.log')
-    files = [file for file in files if not file.endswith('.ncml')]
     for file in files:
-        try:
-            shutil.rmtree(os.path.join(threddspath, file))
-        except:
+        if not file.endswith('.log') and not os.path.isdir(os.path.join(threddspath, file)):
             os.remove(os.path.join(threddspath, file))
     logging.info('Done')
     return
@@ -342,7 +337,7 @@ def workflow(threddspath, clobber='no'):
     new_ncml(threddspath, timestamp, forecastlevels)
 
     # finish things up
-    cleanup(threddspath, timestamp)
+    cleanup(threddspath)
     logging.info('\nAll finished- writing the timestamp used on this run to a txt file')
     with open(os.path.join(threddspath, 'last_run.txt'), 'w') as file:
         file.write(timestamp)
