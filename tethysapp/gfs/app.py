@@ -7,7 +7,7 @@ class Gfs(TethysAppBase):
     Tethys app class for GFS Visualization Tool.
     """
 
-    name = 'GFS Visualization Tool'
+    name = 'GFS Data Tool'
     index = 'gfs:home'
     icon = 'gfs/images/gfs.png'
     package = 'gfs'
