@@ -29,10 +29,13 @@
 {% endblock %}
 
 {% block app_actions %}
-  <strong style="color: white; font-size: large">Help and Resources</strong>
-  <a class="btn btn-default" role="button" data-toggle="modal" data-target="#help-modal">How To Use This App</a>
-  <a class="btn btn-default" role="button" data-toggle="modal" data-target="#data-modal">About GFS data</a>
-  <a class="btn btn-default" role="button" href="{{ githublink }}" target="_blank">View Source Code (GitHub)</a>
+  <div style="width: 20%; float: left"><strong>{{ version }}</strong></div>
+  <div style="width: 80%; float: left; text-align: right">
+    <strong style="color: white; font-size: large">Help and Resources</strong>
+    <a class="btn btn-default" role="button" data-toggle="modal" data-target="#help-modal">How To Use This App</a>
+    <a class="btn btn-default" role="button" data-toggle="modal" data-target="#data-modal">About GLDAS data</a>
+    <a class="btn btn-default" role="button" href="{{ githublink }}" target="_blank">View Source Code (GitHub)</a>
+  </div>
 {% endblock %}
 
 {% block after_app_content %}

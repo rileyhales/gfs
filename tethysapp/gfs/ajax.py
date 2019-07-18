@@ -19,9 +19,8 @@ def getchart(request):
     Dependencies: gldas_variables (options), pointchart (tools), ast, makestatplots (tools)
     """
     data = ast.literal_eval(request.body.decode('utf-8'))
-    data['user'] = request.user
-    data = newchart(data)
-    return JsonResponse(data)
+    data['instance_id'] = request.META['HTTP_COOKIE'].split('instance_id=')[1][0:9]
+    return JsonResponse(newchart(data))
 
 
 @login_required()
@@ -35,13 +34,13 @@ def get_levels_for_variable(request):
 @login_required()
 def uploadshapefile(request):
     files = request.FILES.getlist('files')
-    user = request.user
-    user_workspace = App.get_user_workspace(user).path
+    instance_id = request.META['HTTP_COOKIE'].split('instance_id=')[1][0:9]
+    user_workspace = os.path.join(os.path.dirname(__file__), 'workspaces', 'user_workspaces', instance_id)
 
-    # delete old files in the directory
+    # delete old files in the directory then recreate
     if os.path.exists(user_workspace):
         shutil.rmtree(user_workspace)
-        os.mkdir(user_workspace)
+    os.mkdir(user_workspace)
 
     # write the new files to the directory
     for n, file in enumerate(files):
@@ -57,7 +56,7 @@ def uploadshapefile(request):
 
     # rename the files and create a zip archive
     files = os.listdir(user_workspace)
-    zippath = os.path.join(user_workspace, str(user) + '.zip')
+    zippath = os.path.join(user_workspace, instance_id + '.zip')
     archive = zipfile.ZipFile(zippath, mode='w')
     for file in files:
         archive.write(os.path.join(user_workspace, file), arcname=file)

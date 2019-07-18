@@ -46,7 +46,7 @@ def newchart(data):
         values, units = polychart(var, data['coords'], path, files)
         type = 'Averaged over a Polygon'
     elif loc_type == 'Shapefile':
-        values, units = shpchart(var, path, files, data['region'], data['user'])
+        values, units = shpchart(var, path, files, data['region'], data['instance_id'])
         if data['region'] == 'customshape':
             type = 'Average for user\'s shapefile'
         else:
@@ -141,7 +141,7 @@ def polychart(var, coords, path, files):
     return values, units
 
 
-def shpchart(var, path, files, region, user):
+def shpchart(var, path, files, region, instance_id):
     """
     Description: This script accepts a netcdf file in a geographic coordinate system, specifically the NASA GLDAS
         netcdfs, and extracts the data from one variable and the lat/lon steps to create a geotiff of that information.
@@ -184,7 +184,7 @@ def shpchart(var, path, files, region, user):
 
         # file paths and settings
         if region == 'customshape':
-            shppath = App.get_user_workspace(user).path
+            shppath = os.path.join(os.path.dirname(__file__), 'workspaces', 'user_workspaces', instance_id)
             shp = [i for i in os.listdir(shppath) if i.endswith('.shp')]
             shppath = os.path.join(shppath, shp[0])
         else:

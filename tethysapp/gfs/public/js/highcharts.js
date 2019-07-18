@@ -107,7 +107,7 @@ function getDrawnChart(drawnItems) {
 
         // decide which ajax url you need based on drawing type
         $.ajax({
-            url: '/apps/' + model + '/ajax/getChart/',
+            url: '/apps/' + app + '/ajax/getChart/',
             data: JSON.stringify(data),
             dataType: 'json',
             contentType: "application/json",
@@ -157,7 +157,7 @@ function getShapeChart(selectedregion) {
     }
 
     $.ajax({
-        url: '/apps/' + model + '/ajax/getChart/',
+        url: '/apps/' + app + '/ajax/getChart/',
         data: JSON.stringify(data),
         dataType: 'json',
         contentType: "application/json",

@@ -6,7 +6,7 @@
 
 {% block title %}{{ tethys_app.name }}{% endblock %}
 {% block app_icon %}<img src="{% static tethys_app.icon %}">{% endblock %}
-{% block app_title %}{{ tethys_app.name }} ({{ version }}){% endblock %}
+{% block app_title %}{{ tethys_app.name }}{% endblock %}
 {% block app_content %}{% endblock %}
 
 {% block app_navigation_items %}
@@ -61,6 +61,8 @@
   <script>
     let threddsbase = "{{ settings.threddsurl }}";
     let model = "{{ model }}";
+    let app = "{{ app }}";
+    let instance_id = "{{ instance_id }}"
   </script>
 
   <!-- Allows csrf verification with AJAX -->

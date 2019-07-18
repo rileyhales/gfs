@@ -1,4 +1,6 @@
-from django.contrib.auth.decorators import login_required
+import random
+import string
+
 from django.shortcuts import render
 from tethys_sdk.gizmos import SelectInput, RangeSlider
 
@@ -6,7 +8,6 @@ from .options import *
 from .app import Gfs as App
 
 
-@login_required()
 def home(request):
     """
     Controller for the app home page.
@@ -110,10 +111,12 @@ def home(request):
         'gjFlOp': gj_fillopacity,
 
         # metadata
+        'app': App.package,
         'githublink': App.githublink,
         'datawebsite': App.datawebsite,
         'version': App.version,
         'settings': app_settings(),
+        'instance_id': ''.join(random.SystemRandom().choice(string.ascii_lowercase + string.digits) for i in range(10))
     }
 
     return render(request, 'gfs/home.html', context)
