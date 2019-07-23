@@ -27,13 +27,11 @@ function uploadShapefile() {
             loadgif.hide();
             $("#shp-modal").modal('hide');
             getWFSData(response['gsworksp'], response['shpname'], response['gsurl']);
-            $("#clearshp").show() // now that you have the shapefile on the map, give option to remove
         },
     });
 }
 
 $("#uploadshp").click(function () {uploadShapefile();});
-$("#clearshp").click(function () {usershape.clearLayers();});
 $("#customShpChart").click(function () {
     if (uploaded_shp) {
         getShapeChart('customshape')

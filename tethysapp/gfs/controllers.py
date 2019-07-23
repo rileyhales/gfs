@@ -13,6 +13,8 @@ def home(request):
     Controller for the app home page.
     """
 
+    gfsdate = currentgfs()
+
     variables = SelectInput(
         display_text='Select GFS Variable',
         name='variables',
@@ -28,8 +30,6 @@ def home(request):
         original=True,
         options=structure_byvars()['al'],
     )
-
-    gfsdate = currentgfs()
 
     colorscheme = SelectInput(
         display_text='GFS Color Scheme',
