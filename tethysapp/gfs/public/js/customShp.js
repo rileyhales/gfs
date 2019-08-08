@@ -26,7 +26,7 @@ function uploadShapefile() {
             uploaded_shp = true;
             loadgif.hide();
             $("#shp-modal").modal('hide');
-            getWFSData(response['gsworksp'], response['shpname'], response['gsurl']);
+            getGeoServerGJ(response['gsworksp'], response['shpname'], response['gsurl']);
         },
     });
 }

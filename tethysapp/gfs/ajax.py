@@ -4,7 +4,6 @@ import os
 import zipfile
 import shutil
 
-from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 
 from .charts import newchart
@@ -12,7 +11,6 @@ from .options import structure_byvars
 from .app import Gfs as App
 
 
-@login_required()
 def getchart(request):
     """
     Used to make a timeseries of a variable at a user drawn point
@@ -23,7 +21,6 @@ def getchart(request):
     return JsonResponse(newchart(data))
 
 
-@login_required()
 def get_levels_for_variable(request):
     data = ast.literal_eval(request.body.decode('utf-8'))
     variable = data['variable']
@@ -31,7 +28,6 @@ def get_levels_for_variable(request):
     return JsonResponse({'levels': levels})
 
 
-@login_required()
 def uploadshapefile(request):
     files = request.FILES.getlist('files')
     instance_id = request.META['HTTP_COOKIE'].split('instance_id=')[1][0:9]
@@ -49,10 +45,16 @@ def uploadshapefile(request):
                 dst.write(chunk)
 
     # check that the user has provided geoserver settings
-    cs = App.get_custom_setting('Geoserver user/pass')
-    gsurl = App.get_custom_setting('GeoserverURL')
-    if cs is None or gsurl is None:
-        return JsonResponse({'status': 'uploaded'})
+    gs_eng = App.get_spatial_dataset_service(name='portal_geoserver', as_engine=True)
+    gs_wfs = App.get_spatial_dataset_service(name='portal_geoserver', as_wfs=True)
+    gs_store = App.package + ':' + instance_id
+    shp = [i for i in os.listdir(user_workspace) if i.endswith('.shp')][0].split('.')[0]
+    shppath = os.path.join(user_workspace, shp)
+    gs_eng.create_shapefile_resource(
+        store_id=gs_store,
+        shapefile_base=shppath,
+        overwrite=True
+        )
 
     # rename the files and create a zip archive
     files = os.listdir(user_workspace)
@@ -64,12 +66,12 @@ def uploadshapefile(request):
 
     # upload the archive to geoserver
     shellpath = os.path.join(App.get_app_workspace().path, 'upload_shapefile.sh')
-    v1 = cs.split('/')[0]
-    v2 = cs.split('/')[1]
+    v1 = gs_eng.username
+    v2 = gs_eng.password
     v3 = zippath
-    v4 = gsurl
+    v4 = gs_eng.endpoint
     v5 = App.package
-    v6 = files[0].split('.')[0]
+    v6 = shp
     subprocess.call(['bash', shellpath, v1, v2, v3, v4, v5, v6])
 
-    return JsonResponse({'gsurl': v4 + '/' + v5 + '/ows', 'gsworksp': v5, 'shpname': v6})
+    return JsonResponse({'gsurl': gs_wfs, 'gsworksp': v5, 'shpname': v6})

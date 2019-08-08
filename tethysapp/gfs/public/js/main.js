@@ -48,28 +48,49 @@ mapObj.on("mousemove", function (event) {
     $("#mouse-position").html('Lat: ' + event.latlng.lat.toFixed(5) + ', Lon: ' + event.latlng.lng.toFixed(5));
 });
 
-let layerObj = newLayer();              // adds the wms raster layer
+let layerGFS = newGFS();                // adds the wms raster layer
+let layerRegion = regionsESRI();        // adds the world regions
 let controlsObj = makeControls();       // the layer toggle controls top-right corner
 legend.addTo(mapObj);                   // add the legend graphic to the map
 latlon.addTo(mapObj);                   // add the box showing lat and lon to the map
-addGEOJSON();                           // add the geojson world boundary regions
 
 ////////////////////////////////////////////////////////////////////////  EVENT LISTENERS
 function update() {
-    for (let i in geojsons) {
-        geojsons[i].addTo(mapObj)
-    }
-    usershape.addTo(mapObj);
-    layerObj = newLayer();
+    layerGFS = newGFS();
     controlsObj = makeControls();
     legend.addTo(mapObj);
+}
+function changeregions(firedfrom) {
+    let countryJQ = $("#countries");
+    let regionjQ = $("#regions");
+    if (firedfrom === 'country') {
+        let country = countryJQ.val();
+        if (!countrieslist.includes(country)) {
+            alert('The country "' + country + '" was not found in the list of countries available. Please check spelling and capitalization, and use the input suggestions.');
+            return
+        }
+        regionjQ.val('none');
+    } else {
+        countryJQ.val('')
+    }
+    // change to none/empty input
+    mapObj.removeLayer(layerRegion);
+    controlsObj.removeLayer(layerRegion);
+    if (firedfrom === 'region') {
+        layerRegion = regionsESRI();
+        controlsObj.addOverlay(layerRegion, 'Region Boundaries');
+    } else {
+        layerRegion = countriesESRI();
+        controlsObj.addOverlay(layerRegion, 'Country Boundaries');
+    }
+    getDrawnChart(drawnItems)
 }
 // data controls
 $("#variables").change(function () {
     let level_div = $("#levels");
     level_div.empty();
     $.ajax({
-        url: '/apps/' + model + '/ajax/getLevelsForVar/',
+        url: '/apps/' + app + '/ajax/getLevelsForVar/',
         async: true,
         data: JSON.stringify({variable: this.options[this.selectedIndex].value}),
         dataType: 'json',
@@ -86,16 +107,19 @@ $("#variables").change(function () {
         },
     });
 });
-$("#dates").change(function () {clearMap();update();getDrawnChart(drawnItems);});
-$('#charttype').change(function () {makechart();});
-$("#levels").change(function () {clearMap();update();});
+$("#dates").change(function () {clearMap();update();getDrawnChart(drawnItems)});
+$('#charttype').change(function () {makechart()});
+$("#levels").change(function () {clearMap();update()});
+$("#regions").change(function () {changeregions('region')});
+$("#countriesGO").click(function () {changeregions('country')});
+
 // display controls
 $("#display").click(function() {$("#displayopts").toggle();});
 $("#cs_min").change(function () {if ($("#use_csrange").is(":checked")) {clearMap();update()}});
 $("#cs_max").change(function () {if ($("#use_csrange").is(":checked")) {clearMap();update()}});
 $("#use_csrange").change(function () {clearMap();update()});
-$('#colorscheme').change(function () {clearMap();update()});
-$("#opacity").change(function () {layerObj.setOpacity($(this).val())});
+$('#colorscheme').change(function () {clearMap();update();});
+$("#opacity").change(function () {layerGFS.setOpacity($(this).val())});
 $('#gjClr').change(function () {styleGeoJSON()});
 $("#gjOp").change(function () {styleGeoJSON()});
 $("#gjWt").change(function () {styleGeoJSON()});

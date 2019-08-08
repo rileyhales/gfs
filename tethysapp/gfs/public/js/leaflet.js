@@ -3,7 +3,8 @@ function map() {
     // create the map
     return L.map('map', {
         zoom: 2,
-        minZoom: 1.25,
+        minZoom: 1.5,
+        zoomSnap: .5,
         boxZoom: true,
         maxBounds: L.latLngBounds(L.latLng(-100.0, -270.0), L.latLng(100.0, 270.0)),
         center: [20, 0],
@@ -25,17 +26,18 @@ function map() {
 
 function basemaps() {
     // create the basemap layers
-    let Esri_WorldImagery = L.esri.basemapLayer('Imagery');
-    let Esri_WorldTerrain = L.esri.basemapLayer('Terrain');
-    let Esri_Imagery_Labels = L.esri.basemapLayer('ImageryLabels');
+    let esri_imagery = L.esri.basemapLayer('Imagery');
+    let esri_terrain = L.esri.basemapLayer('Terrain');
+    let esri_labels = L.esri.basemapLayer('ImageryLabels');
     return {
-        "ESRI Imagery": L.layerGroup([Esri_WorldImagery, Esri_Imagery_Labels]).addTo(mapObj),
-        "ESRI Terrain": L.layerGroup([Esri_WorldTerrain, Esri_Imagery_Labels])
+        "ESRI Imagery (No Label)": L.layerGroup([esri_imagery]).addTo(mapObj),
+        "ESRI Imagery (Labeled)": L.layerGroup([esri_imagery, esri_labels]),
+        "ESRI Terrain": L.layerGroup([esri_terrain, esri_labels])
     }
 }
 
-////////////////////////////////////////////////////////////////////////  WMS LAYERS
-function newLayer() {
+////////////////////////////////////////////////////////////////////////  GLDAS LAYERS
+function newGFS() {
     let layer = $("#variables").val();
     let wmsurl = threddsbase + $("#levels").val() + '_wms.ncml';
     let cs_rng = bounds[layer];
@@ -66,52 +68,65 @@ function newLayer() {
     }).addTo(mapObj);
 }
 
-////////////////////////////////////////////////////////////////////////  GEOJSON LAYERS
-let currentregion = '';              // tracks which region is on the chart for updates not caused by the user picking a new region
-function layerPopups(feature, layer) {
-    let region = feature.properties.name;
-    layer.bindPopup('<a class="btn btn-default" role="button" onclick="getShapeChart(' + "'" + region + "'" + ')">Get timeseries (average) for ' + region + '</a>');
-}
-
-// create all the geojson layers for world regions
-const initstyle = {color: $("#gjClr").val(), opacity: $("#gjOp").val(), weight: $("#gjWt").val(), fillColor: $("#gjFlClr").val(), fillOpacity: $("#gjFlOp").val()};
-let jsonparams = {onEachFeature: layerPopups, style: initstyle};
-
-let africa = L.geoJSON(africa_json, jsonparams);
-let asia = L.geoJSON(asia_json, jsonparams);
-let australia = L.geoJSON(australia_json, jsonparams);
-let centralamerica = L.geoJSON(centralamerica_json, jsonparams);
-let europe = L.geoJSON(europe_json, jsonparams);
-let middleeast = L.geoJSON(middleeast_json, jsonparams);
-let northamerica = L.geoJSON(northamerica_json, jsonparams);
-let southamerica = L.geoJSON(southamerica_json, jsonparams);
-const geojsons = [africa, asia, australia, centralamerica, europe, middleeast, northamerica, southamerica];
-
-function addGEOJSON() {
-    for (let i in geojsons) {
-        geojsons[i].addTo(mapObj)
-    }
-}
-
+////////////////////////////////////////////////////////////////////////  GEOJSON STYLING CONTROLS
+let chosenRegion = ''; // tracks which region is on the chart for updates not caused by the user picking a new region
+getStyle = function() {return {color: $("#gjClr").val(), opacity: $("#gjOp").val(), weight: $("#gjWt").val(), fillColor: $("#gjFlClr").val(), fillOpacity: $("#gjFlOp").val()}};
 function styleGeoJSON() {
-    // determine the styling to apply
-    let style = {
-        color: $("#gjClr").val(),
-        opacity: $("#gjOp").val(),
-        weight: $("#gjWt").val(),
-        fillColor: $("#gjFlClr").val(),
-        fillOpacity: $("#gjFlOp").val(),
-    };
-    // apply it to all the geojson layers
-    for (let i in geojsons) {
-        geojsons[i].setStyle(style);
-    }
+    let style = getStyle();
+    layerRegion.setStyle(style);
     usershape.setStyle(style);
 }
-////////////////////////////////////////////////////////////////////////  USERS CUSTOM UPLOADED SHAPEFILE
+
+////////////////////////////////////////////////////////////////////////  ESRI LIVING ATLAS LAYERS (FEATURE SERVER)
+function regionsESRI() {
+    let region = $("#regions").val();
+
+    let where = '1=1';
+    if (region !== '') {
+        where = "REGION = '" + region + "'"
+    }
+    let params = {
+        url: 'https://services.arcgis.com/P3ePLMYs2RVChkJx/ArcGIS/rest/services/World_Regions/FeatureServer/0',
+        style: getStyle,
+        outSR: 4326,
+        where: where,
+        onEachFeature: function (feature, layer) {
+            let place = feature.properties.REGION;
+            layer.bindPopup('<a class="btn btn-default" role="button" onclick="getShapeChart(' + "'esri-regions-" + place + "'" + ')">Get timeseries for ' + place + '</a>');
+        },
+    };
+    if (region !== '') {params['where'] = "REGION = '" + region + "'"}
+    let layer = L.esri.featureLayer(params);
+    layer.addTo(mapObj);
+    layer.query().where(where).bounds(function(error, latLngBounds, response){
+        mapObj.flyToBounds(latLngBounds)
+    });
+    return layer;
+}
+function countriesESRI() {
+    let region = $("#countries").val();
+    let where = "NAME='" + region + "'";
+    let params = {
+        url: 'https://services.arcgis.com/P3ePLMYs2RVChkJx/ArcGIS/rest/services/World__Countries_Generalized_analysis_trim/FeatureServer/0',
+        style: getStyle,
+        outSR: 4326,
+        where: where,
+        onEachFeature: function (feature, layer) {
+            layer.bindPopup('<a class="btn btn-default" role="button" onclick="getShapeChart(' + "'esri-countries-" + region + "'" + ')">Get timeseries for ' + region + '</a>');
+        },
+    };
+    let layer = L.esri.featureLayer(params);
+    layer.addTo(mapObj);
+    layer.query().where(where).bounds(function(error, latLngBounds, response){
+        mapObj.flyToBounds(latLngBounds)
+    });
+    return layer;
+}
+
+////////////////////////////////////////////////////////////////////////  USER'S CUSTOM UPLOADED SHAPEFILE
 // gets the geojson layers from geoserver wfs and updates the layer
 let usershape = L.geoJSON(false);
-function getWFSData(gsworksp, shpname, gsurl) {
+function getGeoServerGJ(gsworksp, shpname, gsurl) {
     let parameters = L.Util.extend({
         service: 'WFS',
         version: '1.0.0',
@@ -130,7 +145,10 @@ function getWFSData(gsworksp, shpname, gsurl) {
         contentType: 'application/json',
         success: function (data) {
             usershape.clearLayers();
+            mapObj.removeLayer(regionsGroup);
+            mapObj.removeLayer(drawnItems);
             usershape.addData(data).addTo(mapObj);
+            mapObj.flyToBounds(usershape.getBounds());
             styleGeoJSON();
         },
     });
@@ -163,32 +181,18 @@ latlon.onAdd = function () {
 // the layers box on the top right of the map
 function makeControls() {
     return L.control.layers(basemapObj, {
-        'Earth Observation': layerObj,
+        'Earth Observation': layerGFS,
         'Drawing': drawnItems,
         'Uploaded Shapefile': usershape,
-        'Europe': europe,
-        'Asia': asia,
-        'Middle East': middleeast,
-        'North America': northamerica,
-        'Central America': centralamerica,
-        'South America': southamerica,
-        'Africa': africa,
-        'Australia': australia,
+        'Region Boundaries': layerRegion,
     }).addTo(mapObj);
 }
 
 // you need to remove layers when you make changes so duplicates dont persist and accumulate
 function clearMap() {
-    // remove the controls for the wms layer then remove it from the map
-    controlsObj.removeLayer(layerObj);
-    mapObj.removeLayer(layerObj);
+    controlsObj.removeLayer(layerGFS);
+    mapObj.removeLayer(layerGFS);
     controlsObj.removeLayer(usershape);
-    mapObj.removeLayer(usershape);
-    // now do it for all the geojson layers
-    for (let i in geojsons) {
-        controlsObj.removeLayer(geojsons[i]);
-        mapObj.removeLayer(geojsons[i]);
-    }
-    // now delete the controls object
+    controlsObj.removeLayer(layerRegion);
     mapObj.removeControl(controlsObj);
 }

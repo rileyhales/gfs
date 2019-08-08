@@ -11,11 +11,21 @@
 
 {% block app_navigation_items %}
   <li class="title">Data Controls</li>
-    <div style="text-align: center; padding: 4px;"><strong>{{ gfsdate }}</strong></div>
-    {% gizmo select_input variables %}
-    {% gizmo select_input levels %}
-    {# {% gizmo select_input heights %} #}
+  <div style="text-align: center; padding: 4px;"><strong>{{ gfsdate }}</strong></div>
+  {% gizmo select_input variables %}
+  {% gizmo select_input levels %}
+  {% gizmo select_input regions %}
 
+  <div id="country-name-gizmo">
+    <label for="countries">Enter A Country Name</label>
+    <div style="width: 80%; float: left">
+      <input id="countries" list="countrieslist" class="form-control">
+    </div>
+    <button class="btn btn-success" role="button" id="countriesGO" style="width: 20%; float: left">Go!</button>
+  </div>
+
+  <br><br>
+  <label for="customShpChart">Upload A Shapefile</label>
   <button class="btn btn-default btn-block" role="button" id="customShpChart">Timeseries for my own Shapefile</button>
   <br>
 
@@ -52,6 +62,9 @@
   <!-- styling for the leaflet draw plugin -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.2/leaflet.draw-src.css"/>
 
+  <!-- styling for JQUERY UI -->
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/black-tie/jquery-ui.css"/>
+
   <!-- styling generated for the app -->
   <link href="{% static 'gfs/css/main.css' %}" rel="stylesheet"/>
 {% endblock %}
@@ -59,14 +72,14 @@
 {% block scripts %}
   {{ block.super }}
   <script>
-    let threddsbase = "{{ settings.threddsurl }}";
-    let model = "{{ model }}";
-    let app = "{{ app }}";
-    let instance_id = "{{ instance_id }}"
+      let threddsbase = "{{ thredds_url }}";
+      let app = "{{ app }}";
+      let instance_id = "{{ instance_id }}"
   </script>
 
   <!-- Allows csrf verification with AJAX -->
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
 
   <!-- script for leaflet -->
   <script type="text/javascript" src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
@@ -89,13 +102,12 @@
   <script type="text/javascript" src="https://code.highcharts.com/modules/export-data.js"></script>
   <script type="text/javascript" src="https://code.highcharts.com/modules/no-data-to-display.js"></script>
 
-  <!-- scripts I wrote for the app, main should go last -->
-  <script src="{% static 'gfs/js/gjson1.js' %}" type="text/javascript"></script>
-  <script src="{% static 'gfs/js/gjson2.js' %}" type="text/javascript"></script>
-  <script src="{% static 'gfs/js/gjson3.js' %}" type="text/javascript"></script>
+  <!-- data assistance reference JSON -->
   <script src="{% static 'gfs/js/bounds.js' %}" type="text/javascript"></script>
-
+  <!-- HTML assistance modules -->
+  <script src="{% static 'gfs/js/countries.js' %}" type="text/javascript"></script>
   <script src="{% static 'gfs/js/customShp.js' %}" type="text/javascript"></script>
+  <!-- chart and map management scripts -->
   <script src="{% static 'gfs/js/highcharts.js' %}" type="text/javascript"></script>
   <script src="{% static 'gfs/js/leaflet.js' %}" type="text/javascript"></script>
   <script src="{% static 'gfs/js/main.js' %}" type="text/javascript"></script>

@@ -16,26 +16,10 @@ let chartdata = null;
 
 // Placeholder chart
 let chart = Highcharts.chart('highchart', {
-    title: {
-        align: "center",
-        text: "Timeseries Data Chart Placeholder",
-    },
-    series: [{
-        data: [],
-    }],
-    chart: {
-        animation: true,
-        zoomType: 'x',
-        borderColor: '#000000',
-        borderWidth: 2,
-        type: 'area',
-    },
-    noData: {
-        style: {
-            fontWeight: 'bold',
-            fontSize: '15px',
-            color: '#303030'
-        }
+    title: {align: "center", text: "Timeseries Data Chart Placeholder"},
+    series: [{data: []}],
+    chart: {animation: true, zoomType: 'x', borderColor: '#000000', borderWidth: 2, type: 'area'},
+    noData: {style: {fontWeight: 'bold', fontSize: '15px', color: '#303030'}
     },
 });
 
@@ -72,10 +56,59 @@ function newHighchart(data) {
     });
 }
 
+function newMultilineChart(data) {
+    let charttype = $("#charttype").val();
+    let categories;
+    if (charttype.includes('month')) {
+        categories = 'month'
+    } else {
+        categories = 'year'
+    }
+    chart = Highcharts.chart('highchart', {
+        title: {
+            align: "center",
+            text: data['name'] + ' v Time ' + '(' + data['type'] + ')',
+        },
+        xAxis: {
+            title: {text: "Time"},
+            categories: data['categories'][categories],
+        },
+        yAxis: {
+            title: {text: data['units']}
+        },
+        series: [
+            {
+                data: data['multiline'][charttype]['min'],
+                type: "line",
+                name: 'Yearly Minimum',
+            },
+            {
+                data: data['multiline'][charttype]['max'],
+                type: "line",
+                name: 'Yearly Maximum',
+            },
+            {
+                data: data['multiline'][charttype]['mean'],
+                type: "line",
+                name: 'Yearly Average',
+            }
+        ],
+        chart: {
+            animation: true,
+            zoomType: 'xy',
+            borderColor: '#000000',
+            borderWidth: 2,
+            type: 'area',
+
+        },
+
+    });
+}
+
 function getDrawnChart(drawnItems) {
     // if there's nothing to get charts for then quit
     let geojson = drawnItems.toGeoJSON()['features'];
-    if (geojson.length === 0 && currentregion === '') {
+    if (geojson.length === 0 && chosenRegion === '') {
         return
     }
 
@@ -98,7 +131,6 @@ function getDrawnChart(drawnItems) {
         // setup a parameters json to generate the right timeserie
         let data = {
             coords: coords,
-            model: model,
             variable: $("#variables").val(),
             level: $("#levels").val(),
             time: $("#dates").val(),
@@ -124,36 +156,27 @@ function getDrawnChart(drawnItems) {
 }
 
 function getShapeChart(selectedregion) {
-    // if the time range is all times then confirm before executing the spatial averaging
-    if ($("#dates").val() === 'alltimes') {
-        if (!confirm("Computing a timeseries of spatial averages for all available times requires over 200 iterations of file conversions and geoprocessing operations. This may result in a long wait (15+ seconds) or cause errors. Are you sure you want to continue?")) {
-            return
-        }
-    }
-
     drawnItems.clearLayers();
     chart.hideNoData();
     chart.showLoading();
 
     // setup a parameters json to generate the right timeseries
     let data = {
-        model: model,
         variable: $("#variables").val(),
         level: $("#levels").val(),
-        time: $("#dates").val(),
-        loc_type: 'Shapefile'
+        loc_type: 'VectorGeometry'
     };
 
     if (selectedregion === 'lastregion') {
         // if we want to update, change the region to the last completed region
-        data['region'] = currentregion;
+        data['vectordata'] = chosenRegion;
     } else if (selectedregion === 'customshape') {
-        data['region'] = selectedregion;
-        currentregion = selectedregion;
+        data['vectordata'] = selectedregion;
+        chosenRegion = selectedregion;
     } else {
         // otherwise, the new selection is the current region on the chart
-        data['region'] = selectedregion;
-        currentregion = selectedregion;
+        data['vectordata'] = selectedregion;
+        chosenRegion = selectedregion;
     }
 
     $.ajax({

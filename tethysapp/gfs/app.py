@@ -1,5 +1,5 @@
 from tethys_sdk.base import TethysAppBase, url_map_maker
-from tethys_sdk.app_settings import CustomSetting
+from tethys_sdk.app_settings import CustomSetting, SpatialDatasetServiceSetting
 
 
 class Gfs(TethysAppBase):
@@ -21,7 +21,7 @@ class Gfs(TethysAppBase):
     feedback_emails = []
     githublink = 'https://github.com/rileyhales/gfs'
     datawebsite = 'https://www.ncdc.noaa.gov/data-access/model-data/model-datasets/global-forcast-system-gfs'
-    version = 'v2 7/2019'
+    version = 'v2 Aug2019'
 
     def url_maps(self):
         """
@@ -55,54 +55,54 @@ class Gfs(TethysAppBase):
             ),
 
             # url maps for api calls
-            urlmap(
-                name='getcapabilities',
-                url='gfs/api/getcapabilities',
-                controller='gfs.api.getcapabilities',
-            ),
-            urlmap(
-                name='timeseries',
-                url='gfs/api/timeseries',
-                controller='gfs.api.timeseries',
-            ),
-            urlmap(
-                name='gfslevels',
-                url='gfs/api/gfslevels',
-                controller='gfs.api.gfslevels',
-            ),
-            urlmap(
-                name='gfsdates',
-                url='gfs/api/gfsdates',
-                controller='gfs.api.gfsdates',
-            ),
+            # urlmap(
+            #     name='getcapabilities',
+            #     url='gfs/api/getcapabilities',
+            #     controller='gfs.api.getcapabilities',
+            # ),
+            # urlmap(
+            #     name='timeseries',
+            #     url='gfs/api/timeseries',
+            #     controller='gfs.api.timeseries',
+            # ),
+            # urlmap(
+            #     name='gfslevels',
+            #     url='gfs/api/gfslevels',
+            #     controller='gfs.api.gfslevels',
+            # ),
+            # urlmap(
+            #     name='gfsdates',
+            #     url='gfs/api/gfsdates',
+            #     controller='gfs.api.gfsdates',
+            # ),
         )
         return url_maps
 
     def custom_settings(self):
-        customsettings = (
+        return (
             CustomSetting(
-                name='Local Thredds Folder Path',
+                name='thredds_path',
                 type=CustomSetting.TYPE_STRING,
                 description="Local file path to datasets (same as used by Thredds) (e.g. /home/thredds/myDataFolder/)",
                 required=True,
             ),
             CustomSetting(
-                name='Thredds WMS URL',
+                name='thredds_url',
                 type=CustomSetting.TYPE_STRING,
-                description="URL to the GLDAS folder on the thredds server (e.g. http://[host]/thredds/gfs/)",
+                description="URL to the GLDAS folder on the thredds server (e.g. http://[host]/thredds/gldas/)",
+                required=True,
+            )
+        )
+
+    def spatial_dataset_service_settings(self):
+        """
+        Example spatial_dataset_service_settings method.
+        """
+        return (
+            SpatialDatasetServiceSetting(
+                name='portal_geoserver',
+                description='Geoserver for serving user uploaded shapefiles',
+                engine=SpatialDatasetServiceSetting.GEOSERVER,
                 required=True,
             ),
-            CustomSetting(
-                name='GeoserverURL',
-                type=CustomSetting.TYPE_STRING,
-                description="Include http or https but no '/' after /geoserver, ex: https://tethys.byu.edu/geoserver",
-                required=False,
-            ),
-            CustomSetting(
-                name='Geoserver user/pass',
-                type=CustomSetting.TYPE_STRING,
-                description="Admin credentials for uploading shapefiles to geoserver in the format username/password",
-                required=False,
-            ),
         )
-        return customsettings

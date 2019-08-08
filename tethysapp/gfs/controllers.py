@@ -1,11 +1,10 @@
-import random
-import string
-
 from django.shortcuts import render
 from tethys_sdk.gizmos import SelectInput, RangeSlider
 
 from .options import *
+from .utilities import *
 from .app import Gfs as App
+from .utilities import new_id
 
 
 def home(request):
@@ -29,6 +28,14 @@ def home(request):
         multiple=False,
         original=True,
         options=structure_byvars()['al'],
+    )
+
+    regions = SelectInput(
+        display_text='Pick A World Region (ESRI Living Atlas)',
+        name='regions',
+        multiple=False,
+        original=True,
+        options=list(worldregions())
     )
 
     colorscheme = SelectInput(
@@ -96,10 +103,10 @@ def home(request):
 
     context = {
         # data options
-        'model': 'gfs',
         'variables': variables,
         'levels': levels,
         'gfsdate': gfsdate,
+        'regions': regions,
 
         # display options
         'colorscheme': colorscheme,
@@ -115,8 +122,8 @@ def home(request):
         'githublink': App.githublink,
         'datawebsite': App.datawebsite,
         'version': App.version,
-        'settings': app_settings(),
-        'instance_id': ''.join(random.SystemRandom().choice(string.ascii_lowercase + string.digits) for i in range(10))
+        'thredds_url': App.get_custom_setting('thredds_url'),
+        'instance_id': new_id(),
     }
 
     return render(request, 'gfs/home.html', context)
