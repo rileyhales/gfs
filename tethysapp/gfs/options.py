@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+
+
 def gfs_variables():
     return [
         ('Albedo', 'al'), ('Apparent temperature', 'aptmp'), ('Absolute vorticity', 'absv'),
