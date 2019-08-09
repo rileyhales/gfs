@@ -74,16 +74,16 @@ def geojson_colors():
 
 
 def gfs_forecastlevels():
-    tuples = [
+    return [
         ('Atmosphere', 'atmosphere'),
         ('At A Depth Below Land Layer', 'depthBelowLandLayer'),
-        ('At A Height Above Ground', 'heightAboveGround'),  # nope
+        ('At A Height Above Ground', 'heightAboveGround'),
         ('At A Height Above Ground Layer', 'heightAboveGroundLayer'),
         ('At A Height Above the Sea', 'heightAboveSea'),
         ('Hybrid Level', 'hybrid'),
         ('Isothermal (0 Celcius)', 'isothermZero'),
-        ('Isobaric (Pa)', 'isobaricInPa'),  # nope
-        ('Isobaric (hPa)', 'isobaricInhPa'),  # nope
+        ('Isobaric (Pa)', 'isobaricInPa'),
+        ('Isobaric (hPa)', 'isobaricInhPa'),
         ('Max Wind', 'maxWind'),
         ('Mean Sea Level', 'meanSea'),
         ('Nominal Top', 'nominalTop'),
@@ -94,27 +94,6 @@ def gfs_forecastlevels():
         ('Surface', 'surface'),
         ('Tropopause', 'tropopause'),
         ('Unknown', 'unknown')
-    ]
-    return [
-        'atmosphere',
-        'depthBelowLandLayer',
-        'heightAboveGround',  # nope
-        'heightAboveGroundLayer',
-        'heightAboveSea',
-        'hybrid',
-        'isothermZero',
-        'isobaricInPa',
-        'isobaricInhPa',  # nope
-        'maxWind',
-        'meanSea',
-        'nominalTop',
-        'potentialVorticity',
-        'pressureFromGroundLayer',  # nope
-        'sigma',
-        'sigmaLayer',
-        'surface',  # nope
-        'tropopause',
-        'unknown',  # nope
     ]
 
 

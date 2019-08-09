@@ -55,26 +55,41 @@ class Gfs(TethysAppBase):
             ),
 
             # url maps for api calls
-            # urlmap(
-            #     name='getcapabilities',
-            #     url='gfs/api/getcapabilities',
-            #     controller='gfs.api.getcapabilities',
-            # ),
-            # urlmap(
-            #     name='timeseries',
-            #     url='gfs/api/timeseries',
-            #     controller='gfs.api.timeseries',
-            # ),
-            # urlmap(
-            #     name='gfslevels',
-            #     url='gfs/api/gfslevels',
-            #     controller='gfs.api.gfslevels',
-            # ),
-            # urlmap(
-            #     name='gfsdates',
-            #     url='gfs/api/gfsdates',
-            #     controller='gfs.api.gfsdates',
-            # ),
+            urlmap(
+                name='getcapabilities',
+                url='gfs/api/help',
+                controller='gfs.api.help',
+            ),
+            urlmap(
+                name='timestamp',
+                url='gfs/api/gfsTimestamp',
+                controller='gfs.api.timestamp',
+            ),
+            urlmap(
+                name='variables',
+                url='gfs/api/variableOptions',
+                controller='gfs.api.variables',
+            ),
+            urlmap(
+                name='levels',
+                url='gfs/api/levelOptions',
+                controller='gfs.api.levels',
+            ),
+            urlmap(
+                name='variablelevels',
+                url='gfs/api/variableLevels',
+                controller='gfs.api.variable_levels',
+            ),
+            urlmap(
+                name='geometry',
+                url='gfs/api/geometryOptions',
+                controller='gfs.api.geometry',
+            ),
+            urlmap(
+                name='timeseries',
+                url='gfs/api/timeseries',
+                controller='gfs.api.timeseries',
+            ),
         )
         return url_maps
 
