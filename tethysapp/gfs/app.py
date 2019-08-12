@@ -20,7 +20,7 @@ class Gfs(TethysAppBase):
     enable_feedback = False
     feedback_emails = []
     githublink = 'https://github.com/rileyhales/gfs'
-    docslink = ''
+    docslink = 'https://gfs.readthedocs.io/en/latest/'
     datawebsite = 'https://www.ncdc.noaa.gov/data-access/model-data/model-datasets/global-forcast-system-gfs'
     version = 'v2 Aug2019'
 
@@ -64,7 +64,7 @@ class Gfs(TethysAppBase):
             urlmap(
                 name='variablelevels',
                 url='gfs/api/variableLevels',
-                controller='gfs.api.variable_levels',
+                controller='gfs.api.varlevels',
             ),
             urlmap(
                 name='timeseries',

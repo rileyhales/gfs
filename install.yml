@@ -15,3 +15,5 @@ conda:
     - rasterio
     - pygrib
     - pyshp
+    - sphinx
+    - shpinx_rtd_theme

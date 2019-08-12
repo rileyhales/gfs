@@ -1,5 +1,6 @@
 from django.http import JsonResponse
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, authentication_classes
+from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 
 from .options import gfs_variables, gfs_levels, variable_levels, worldregions, countries
 from .utilities import get_gfsdate, new_id
@@ -94,6 +95,7 @@ class TimeSeries:
 
 
 @api_view(['GET'])
+@authentication_classes((TokenAuthentication, SessionAuthentication,))
 def helpme(request):
     return JsonResponse({
         'documentation_website': App.docslink,
@@ -119,7 +121,8 @@ def helpme(request):
 
 
 @api_view(['GET'])
-def variable_levels(request):
+@authentication_classes((TokenAuthentication, SessionAuthentication,))
+def varlevels(request):
     parameters = request.GET
     try:
         return JsonResponse({'levels': variable_levels()[parameters['variable']]})
@@ -128,6 +131,7 @@ def variable_levels(request):
 
 
 @api_view(['GET'])
+@authentication_classes((TokenAuthentication, SessionAuthentication,))
 def timeseries(request):
     ts = TimeSeries(request.GET)
     if ts.isValid:
