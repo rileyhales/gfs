@@ -59,7 +59,7 @@ class TimeSeries:
             return
 
         # validate level argument
-        if not self.data['variable'] in variable_levels()[self.data['variable']]:
+        if not self.data['variable'] in [i[1] for i in variable_levels()[self.data['variable']]]:
             self.error = 'Invalid level selection for given variable, please try again'
             return
 
