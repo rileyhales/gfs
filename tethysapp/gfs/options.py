@@ -73,7 +73,7 @@ def geojson_colors():
     ]
 
 
-def gfs_forecastlevels():
+def gfs_levels():
     return [
         ('Atmosphere', 'atmosphere'),
         ('At A Depth Below Land Layer', 'depthBelowLandLayer'),
@@ -97,7 +97,7 @@ def gfs_forecastlevels():
     ]
 
 
-def structure_byvars():
+def variable_levels():
     return {
         'refc': [('Atmosphere', 'atmosphere')],
         'tcc': [('Atmosphere', 'atmosphere'), ('Isobaric (hPa)', 'isobaricInhPa'), ('Unknown', 'unknown')],

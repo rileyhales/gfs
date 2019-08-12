@@ -1,148 +1,136 @@
 from django.http import JsonResponse
-# from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view
 
-from .options import gfs_variables, gfs_forecastlevels, structure_byvars, worldregions, countries
-from .utilities import new_id
+from .options import gfs_variables, gfs_levels, variable_levels, worldregions, countries
+from .utilities import get_gfsdate, new_id
 from .charts import newchart
 from .app import Gfs as App
 
 
-# @api_view(['GET'])
-def help(request):
+class TimeSeries:
+    data = {}
+    isValid = False
+    error = None
+
+    def __init__(self, parameters):
+        try:
+            self.data['variable'] = parameters['variable']
+            self.data['level'] = parameters['level']
+            self.data['location'] = parameters.getlist('location')
+            self.validate()
+        except KeyError as e:
+            self.error = 'Missing parameter: ' + str(e).replace('"', '').replace("'", '')
+
+    # are the point coordinates valid
+    def validate_points(self):
+        tmp = self.data['location']
+        for i in tmp:
+            try:
+                float(i)
+            except ValueError:
+                return False
+        if not 180 > float(tmp[0]) > -180 and 90 > float(tmp[1]) > -90:
+            return False
+        self.data['coords'] = self.data['location']
+        return True
+
+    # are the bounding box coordinates valid
+    def validate_polygon(self):
+        tmp = self.data['location']
+        for i in tmp:
+            try:
+                float(i)
+            except ValueError:
+                return False
+        if not float(tmp[1]) > float(tmp[0]) and float(tmp[3]) > float(tmp[2]):
+            return False
+        if not 180 > float(tmp[0]) > -180 and 180 > float(tmp[1]) > -180:
+            return False
+        if not 90 > float(tmp[2]) > -90 and 90 > float(tmp[3]) > -90:
+            return False
+        self.data['coords'] = [[[tmp[0], tmp[2]], [tmp[0], tmp[3]], [tmp[1], tmp[3]], [tmp[1], tmp[2]]]]
+        return True
+
+    def validate(self):
+        # validate variable argument
+        if not self.data['variable'] in [i[1] for i in gfs_variables()]:
+            self.error = 'Invalid variable name. Use one of the shortened variables names given in variableOptions'
+            return
+
+        # validate level argument
+        if not self.data['variable'] in variable_levels()[self.data['variable']]:
+            self.error = 'Invalid level selection for given variable, please try again'
+            return
+
+        # validate location argument
+        if len(self.data['location']) == 1:
+            self.data['loc_type'] = 'VectorGeometry'
+            self.data['location'] = self.data['location'][0]
+            if self.data['location'] in worldregions():
+                self.data['vectordata'] = 'esri-regions-' + self.data['location']
+            elif self.data['location'] in countries():
+                self.data['vectordata'] = 'esri-countries-' + self.data['location']
+            else:
+                self.error = 'Country/Region name not recognized. Check your spelling/capitalization'
+                return
+        elif len(self.data['location']) == 2:
+            self.data['loc_type'] = 'Point'
+            if not self.validate_points():
+                self.error = 'Invalid list of coordinates for a Point location.'
+                return
+        elif len(self.data['location']) == 4:
+            self.data['loc_type'] = 'Polygon'
+            if not self.validate_polygon():
+                self.error = 'Invalid list of coordinates for a Bounding Box location.'
+                return
+        else:
+            self.error = 'Invalid location. Enter a list of valid coordinates or a country/region name'
+            return
+
+        # all arguments pass the tests
+        self.isValid = True
+        self.data['instance_id'] = new_id()
+        return
+
+
+@api_view(['GET'])
+def helpme(request):
     return JsonResponse({
-        'api_calls': ['help', 'gfsTimestamp', 'variableOptions', 'levelOptions', 'variableLevels',
-                      'geometryOptions', 'timeseries'],
-        'help_url': App.githublink,
-        'required_arguments': {
-            'variable': 'Short name of a GLDAS variable (see gldas/api/variableOptions for more help)',
-            'level': 'Which of the variable\'s measurment levels from which to extract a timeseries',
-            'loc_type': 'The area you want a timeseries for. You may choose Point, Polygon (a Bounding Box), or '
-                        'VectorGeometry (for countries/regions) (see gldas/api/geometryOptions for more help)',
-            'coords': 'REQUIRED IF loc_type is Point or Polygon (see gldas/api/geometryOptions for more help)',
-            'vectordata': 'REQUIRED IF loc_type is VectorGeometry (see gldas/api/geometryOptions for more help)',
-        }
+        'documentation_website': App.docslink,
+        'required_arguments': ['variable', 'level', 'location'],
+        'time': 'The most recent available GFS data is from ' + get_gfsdate(),
+        'variable': {
+            'Description': 'The abbreviated name of a variable used by NASA in the GLDAS data files.',
+            'Options': gfs_variables(),
+        },
+        'level': {
+            'Description': 'The abbreviated name of a measurement level corresponding to the variable choice.',
+            'Options': gfs_levels(),
+        },
+        'location': {
+            'Description': 'Available locations are points, bounding boxes, countries, or world regions',
+            'Point': 'To get values at a point, provide a list in the form: [longitude, latitude]',
+            'Bounding Box': 'To get values in a bounding box, provide a list in the form: '
+                            '[min_longitude, max_longitude, min_latitude, max_latitude]',
+            'Regions': [i[0] for i in worldregions() if i[1] != '' and i[1] != 'none'],
+            'Countries': countries(),
+        },
     })
 
 
-# @api_view(['GET'])
-def timestamp(request):
-    # todo add function for checking available time
-    dates = {
-        'start_time': '',
-        'end_time': '',
-    }
-    return JsonResponse(dates)
-
-
-# @api_view(['GET'])
-def variables(request):
-    return JsonResponse({'allvariables': gfs_variables()})
-
-
-# @api_view(['GET'])
-def levels(request):
-    return JsonResponse({'all_levels': gfs_forecastlevels()})
-
-
-# @api_view(['GET'])
+@api_view(['GET'])
 def variable_levels(request):
     parameters = request.GET
     try:
-        return JsonResponse({'levels': structure_byvars()[parameters['variable']]})
+        return JsonResponse({'levels': variable_levels()[parameters['variable']]})
     except KeyError:
-        return JsonResponse(structure_byvars())
+        return JsonResponse(variable_levels())
 
 
-# @api_view(['GET'])
-def geometry(request):
-    return JsonResponse({
-        'Point': 'Requires coords argument: formatted as a list [longitude, latitude]',
-        'Polygon': 'Requires coords argument: formatted as a list [minimum longitude, max longitude, min latitude, '
-                   'max latitude]',
-        'VectorGeometry': 'Requires region argument: specify the name of a region or country exactly as shown',
-        'Regions': [i[0] for i in worldregions() if i[1] != '' and i[1] != 'none'],
-        'Countries': countries(),
-    })
-
-
-# @api_view(['GET'])
+@api_view(['GET'])
 def timeseries(request):
-    parameters = request.GET
-    data = {}
-
-    # todo modify the filters to verify they gave the correct parameters
-
-    # use try/except to make the data dictionary because we want to check that each param has been given
-    try:
-        # try to parse the 3 standard arguments, the 4th comes from validation
-        data['time'] = parameters['time']
-        data['variable'] = parameters['variable']
-        data['loc_type'] = parameters['loc_type']
-
-        if data['loc_type'] == 'VectorGeometry':
-            data['vectordata'] = parameters['vectordata']
-        else:
-            data['coords'] = parameters.getlist('coords')
-
-    except KeyError as e:
-        return JsonResponse({'Missing Parameter': str(e).replace('"', '').replace("'", '')})
-
-    def validate_points(data):
-        test = data['coords']
-        if type(test) is list and len(test) == 2:
-            for i in test:
-                try:
-                    float(i)
-                except Exception:
-                    return False
-            if not 180 > float(test[0]) > -180 and 90 > float(test[1]) > -90:
-                return False
-        else:
-            return False
-        return True
-
-    def validate_polygon(data):
-        test = data['coords']
-        print(test)
-        if type(test) is list and len(test) == 4:
-            for i in test:
-                try:
-                    float(i)
-                except Exception:
-                    return False
-            if not float(test[1]) > float(test[0]) and float(test[3]) > float(test[2]):
-                return False
-            if not 180 > float(test[0]) > -180 and 180 > float(test[1]) > -180:
-                return False
-            if not 90 > float(test[2]) > -90 and 90 > float(test[3]) > -90:
-                return False
-        else:
-            return False
-        return True
-
-    # perform validation for point
-    if data['loc_type'] == 'Point':
-        if not validate_points(data):
-            return JsonResponse({'Invalid coords': 'ask gldas/api/geometryOptions for more help'})
-
-    # perform validation for polygon
-    elif data['loc_type'] == 'Polygon':
-        if validate_polygon(data):
-            data['coords'] = [[[data['coords'][0], data['coords'][2]], [data['coords'][0], data['coords'][3]],
-                               [data['coords'][1], data['coords'][3]], [data['coords'][1], data['coords'][2]]]]
-        else:
-            return JsonResponse({'Invalid coords': 'ask gldas/api/geometryOptions for more help'})
-
-    # perform validation for vectorgeometry
-    elif data['loc_type'] == 'VectorGeometry':
-        data['vectordata'] = parameters['vectordata']
-        if data['vectordata'] in worldregions():
-            data['vectordata'] = 'esri-regions-' + data['vectordata']
-        elif data['vectordata'] in countries():
-            data['vectordata'] = 'esri-countries-' + data['vectordata']
-        else:
-            return JsonResponse(
-                {'Invalid Selection': data['vectordata'] + ' is not a valid region/country, check your spelling'})
-
-    data['instance_id'] = new_id()
-    return JsonResponse(newchart(data))
+    ts = TimeSeries(request.GET)
+    if ts.isValid:
+        return JsonResponse(newchart(ts.data))
+    else:
+        return JsonResponse({'Error': ts.error})

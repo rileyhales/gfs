@@ -14,3 +14,4 @@
 *.shx
 *.zip
 _build
+.ipynb_checkpoints

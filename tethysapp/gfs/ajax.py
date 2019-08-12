@@ -7,7 +7,7 @@ import shutil
 from django.http import JsonResponse
 
 from .charts import newchart
-from .options import structure_byvars
+from .options import variable_levels
 from .app import Gfs as App
 
 
@@ -24,7 +24,7 @@ def getchart(request):
 def get_levels_for_variable(request):
     data = ast.literal_eval(request.body.decode('utf-8'))
     variable = data['variable']
-    levels = structure_byvars()[variable]
+    levels = variable_levels()[variable]
     return JsonResponse({'levels': levels})
 
 

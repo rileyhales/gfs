@@ -20,6 +20,7 @@ class Gfs(TethysAppBase):
     enable_feedback = False
     feedback_emails = []
     githublink = 'https://github.com/rileyhales/gfs'
+    docslink = ''
     datawebsite = 'https://www.ncdc.noaa.gov/data-access/model-data/model-datasets/global-forcast-system-gfs'
     version = 'v2 Aug2019'
 
@@ -56,34 +57,14 @@ class Gfs(TethysAppBase):
 
             # url maps for api calls
             urlmap(
-                name='getcapabilities',
+                name='help',
                 url='gfs/api/help',
-                controller='gfs.api.help',
-            ),
-            urlmap(
-                name='timestamp',
-                url='gfs/api/gfsTimestamp',
-                controller='gfs.api.timestamp',
-            ),
-            urlmap(
-                name='variables',
-                url='gfs/api/variableOptions',
-                controller='gfs.api.variables',
-            ),
-            urlmap(
-                name='levels',
-                url='gfs/api/levelOptions',
-                controller='gfs.api.levels',
+                controller='gfs.api.helpme',
             ),
             urlmap(
                 name='variablelevels',
                 url='gfs/api/variableLevels',
                 controller='gfs.api.variable_levels',
-            ),
-            urlmap(
-                name='geometry',
-                url='gfs/api/geometryOptions',
-                controller='gfs.api.geometry',
             ),
             urlmap(
                 name='timeseries',

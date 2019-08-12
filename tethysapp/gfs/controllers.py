@@ -27,7 +27,7 @@ def home(request):
         name='levels',
         multiple=False,
         original=True,
-        options=structure_byvars()['al'],
+        options=variable_levels()['al'],
     )
 
     regions = SelectInput(
