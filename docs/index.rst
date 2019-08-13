@@ -1,5 +1,6 @@
-Welcome to GFS Data Tool's documentation!
-=========================================
+*************
+GFS Data Tool
+*************
 The GFS Data Tool is a tool that handles downloading, processing, visualizing, analyzing, and sharing the most recent
 GFS 1/4 degree forecasts. The tool provides visual and programmatic access to the data across all variable and levels
 but not across varied measurement depths.
@@ -16,7 +17,9 @@ develop and deploy web-apps for scientific data, especially geospatial and water
     :caption: Table of Contents
     :name: mastertoc
 
+    features
     workshop
     api
+    appinstall
     license
 
