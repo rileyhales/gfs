@@ -45,8 +45,8 @@ def uploadshapefile(request):
                 dst.write(chunk)
 
     # check that the user has provided geoserver settings
-    gs_eng = App.get_spatial_dataset_service(name='portal_geoserver', as_engine=True)
-    gs_wfs = App.get_spatial_dataset_service(name='portal_geoserver', as_wfs=True)
+    gs_eng = App.get_spatial_dataset_service(name='geoserver', as_engine=True)
+    gs_wfs = App.get_spatial_dataset_service(name='geoserver', as_wfs=True)
     gs_store = App.package + ':' + instance_id
     shp = [i for i in os.listdir(user_workspace) if i.endswith('.shp')][0].split('.')[0]
     shppath = os.path.join(user_workspace, shp)

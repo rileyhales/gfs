@@ -4,8 +4,7 @@ Copyright: Riley Hales, RCH Engineering, 2019
 Description: Functions for generating timeseries and simple statistical
     charts for netCDF data for point, bounding box, or shapefile geometries
 """
-import calendar
-import datetime
+import datetime as dt
 import os
 import shutil
 import requests
@@ -17,8 +16,8 @@ import shapefile
 import netCDF4
 import numpy
 
-from .utilities import get_gfsdate, currentgfs
 from .options import gfs_variables
+from .utilities import get_gfsdate
 from .app import Gfs as App
 
 
@@ -26,9 +25,15 @@ def newchart(data):
     """
     Determines the environment for generating a timeseries chart. Call this function
     """
-    # input parameters
-    var = str(data['variable'])
-    loc_type = data['loc_type']
+    # response metadata items
+    meta = {
+        'variable': data['variable'],
+        'loc_type': data['loc_type']
+    }
+    for item in gfs_variables():
+        if item[1] == data['variable']:
+            meta['name'] = item[0]
+            break
 
     # list the netcdfs to be processed
     path = App.get_custom_setting('thredds_path')
@@ -38,36 +43,18 @@ def newchart(data):
     files = [nc for nc in allfiles if nc.startswith(data['level']) and nc.endswith('.nc')]
     files.sort()
 
-    # some metadata
-    for item in gfs_variables():
-        if item[1] == data['variable']:
-            name = item[0]
-            break
-
     # get the timeseries, units, and message based on location type
-    if loc_type == 'Point':
-        values, units = pointchart(var, data['coords'], path, files)
-        type_message = 'Values at a Point'
-    elif loc_type == 'Polygon':
-        values, units = polychart(var, data['coords'], path, files)
-        type_message = 'In a Bounding Box'
-    elif loc_type == 'VectorGeometry':
-        vectordata = data['vectordata']
-        values, units = vectorchart(var, path, files, vectordata, data['instance_id'])
-        if vectordata == 'customshape':
-            type_message = 'Average in user\'s shapefile'
-        else:
-            if vectordata.startswith('esri-'):
-                vectordata = vectordata.split('-')[-1]
-            type_message = 'Average for ' + vectordata
+    if data['loc_type'] == 'Point':
+        values, meta['units'], meta['seriesmsg'] = pointchart(data['variable'], data['coords'], path, files)
+    elif data['loc_type'] == 'Polygon':
+        values, meta['units'], meta['seriesmsg'] = polychart(data['variable'], data['coords'], path, files)
+    else:  # loc_type == 'VectorGeometry':
+        values, meta['units'], meta['seriesmsg'] = vectorchart(data['variable'], data['vectordata'], path,
+                                                               files, data['instance_id'])
     values.sort(key=lambda tup: tup[0])
-
     return {
-        'values': values,
-        'units': units,
-        'variable': var,
-        'type': type_message,
-        'name': name
+        'meta': meta,
+        'timeseries': values,
     }
 
 
@@ -120,7 +107,7 @@ def geojson_to_shape(vectordata, savepath):
 
 def pointchart(var, coords, path, files):
     # return items
-    values = []
+    timeseries = []
 
     # get a list of the lat/lon and units using a reference file
     nc_obj = netCDF4.Dataset(os.path.join(path, files[0]), 'r')
@@ -136,14 +123,13 @@ def pointchart(var, coords, path, files):
     for nc in files:
         # get the time value for each file
         nc_obj = netCDF4.Dataset(os.path.join(path, nc), 'r')
-        time = nc_obj['time'].__dict__['begin_date']
-        time = datetime.datetime.strptime(time, "%Y%m%d%H")
+        time = dt.datetime.strptime(nc_obj['time'].__dict__['begin_date'], "%Y%m%d%H")
         # slice the array at the area you want
         val = float(nc_obj[var][0, lat_indx, lon_indx].data)
-        values.append((calendar.timegm(time.utctimetuple()) * 1000, val))
+        timeseries.append((time, val))
         nc_obj.close()
 
-    return values, units
+    return timeseries, units, 'Values at a Point'
 
 
 def polychart(var, coords, path, files):
@@ -166,29 +152,20 @@ def polychart(var, coords, path, files):
     for nc in files:
         # set the time value for each file
         nc_obj = netCDF4.Dataset(os.path.join(path, nc), 'r')
-        time = nc_obj['time'].__dict__['begin_date']
-        time = datetime.datetime.strptime(time, "%Y%m%d%H")
+        time = dt.datetime.strptime(nc_obj['time'].__dict__['begin_date'], "%Y%m%d%H")
         # slice the array, drop nan values, get the mean, append to list of values
         array = nc_obj[var][0, minlat:maxlat, minlon:maxlon].data
         array[array < -5000] = numpy.nan  # If you have fill values, change the comparator to git rid of it
         array = array.flatten()
         array = array[~numpy.isnan(array)]
-        values.append((calendar.timegm(time.utctimetuple()) * 1000, float(array.mean())))
+        values.append((time, float(array.mean())))
 
         nc_obj.close()
 
-    return values, units
+    return values, units, 'In a Bounding Box'
 
 
-def vectorchart(var, path, files, vectordata, instance_id=None):
-    """
-    Description: This script accepts a netcdf file in a geographic coordinate system, specifically the NASA GLDAS
-        netcdfs, and extracts the data from one variable and the lat/lon steps to create a geotiff of that information.
-    Dependencies: netCDF4, numpy, rasterio, rasterstats, os, shutil, calendar, datetime
-    Params: View README.md
-    Returns: Creates a geotiff named 'geotiff.tif' in the directory specified
-    Author: Riley Hales, RCH Engineering, March 2019
-    """
+def vectorchart(var, vectordata, path, files, instance_id=None):
     # return items
     values = []
 
@@ -202,10 +179,12 @@ def vectorchart(var, path, files, vectordata, instance_id=None):
 
     # file paths and settings
     if vectordata == 'customshape':
+        type_message = 'Average in user\'s shapefile'
         dirpath = os.path.join(os.path.dirname(__file__), 'workspaces', 'user_workspaces', instance_id)
         shp = [i for i in os.listdir(dirpath) if i.endswith('.shp')]
         vectorpath = os.path.join(dirpath, shp[0])
     else:  # vectordata.startswith('esri-'):
+        type_message = 'Average for ' + vectordata.replace('esri-countries-', '').replace('esri-regions-', '')
         vectordata = vectordata.replace('esri-', '')
         dirpath = os.path.join(os.path.dirname(__file__), 'workspaces', 'user_workspaces', instance_id)
         if os.path.exists(dirpath):
@@ -219,8 +198,7 @@ def vectorchart(var, path, files, vectordata, instance_id=None):
     for nc in files:
         # open the netcdf and get the data array
         nc_obj = netCDF4.Dataset(os.path.join(path, nc), 'r')
-        time = nc_obj['time'].__dict__['begin_date']
-        time = datetime.datetime.strptime(time, "%Y%m%d%H")
+        time = dt.datetime.strptime(nc_obj['time'].__dict__['begin_date'], "%Y%m%d%H")
 
         var_data = nc_obj.variables[var][:]  # this is the array of values for the nc_obj
         array = numpy.asarray(var_data)[0, :, :]  # converting the data type
@@ -229,5 +207,8 @@ def vectorchart(var, path, files, vectordata, instance_id=None):
 
         stats = rasterstats.zonal_stats(vectorpath, array, affine=affine, nodata=numpy.nan, stats="mean")
         tmp = [i['mean'] for i in stats if i['mean'] is not None]
-        values.append((calendar.timegm(time.utctimetuple()) * 1000, sum(tmp) / len(tmp)))
-    return values, units
+        values.append((time, sum(tmp) / len(tmp)))
+
+        nc_obj.close()
+
+    return values, units, type_message

@@ -83,8 +83,14 @@ function changeregions(firedfrom) {
         layerRegion = countriesESRI();
         controlsObj.addOverlay(layerRegion, 'Country Boundaries');
     }
-    getDrawnChart(drawnItems)
 }
+
+// input validation
+$(".customs").keyup(function () {this.value = this.value.replace(/i[a-z]/, '')});
+
+// chart download
+$("#chartCSV").click(function () {chartToCSV()});
+
 // data controls
 $("#variables").change(function () {
     let level_div = $("#levels");

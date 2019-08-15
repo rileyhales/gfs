@@ -13,7 +13,14 @@ html, body, #app-content, #inner-app-content, #outer-container {
     padding: 1px;
 }
 
-#highchart {
+#chart {
     height: 40%;
     padding: 1px;
+}
+
+
+.load {
+    height: 100%;
+    text-align: center;
+    vertical-align: baseline;
 }

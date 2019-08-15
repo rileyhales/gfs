@@ -7,7 +7,7 @@
 {% block app_content %}
   <div id="outer-container" style="overflow-y: auto">
     <div id="map"></div>
-    <div id="highchart"></div>
+    <div id="chart"></div>
   </div>
 {% endblock %}
 
@@ -31,10 +31,7 @@
 {% block app_actions %}
   <div style="width: 20%; float: left"><strong>{{ version }}</strong></div>
   <div style="width: 80%; float: left; text-align: right">
-    <strong style="color: white; font-size: large">Help and Resources</strong>
-    <a class="btn btn-default" role="button" data-toggle="modal" data-target="#help-modal">How To Use This App</a>
-    <a class="btn btn-default" role="button" data-toggle="modal" data-target="#data-modal">About GFS data</a>
-    <a class="btn btn-default" role="button" href="{{ githublink }}" target="_blank">View Source Code (GitHub)</a>
+    <a class="btn btn-default" role="button" id="chartCSV">Save Chart as CSV</a>
   </div>
 {% endblock %}
 

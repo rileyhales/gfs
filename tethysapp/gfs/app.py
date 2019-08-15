@@ -96,7 +96,7 @@ class Gfs(TethysAppBase):
         """
         return (
             SpatialDatasetServiceSetting(
-                name='portal_geoserver',
+                name='geoserver',
                 description='Geoserver for serving user uploaded shapefiles',
                 engine=SpatialDatasetServiceSetting.GEOSERVER,
                 required=True,
