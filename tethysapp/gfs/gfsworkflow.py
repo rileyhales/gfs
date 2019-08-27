@@ -367,6 +367,9 @@ def workflow(threddspath, clobber='no'):
     return 'GFS Workflow Completed- Normal Finish'
 
 
-# bash this py file with the argument of the path to store gfs data in the thredds directory (same as custom setting)
+# execute this script with the path location to store gfs data as an argument
 if __name__ == '__main__':
+    if not os.path.exists(sys.argv[1]):
+        print('This path does not exist. Please check the path and try again.')
+        exit()
     workflow(sys.argv[1])
