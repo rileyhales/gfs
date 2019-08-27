@@ -83,8 +83,8 @@ def download_gfs(threddspath, timestamp):
     gribsdir = os.path.join(threddspath, timestamp, 'gribs')
 
     # This is the List of forecast timesteps for 7 days (6-hr increments)
-    fc_steps = ['006', '012', '018', '024', '030', '036', '042', '048', '054', '060', '066', '072', '078', '084']
-    # '090', '096', '102', '108', '114', '120', '126', '132', '138', '144', '150', '156', '162', '168']
+    fc_steps = ['006', '012', '018', '024', '030', '036', '042', '048', '054', '060', '066', '072', '078', '084',
+                '090', '096', '102', '108', '114', '120', '126', '132', '138', '144', '150', '156', '162', '168']
 
     # if you already have a folder with data for this timestep, quit this function (you dont need to download it)
     if not os.path.exists(gribsdir):
@@ -298,11 +298,12 @@ def cleanup(threddspath, timestamp):
     logging.info('\nGetting rid of old data folders')
     files = os.listdir(threddspath)
     for file in files:
-        # keep last_run.txt, running.txt, ncml files, and the timestamp data directory
+        path = os.path.join(threddspath, file)
+        # keep last_run.txt, running.txt, ncml files, and the directory for the timestamp
         if file.endswith('.txt') or file.endswith('.log') or file.endswith('.ncml') or file == timestamp:
+            os.chmod(path, 0o777)
             continue
         # delete everything else
-        path = os.path.join(threddspath, file)
         if os.path.isdir(path):
             shutil.rmtree(path)
         else:
