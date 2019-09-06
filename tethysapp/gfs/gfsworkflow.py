@@ -12,9 +12,6 @@ import requests
 
 
 def solve_environment(threddspath):
-    """
-    Dependencies: os, shutil, datetime, urllib.request, app_settings (options)
-    """
     logging.info('\nSetting the Environment for the GFS Workflow')
     # determine the most day and hour of the day timestamp of the most recent GFS forecast
     now = datetime.datetime.utcnow() - datetime.timedelta(hours=6)
@@ -83,8 +80,9 @@ def download_gfs(threddspath, timestamp):
     gribsdir = os.path.join(threddspath, timestamp, 'gribs')
 
     # This is the List of forecast timesteps for 7 days (6-hr increments)
-    fc_steps = ['006', '012', '018', '024', '030', '036', '042', '048', '054', '060', '066', '072', '078', '084',
-                '090', '096', '102', '108', '114', '120', '126', '132', '138', '144', '150', '156', '162', '168']
+    fc_steps = ['006']
+    # fc_steps = ['006', '012', '018', '024', '030', '036', '042', '048', '054', '060', '066', '072', '078', '084',
+    #             '090', '096', '102', '108', '114', '120', '126', '132', '138', '144', '150', '156', '162', '168']
 
     # if you already have a folder with data for this timestep, quit this function (you dont need to download it)
     if not os.path.exists(gribsdir):
@@ -161,8 +159,7 @@ def set_wmsbounds(threddspath, timestamp):
 
     formatted = {}
     for var in db:
-        bounds = db[var]
-        formatted[var] = str(bounds[0]) + ',' + str(bounds[1])
+        formatted[var.encode('utf-8')] = str(db[var][0]) + ',' + str(db[var][1])
 
     boundsfile = os.path.join(os.path.dirname(__file__), 'public', 'js', 'bounds.js')
     with open(boundsfile, 'w') as file:
@@ -172,9 +169,6 @@ def set_wmsbounds(threddspath, timestamp):
 
 
 def grib_to_netcdf(threddspath, timestamp, forecastlevels):
-    """
-    Dependencies: xarray, netcdf4, os, shutil, app_settings (options)
-    """
     logging.info('\nStarting Grib Conversions')
     # setting the environment file paths
     gribs = os.path.join(threddspath, timestamp, 'gribs')
@@ -317,8 +311,6 @@ def workflow(threddspath, clobber='no'):
     Accepts environment settings then runs the workflow functions in the order they should be executed
     """
     runlock = os.path.join(threddspath, 'running.txt')
-    if os.path.exists(runlock):
-        return 'Workflow Aborted- another workflow process is running'
 
     # enable logging to track the progress of the workflow and for debugging
     logfile = os.path.join(threddspath, 'workflow.log')
@@ -343,13 +335,15 @@ def workflow(threddspath, clobber='no'):
     # if this has already been done for the most recent forecast, abort the workflow
     if redundant:
         logging.info('\nWorkflow aborted on ' + datetime.datetime.utcnow().strftime("%D at %R"))
-        os.remove(runlock)
+        if os.path.isfile(runlock):
+            os.remove(runlock)
         return 'Workflow Aborted- already run for most recent data'
 
     # get data from the gribs
     if not download_gfs(threddspath, timestamp):
         logging.info('\nWorkflow aborted on ' + datetime.datetime.utcnow().strftime("%D at %R"))
-        os.remove(runlock)
+        if os.path.isfile(runlock):
+            os.remove(runlock)
         return 'Workflow Aborted- Downloading Errors Occurred'
     set_wmsbounds(threddspath, timestamp)
 
@@ -371,5 +365,8 @@ def workflow(threddspath, clobber='no'):
 if __name__ == '__main__':
     if not os.path.exists(sys.argv[1]):
         print('This path does not exist. Please check the path and try again.')
+        exit()
+    elif os.path.isfile(os.path.join(sys.argv[1], 'running.txt')):
+        print('There is a running.txt file preventing another workflow run.')
         exit()
     workflow(sys.argv[1])
