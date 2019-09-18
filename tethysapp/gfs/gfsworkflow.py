@@ -9,6 +9,7 @@ import netCDF4
 import numpy
 import pygrib
 import requests
+import json
 
 
 def solve_environment(threddspath):
@@ -158,11 +159,11 @@ def set_wmsbounds(threddspath, timestamp):
 
     formatted = {}
     for var in db:
-        formatted[var.encode('utf-8')] = str(db[var][0]) + ',' + str(db[var][1])
+        formatted[var] = str(db[var][0]) + ',' + str(db[var][1])
 
     boundsfile = os.path.join(os.path.dirname(__file__), 'public', 'js', 'bounds.js')
     with open(boundsfile, 'w') as file:
-        file.write('const bounds = ' + str(formatted) + ';')
+        file.write('const bounds = ' + json.dumps(formatted, ensure_ascii=True) + ';')
     logging.info('Wrote boundaries to ' + boundsfile)
     return
 
@@ -305,7 +306,7 @@ def cleanup(threddspath, timestamp):
     return
 
 
-def workflow(threddspath, clobber='no'):
+def workflow(threddspath='', clobber='no'):
     """
     Accepts environment settings then runs the workflow functions in the order they should be executed
     """
@@ -362,10 +363,11 @@ def workflow(threddspath, clobber='no'):
 
 # execute this script with the path location to store gfs data as an argument
 if __name__ == '__main__':
-    if not os.path.exists(sys.argv[1]):
+    path = sys.argv[1]
+    if not os.path.exists(path):
         print('This path does not exist. Please check the path and try again.')
         exit()
-    elif os.path.isfile(os.path.join(sys.argv[1], 'running.txt')):
+    elif os.path.isfile(os.path.join(path, 'running.txt')):
         print('There is a running.txt file preventing another workflow run.')
         exit()
-    workflow(sys.argv[1])
+    workflow(threddspath=path)
