@@ -14,7 +14,7 @@ dependencies = ['netCDF4', 'numpy', 'pandas', 'rasterstats', 'rasterio', 'pygrib
 
 setup(
     name=release_package,
-    version='2',
+    version='2.0.1',
     tags='',
     description='',
     long_description='',

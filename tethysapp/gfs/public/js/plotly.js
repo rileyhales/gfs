@@ -126,6 +126,12 @@ function getDrawnChart(drawnItems) {
             success: function (result) {
                 chartdata = result;
                 makechart();
+            },
+            error: function(result) {
+                $("#chart").html(
+                    '<div style="text-align: center"><br><br><br><br><br>' +
+                    'was an error creating a timeseries for this variable. That\'s awkward. Please <a href="https://github.com/rileyhales/gfs/issues/" target="_blank">report the issue</a> and i\'ll fix it!' +
+                    '</div>')
             }
         })
         // If there isn't any geojson, then you actually should refresh the shapefile chart (ie the data is the lastregion)

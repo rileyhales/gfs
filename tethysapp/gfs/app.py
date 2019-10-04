@@ -22,7 +22,7 @@ class Gfs(TethysAppBase):
     githublink = 'https://github.com/rileyhales/gfs'
     docslink = 'https://gfs.readthedocs.io/en/latest/'
     datawebsite = 'https://www.ncdc.noaa.gov/data-access/model-data/model-datasets/global-forcast-system-gfs'
-    version = 'v2 Aug2019'
+    version = 'v2 Oct2019'
 
     def url_maps(self):
         """
