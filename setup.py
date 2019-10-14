@@ -27,7 +27,7 @@ setup(
     namespace_packages=['tethysapp', 'tethysapp.' + app_package],
     include_package_data=True,
     zip_safe=False,
-    install_requires=dependencies,
+    install_requires=[],
     cmdclass={
         'install': custom_install_command(app_package, app_package_dir, dependencies),
         'develop': custom_develop_command(app_package, app_package_dir, dependencies)

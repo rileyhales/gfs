@@ -75,6 +75,8 @@
       let threddsbase = "{{ thredds_url }}";
       let app = "{{ app }}";
       let instance_id = "{{ instance_id }}"
+      var baseStatic = "{% static 'gfs/index.html' %}";
+      baseStatic = baseStatic.replace('\/index.html','');
   </script>
 
   <!-- Allows csrf verification with AJAX -->
