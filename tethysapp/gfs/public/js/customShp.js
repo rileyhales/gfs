@@ -16,7 +16,7 @@ function uploadShapefile() {
     let loadgif = $("#loading");
     loadgif.show();
     $.ajax({
-        url: '/apps/' + app + '/ajax/uploadShapefile/',
+        url: `${apiServer}/ajax/uploadShapefile/`,
         type: 'POST',
         data: data,
         dataType: 'json',

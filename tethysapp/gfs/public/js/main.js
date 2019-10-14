@@ -1,3 +1,6 @@
+var staticPath = baseStatic
+var apiServer = `${staticPath.replace("/static", "/apps")}`
+
 // see base.html scripts for thredds, geoserver, app, model, instance_id
 let csrftoken = Cookies.get('csrftoken');
 Cookies.set('instance_id', instance_id);
@@ -96,7 +99,7 @@ $("#variables").change(function () {
     let level_div = $("#levels");
     level_div.empty();
     $.ajax({
-        url: '/apps/' + app + '/ajax/getLevelsForVar/',
+        url: `${apiServer}/ajax/getLevelsForVar/`,
         async: true,
         data: JSON.stringify({variable: this.options[this.selectedIndex].value}),
         dataType: 'json',
