@@ -199,7 +199,7 @@ function chartToCSV() {
     let link = document.createElement('a');
     link.setAttribute('href', encodeURI(csv));
     link.setAttribute('target', '_blank');
-    link.setAttribute('download', 'gldastimeseries.csv');
+    link.setAttribute('download', 'gfs_timeseries.csv');
     document.body.appendChild(link);
     link.click();
     $("#a").remove()
