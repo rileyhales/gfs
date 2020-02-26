@@ -22,7 +22,7 @@ class Gfs(TethysAppBase):
     githublink = 'https://github.com/rileyhales/gfs'
     docslink = 'https://gfs.readthedocs.io/en/latest/'
     datawebsite = 'https://www.ncdc.noaa.gov/data-access/model-data/model-datasets/global-forcast-system-gfs'
-    version = 'v2 Oct2019'
+    version = 'v3 Feb2020'
 
     def url_maps(self):
         """
@@ -36,6 +36,11 @@ class Gfs(TethysAppBase):
                 name='home',
                 url='gfs',
                 controller='gfs.controllers.home'
+            ),
+            urlmap(
+                name='checkWorkflowStatus',
+                url='gfs/checkWorkflowStatus',
+                controller='gfs.controllers.checkworkflowstatus'
             ),
 
             # url maps for ajax calls
@@ -53,6 +58,11 @@ class Gfs(TethysAppBase):
                 name='uploadShapefile',
                 url='gfs/ajax/uploadShapefile',
                 controller='gfs.ajax.uploadshapefile',
+            ),
+            urlmap(
+                name='uploadGeoJSON',
+                url='gfs/ajax/uploadGeoJSON',
+                controller='gfs.ajax.uploadgeojson',
             ),
 
             # url maps for api calls
@@ -81,12 +91,14 @@ class Gfs(TethysAppBase):
                 type=CustomSetting.TYPE_STRING,
                 description="Local file path to datasets (same as used by Thredds) (e.g. /home/thredds/myDataFolder/)",
                 required=True,
+                default='/Users/rileyhales/thredds/gfs/',
             ),
             CustomSetting(
                 name='thredds_url',
                 type=CustomSetting.TYPE_STRING,
                 description="URL to the GLDAS folder on the thredds server (e.g. http://[host]/thredds/gldas/)",
                 required=True,
+                default='https://tethys.byu.edu/thredds/wms/tethys/gfs/',
             )
         )
 

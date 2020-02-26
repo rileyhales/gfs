@@ -26,5 +26,5 @@ def currentgfs():
     return "No GFS data detected"
 
 
-def new_id():
-    return ''.join(random.SystemRandom().choice(string.ascii_lowercase + string.digits) for i in range(10))
+def new_id(length=10):
+    return ''.join(random.SystemRandom().choice(string.ascii_lowercase + string.digits) for i in range(length))

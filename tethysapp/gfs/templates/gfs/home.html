@@ -5,10 +5,7 @@
 {% load staticfiles %}
 
 {% block app_content %}
-  <div id="outer-container" style="overflow-y: auto">
-    <div id="map"></div>
-    <div id="chart"></div>
-  </div>
+<div id="map"></div>
 {% endblock %}
 
 
@@ -16,8 +13,11 @@
   <div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom" title="How To Use This Page">
     <a data-toggle="modal" data-target="#help-modal"><span class="glyphicon glyphicon-question-sign"></span></a>
   </div>
-  <div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom" title="Upload Shapefile">
-    <a data-toggle="modal" data-target="#shp-modal"><span class="glyphicon glyphicon-export"></span></a>
+  <div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom" title="View Chart">
+    <a data-toggle="modal" data-target="#chart_modal"><span class="glyphicon glyphicon-stats"></span></a>
+  </div>
+  <div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom" title="Upload GIS Data">
+    <a data-toggle="modal" data-target="#geometry-modal"><span class="glyphicon glyphicon-cloud-upload"></span></a>
   </div>
   <div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom" title="Download the Data">
     <a href="{{ datawebsite }}" target="_blank"><span class="glyphicon glyphicon-download-alt"></span></a>
@@ -29,15 +29,12 @@
 {% endblock %}
 
 {% block app_actions %}
-  <div style="width: 20%; float: left"><strong>{{ version }}</strong></div>
-  <div style="width: 80%; float: left; text-align: right">
-    <a class="btn btn-default" role="button" id="chartCSV">Save Chart as CSV</a>
-  </div>
+  <strong>{{ version }}</strong>
 {% endblock %}
 
 {% block after_app_content %}
   {# Upload Shapefile Data Modal #}
-  <div class="modal fade" id="shp-modal" tabindex="-1" role="dialog" aria-labelledby="shp-modal-label">
+  <div class="modal fade" id="geometry-modal" tabindex="-1" role="dialog" aria-labelledby="shp-modal-label">
     <div class="modal-dialog" role="document">
       <form action="" method="post" enctype="multipart/form-data">.
         {% csrf_token %}
@@ -45,10 +42,12 @@
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                     aria-hidden="true">X</span></button>
-            <h2 class="modal-title" id="about-modal-onamet-label">Upload A Shapefile</h2>
+            <h2 class="modal-title" id="about-modal-onamet-label">Upload GIS Data</h2>
           </div>
           <div class="modal-body">
-            <div>Guidelines for using a custom shapefile:
+            <h2>Upload a Shapefile</h2>
+            <div>
+              Guidelines for using a custom shapefile:
               <ul>
                 <li>Your shapefile must contain only polygon data.</li>
                 <li>You must include the 4 files ending in the extensions "prj" "shp", "shx", and "dbf".</li>
@@ -60,14 +59,30 @@
               </ul>
             </div>
             <br>
-            <div class="form-group">
+            <div class="form-group" style="text-align: center">
               <input type="file" class="local-file-upload" id="shapefile-upload" accept=".shp,.prj,.shx,.dbf" multiple>
             </div>
             <div>Once you've selected the shapefile components, click submit to upload it.</div>
+            <button type="button" class="btn btn-success" id="uploadshp">Submit Shapefile</button>
+
+            <h2>Upload a GeoJSON</h2>
+            Guidelines for using a geojson:
+              <ul>
+                <li>Your geojson must contain only polygon data.</li>
+                <li>It should be a text geojson file ending in ".geojson" or ".json"</li>
+                <li>Your geojson must use the WGS1984 Geographic Coordinate System or another GCS.</li>
+                <li>If the geojson file is large (more than a few MB) the data may not show on your map. It will still upload.</li>
+              </ul>
+            <div class="form-group" style="text-align: center">
+              <input type="file" class="local-file-upload" id="geojson-upload" accept="application/geo+json,.geojson,.json,application/json">
+            </div>
+            <div>Once you've selected the geojson file, click submit to upload it.</div>
+            <button type="button" class="btn btn-success" id="uploadgj">Submit GeoJSON</button>
+
             <div id="loading" style="display: none; text-align: center"><img src="https://media.giphy.com/media/jAYUbVXgESSti/giphy.gif"></div>
-          </div>
+        </div>
+
           <div class="modal-footer">
-            <button type="button" class="btn btn-success" id="uploadshp">Submit</button>
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
           </div>
         </div>
@@ -120,6 +135,27 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chart Modal -->
+  <div class="modal fade" id="chart_modal" tabindex="-1" role="dialog" aria-labelledby="about-modal-label">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <div class="row">
+            <h2 style="text-align: center">Timeseries Results</h2>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div id="chart"></div>
+        </div>
+        <div class="modal-footer">
+          <a class="btn btn-success" role="button" id="chartCSV">Save Chart as CSV</a>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         </div>
       </div>
     </div>

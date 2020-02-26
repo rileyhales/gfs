@@ -1,5 +1,7 @@
 from django.shortcuts import render
+from django.http import JsonResponse
 from tethys_sdk.gizmos import SelectInput, RangeSlider
+from django.contrib.auth.decorators import login_required
 
 from .options import *
 from .utilities import *
@@ -127,3 +129,21 @@ def home(request):
     }
 
     return render(request, 'gfs/home.html', context)
+
+
+@login_required()
+def checkworkflowstatus(request):
+    threddspath = os.path.join(App.get_custom_setting('thredds_path'))
+    fail = os.path.join(threddspath, 'last_run_failed.txt')
+    run = os.path.join(threddspath, 'running.txt')
+    last = os.path.join(threddspath, 'last_run.txt')
+    if os.path.isfile(last):
+        with open(last, 'r') as f:
+            return JsonResponse({'succeeded': f.readlines()})
+    elif os.path.isfile(run):
+        return JsonResponse({'running': 'running'})
+    elif os.path.isfile(fail):
+        with open(fail, 'r') as f:
+            return JsonResponse({'failed': f.readlines()})
+    else:
+        return JsonResponse({'unknown': 'no indicator files were found'})

@@ -161,7 +161,8 @@ def set_wmsbounds(threddspath, timestamp):
     for var in db:
         formatted[var] = str(db[var][0]) + ',' + str(db[var][1])
 
-    boundsfile = os.path.join(os.path.dirname(__file__), 'public', 'js', 'bounds.js')
+    boundsfile = os.path.join(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'tethysapp', 'gfs', 'public', 'js', 'bounds.js')
     with open(boundsfile, 'w') as file:
         file.write('const bounds = ' + json.dumps(formatted, ensure_ascii=True) + ';')
     logging.info('Wrote boundaries to ' + boundsfile)
@@ -370,4 +371,12 @@ if __name__ == '__main__':
     elif os.path.isfile(os.path.join(path, 'running.txt')):
         print('There is a running.txt file preventing another workflow run.')
         exit()
-    workflow(threddspath=path)
+    elif os.path.isfile(os.path.join(path, 'last_run_failed.txt')):
+        print('Last run failed. You need to figure out why. Deleting old data and trying again')
+        os.remove(path)
+        os.mkdir(path)
+    try:
+        workflow(threddspath=path)
+    except Exception as e:
+        with open(os.path.join(path, 'last_run_failed.txt'), 'w') as fail:
+            fail.writelines(str(e))

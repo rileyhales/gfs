@@ -1,4 +1,4 @@
-html, body, #app-content, #inner-app-content, #outer-container {
+html, body, #app-content, #inner-app-content, #outer-container, #map {
     margin: 0px;
     padding: 2px;
     height: 100%;
@@ -8,16 +8,20 @@ html, body, #app-content, #inner-app-content, #outer-container {
     height: 100% !important;
 }
 
-#map {
-    height: 60%;
-    padding: 1px;
+#inner-app-content {
+    padding: 0;
+    height: 100%;
+}
+
+#chart_modal .modal-dialog {
+    width: 80%;
 }
 
 #chart {
     height: 40%;
+    width: 100%;
     padding: 1px;
 }
-
 
 .load {
     height: 100%;

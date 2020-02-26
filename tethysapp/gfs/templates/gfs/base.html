@@ -14,8 +14,9 @@
   <div style="text-align: center; padding: 4px;"><strong>{{ gfsdate }}</strong></div>
   {% gizmo select_input variables %}
   {% gizmo select_input levels %}
-  {% gizmo select_input regions %}
 
+  <li class="title">Shapefile & GeoJSON Data</li>
+    {% gizmo select_input regions %}
   <div id="country-name-gizmo">
     <label for="countries">Enter A Country Name</label>
     <div style="width: 80%; float: left">
@@ -25,8 +26,11 @@
   </div>
 
   <br><br>
-  <label for="customShpChart">Upload A Shapefile</label>
+  <label for="customShpChart">Upload a Shapefile</label>
   <button class="btn btn-default btn-block" role="button" id="customShpChart">Timeseries for my own Shapefile</button>
+
+  <label for="customShpChart">Uploading a GeoJSON</label>
+  <button class="btn btn-default btn-block" role="button" id="customGjChart">Timeseries for my own GeoJSON</button>
   <br>
 
   <div style="text-align: center; padding-bottom: 12px">
@@ -97,13 +101,13 @@
   <!-- script for using plotly -->
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
-  <!-- data assistance reference JSON -->
+  <!-- Data Tools -->
   <script src="{% static 'gfs/js/bounds.js' %}" type="text/javascript"></script>
-  <!-- HTML assistance modules -->
   <script src="{% static 'gfs/js/countries.js' %}" type="text/javascript"></script>
-  <script src="{% static 'gfs/js/customShp.js' %}" type="text/javascript"></script>
+  <script src="{% static 'gfs/js/customShapeGJ.js' %}" type="text/javascript"></script>
   <!-- chart and map management scripts -->
   <script src="{% static 'gfs/js/plotly.js' %}" type="text/javascript"></script>
-  <script src="{% static 'gfs/js/leaflet.js' %}" type="text/javascript"></script>
+  <script src="{% static 'gfs/js/leaflet_map.js' %}" type="text/javascript"></script>
+  <script src="{% static 'gfs/js/leaflet_draw.js' %}" type="text/javascript"></script>
   <script src="{% static 'gfs/js/main.js' %}" type="text/javascript"></script>
 {% endblock %}
