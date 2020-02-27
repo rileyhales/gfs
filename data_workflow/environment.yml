@@ -1,0 +1,9 @@
+name: workflow-gfs
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - pandas
+  - numpy
+  - requests
+  - pygrib
