@@ -368,13 +368,13 @@ if __name__ == '__main__':
     if not os.path.exists(path):
         print('This path does not exist. Please check the path and try again.')
         exit()
-    elif os.path.isfile(os.path.join(path, 'running.txt')):
-        print('There is a running.txt file preventing another workflow run.')
-        exit()
     elif os.path.isfile(os.path.join(path, 'last_run_failed.txt')):
         print('Last run failed. You need to figure out why. Deleting old data and trying again')
         os.remove(path)
         os.mkdir(path)
+    elif os.path.isfile(os.path.join(path, 'running.txt')):
+        print('There is a running.txt file preventing another workflow run.')
+        exit()
     try:
         workflow(threddspath=path)
     except Exception as e:
