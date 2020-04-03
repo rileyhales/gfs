@@ -378,6 +378,7 @@ if __name__ == '__main__':
     try:
         workflow(threddspath=path)
     except Exception as e:
-        os.remove(os.path.join(path, 'running.txt'))
+        if os.path.exists(os.path.join(path, 'running.txt')):
+            os.remove(os.path.join(path, 'running.txt'))
         with open(os.path.join(path, 'last_run_failed.txt'), 'w') as fail:
             fail.writelines(str(e))
