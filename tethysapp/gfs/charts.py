@@ -7,6 +7,7 @@ Description: Functions for generating timeseries and simple statistical
 import os
 import glob
 import json
+import shutil
 
 import netCDF4 as nc
 import geomatics as gm
@@ -31,6 +32,9 @@ def newchart(data):
             break
 
     user_workspace = os.path.join(os.path.dirname(__file__), 'workspaces', 'user_workspaces', data['instance_id'])
+    if os.path.exists(user_workspace):
+        shutil.rmtree(user_workspace)
+    os.mkdir(user_workspace)
     date_pattern = data['level'] + '_%Y%m%d%H.nc'
 
     # list the netcdfs to be processed
@@ -45,50 +49,50 @@ def newchart(data):
 
     # get the timeseries, units, and message based on location type
     if data['loc_type'] == 'Point':
-        timeseries = gm.netcdfs.point_series(files, data['variable'], data['coords'], date_pattern)
+        timeseries = gm.timeseries.point(files, data['variable'], data['coords'], ('lon', 'lat'),
+                                         strp=date_pattern)
         meta['seriesmsg'] = 'At a Point'
 
     elif data['loc_type'] == 'Polygon':
         coords = data['coords'][0]
         coords = (
-            float(coords[0][0]),
-            float(coords[0][1]),
-            float(coords[2][0]),
-            float(coords[2][1]),
+            (float(coords[0][0]), float(coords[0][1]),),
+            (float(coords[2][0]), float(coords[2][1]),),
         )
-        timeseries = gm.netcdfs.box_series(files, data['variable'], coords, date_pattern)
+        timeseries = gm.timeseries.bounding_box(files, data['variable'], coords[0], coords[1],
+                                                ('lon', 'lat'), strp=date_pattern)
         meta['seriesmsg'] = 'In a Bounding Box'
 
     elif data['loc_type'] == 'Shapefile':
         shp = [i for i in os.listdir(user_workspace) if i.endswith('.shp')]
-        shp = shp.remove('usergj.shp')
+        shp.remove('usergj.shp')
         shp = os.path.join(shp[0])
-        timeseries = gm.netcdfs.shp_series(files, data['variable'], shp, date_pattern)
+        timeseries = gm.timeseries.polygons(files, data['variable'], shp, ('lon', 'lat'))
         meta['seriesmsg'] = 'In User\'s Shapefile'
 
     elif data['loc_type'] == 'GeoJSON':
         shp = os.path.join(user_workspace, '__tempgj.shp')
         with open(os.path.join(user_workspace, 'usergj.geojson')) as f:
-            gm.geojsons.geojson_to_shp(json.loads(f.read()), shp)
-        timeseries = gm.netcdfs.shp_series(files, data['variable'], shp, date_pattern)
+            gm.convert.geojson_to_shapefile(json.loads(f.read()), shp)
+        timeseries = gm.timeseries.polygons(files, data['variable'], shp, ('lon', 'lat'), strp=date_pattern)
         for file in glob.glob(os.path.join(user_workspace, '__tempgj.*')):
             os.remove(file)
         meta['seriesmsg'] = 'In User\'s GeoJSON'
 
     elif data['loc_type'].startswith('esri-'):
         esri_location = data['loc_type'].replace('esri-', '')
-        geojson = gm.geojsons.request_livingatlas_geojson(esri_location)
-        shp = os.path.join(user_workspace, '___esri.shp')
-        gm.geojsons.geojson_to_shp(geojson, shp)
-        timeseries = gm.netcdfs.shp_series(files, data['variable'], shp, date_pattern)
-        for file in glob.glob(os.path.join(user_workspace, '___esri.*')):
-            os.remove(file)
+        geojson = gm.data.get_livingatlas_geojson(esri_location)
+        shp = os.path.join(user_workspace, 'tmp.geojson')
+        with open(shp, 'w') as tmp:
+            tmp.write(json.dumps(geojson))
+        timeseries = gm.timeseries.polygons(files, data['variable'], shp, ('lon', 'lat'), strp=date_pattern)
+        os.remove(shp)
         meta['seriesmsg'] = 'Within ' + esri_location
 
-    dates = timeseries.index.strftime('%Y-%m-%d %H')
+    dates = timeseries['datetime'].dt.strftime('%Y-%m-%d %H')
     dates = dates.tolist()
 
     return {
         'meta': meta,
-        'timeseries': list(zip(dates, timeseries['values'].tolist())),
+        'timeseries': list(zip(dates, timeseries.values[:, 1])),
     }
