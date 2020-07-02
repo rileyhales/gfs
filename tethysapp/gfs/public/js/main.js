@@ -48,7 +48,7 @@ $("#variables").change(function () {
     let level_div = $("#levels");
     level_div.empty();
     $.ajax({
-        url: '/apps/' + app + '/ajax/getLevelsForVar/',
+        url: URL_levelsForVar,
         async: true,
         data: JSON.stringify({variable: this.options[this.selectedIndex].value}),
         dataType: 'json',

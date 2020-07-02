@@ -17,7 +17,7 @@ function uploadShapefile() {
     let loadgif = $("#loading");
     loadgif.show();
     $.ajax({
-        url: '/apps/' + app + '/ajax/uploadShapefile/',
+        url: URL_uploadShapefile,
         type: 'POST',
         data: data,
         dataType: 'json',
@@ -48,7 +48,7 @@ function uploadGeoJSON() {
     let loadgif = $("#loading");
     loadgif.show();
     $.ajax({
-        url: '/apps/' + app + '/ajax/uploadGeoJSON/',
+        url: URL_uploadGeoJSON,
         type: 'POST',
         data: data,
         dataType: 'json',

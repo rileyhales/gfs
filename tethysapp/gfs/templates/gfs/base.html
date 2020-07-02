@@ -78,7 +78,12 @@
   <script>
       let threddsbase = "{{ thredds_url }}";
       let app = "{{ app }}";
-      let instance_id = "{{ instance_id }}"
+      let instance_id = "{{ instance_id }}";
+      
+      let URL_levelsForVar = "{% url 'gfs:getLevelsForVar' %}";
+      let URL_getChart = "{% url 'gfs:getChart' %}";
+      let URL_uploadShapefile = "{% url 'gfs:uploadShapefile' %}";
+      let URL_uploadGeoJSON = "{% url 'gfs:uploadGeoJSON' %}";
   </script>
 
   <!-- Allows csrf verification with AJAX -->
