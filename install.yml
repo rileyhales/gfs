@@ -11,7 +11,7 @@ requirements:
     channels:
       - rileyhales
       - conda-forge
-    dependencies:
+    packages:
       - geomatics>=0.10
       - netcdf4
       - numpy
