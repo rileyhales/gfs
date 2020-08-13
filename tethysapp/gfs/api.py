@@ -1,11 +1,13 @@
-from django.http import JsonResponse
-from rest_framework.decorators import api_view, authentication_classes
-from rest_framework.authentication import TokenAuthentication, SessionAuthentication
+import json
 
+from django.http import JsonResponse
+from rest_framework.authentication import TokenAuthentication, SessionAuthentication
+from rest_framework.decorators import api_view, authentication_classes
+
+from .app import Gfs as App
+from .charts import newchart
 from .options import gfs_variables, gfs_levels, variable_levels, worldregions, countries
 from .utilities import get_gfsdate, new_id
-from .charts import newchart
-from .app import Gfs as App
 
 
 class TimeSeries:
@@ -17,7 +19,7 @@ class TimeSeries:
         try:
             self.data['variable'] = parameters['variable']
             self.data['level'] = parameters['level']
-            self.data['location'] = parameters.getlist('location')
+            self.data['location'] = json.loads(parameters.getlist('location')[0])
             self.validate()
         except KeyError as e:
             self.error = 'Missing parameter: ' + str(e).replace('"', '').replace("'", '')
